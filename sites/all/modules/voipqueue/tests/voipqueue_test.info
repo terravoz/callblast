@@ -1,0 +1,9 @@
+core = 7.x
+name = "VoIP Queue Test"
+description = Simpletests for VoipQueue and required additional hooks.
+package = "VoIP Drupal"
+
+dependencies[] = voipqueue
+dependencies[] = voiptest
+
+files[] = voipqueue.test

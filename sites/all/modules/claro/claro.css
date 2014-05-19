@@ -1,0 +1,8 @@
+#feeds-import-form .form-item-feeds-FeedsCSVParser-delimiter,
+#feeds-import-form .form-item-feeds-FeedsCSVParser-no-headers{
+    display:none;
+}
+
+#phone-number-node-form .form-item-title{
+    display:none;
+}

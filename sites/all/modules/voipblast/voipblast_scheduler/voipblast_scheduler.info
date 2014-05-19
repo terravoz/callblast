@@ -1,0 +1,7 @@
+name = VoIP blast schedule
+description = Set times for the start and end of VoIP blasts.
+core = 7.x
+package = VoIP Drupal
+version = 7.x-1.0
+dependencies[] = voipblast
+dependencies[] = date_api

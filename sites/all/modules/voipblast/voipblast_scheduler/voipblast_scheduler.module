@@ -1,0 +1,196 @@
+<?php
+/**
+ * @file
+ *
+ * Adds scheduling field to VoIP blast operations.
+ */
+
+/**
+ * Implementation of hook_cron().
+ */
+function voipblast_scheduler_cron() {
+  $result = db_query('SELECT queue_name, tag FROM {voipblast_scheduler} WHERE date_end < :now', array(':now' => time()));
+  $pause = array();
+  foreach ($result as $queue) {
+    $pause[] = $queue->queue_name . ':' . $queue->tag;
+  }
+  if (count($pause)) {
+    voipblast_operations_operation('pause', $pause, array());
+  }
+}
+
+function voipblast_scheduler_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
+  if ($form['#form_id'] == 'views_form_voipblast_create_page' && $form_state['step'] == 'views_bulk_operations_config_form') {
+    $settings = array(); // _voipblast_scheduler_voipblast_scheduler_settings($form['nid']['#value']);
+
+    $form['#attached']['css'][] = drupal_get_path('module', 'voipblast_scheduler') . '/voipblast_scheduler.admin.css';
+
+    $format = module_exists('date_popup') ? 'Y-m-d H:i' : variable_get('date_format_short', 'm/d/Y - H:i');
+
+    $now = new DateObject();
+    $now_formatted = $now->format($format);
+
+    if (!empty($settings)) {
+      $start_date = $settings['begin'] != 0 ? new DateObject($settings['begin']) : NULL;
+      $end_date = $settings['end'] != 0 ? new DateObject($settings['end']) : NULL;
+    }
+
+    $form['voipblast_scheduler'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Scheduler'),
+      '#description' => t('Specify dates and times to schedule start and finish sending blast.'),
+      '#weight' => -2.5,
+      '#collapsible' => TRUE,
+      '#collapsed' => !isset($start_date) && !isset($end_date),
+      '#tree' => TRUE,
+    );
+
+    $form['voipblast_scheduler']['date_start'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Start time'),
+      '#description' => t('E.g., @date', array('@date' => $now_formatted)),
+      '#default_value' => isset($start_date) ? $start_date->format($format) : NULL,
+      '#element_validate' => array('voipblast_scheduler_date_start_validate'),
+      '#date_format' => $format,
+    );
+
+    $form['voipblast_scheduler']['date_end'] = array(
+      '#type' => 'textfield',
+      '#title' => t('End time'),
+      '#description' => t('E.g., @date', array('@date' => $now_formatted)),
+      '#default_value' => isset($end_date) ? $end_date->format($format) : NULL,
+      '#element_validate' => array('voipblast_scheduler_date_end_validate'),
+      '#date_format' => $format,
+    );
+
+    // These additions/modifications to the form elements are made if the
+    // date_popup module is available.
+    if (module_exists('date_popup')) {
+      $date_popup = array(
+        '#type' => 'date_popup',
+        '#date_year_range' => '0:+3',
+        '#description' => NULL,
+      );
+
+      $form['voipblast_scheduler']['date_start'] = array_merge($form['voipblast_scheduler']['date_start'], $date_popup);
+      $form['voipblast_scheduler']['date_end'] = array_merge($form['voipblast_scheduler']['date_end'], $date_popup);
+    }
+  }
+}
+
+function voipblast_scheduler_date_start_validate($element, &$form, &$form_state) {
+  voipblast_scheduler_date_validate('start', $element, $form, $form_state);
+}
+
+function voipblast_scheduler_date_end_validate($element, &$form, &$form_state) {
+  voipblast_scheduler_date_validate('end', $element, $form, $form_state);
+}
+
+function voipblast_scheduler_date_validate($field, $element, &$form, &$form_state) {
+  static $start, $end;
+
+  if (! empty($element['#value'])) {
+    $format = module_exists('date_popup') ? 'Y-m-d H:i' : variable_get('date_format_short', 'm/d/Y - H:i');
+    // Make a new DateObject (supplied by date_api) from the user input.
+    if (isset($element['#value']['date'])) {
+      // date_popup altered form.
+      $value = $element['#value']['date'] . ' ' . $element['#value']['time']; 
+    }
+    else {
+      $value = $element['#value'];
+    }
+    $value = trim($value);
+
+    if (! empty($value)) {
+      $date = new DateObject($value , NULL, $format);
+
+      // Check for valid date.
+      if (isset($date->errors['invalid'])) {
+        form_error($element, $date->errors['invalid']);
+      }
+      else {
+        ${$field} = $date;
+      }
+    }
+  }
+
+  // If both valid start and end dates. Check end not before start.
+  if (isset($start) && isset($end) && $end <= $start) {
+    form_error($element, t('The end time cannot be before the start time.'));
+  }
+}
+
+/**
+ * Callback to add times to action.
+ *
+ * @see voipblast_add_call_action_submit().
+ * @see voipblast_add_text_action_submit().
+ */
+function voipblast_scheduler_action_submit($form, $form_state, &$params) {
+  $format = module_exists('date_popup') ? 'Y-m-d H:i' : variable_get('date_format_short', 'm/d/Y - H:i');
+  // Add start delay time to parameters for the voipqueue_add_*
+  // function.
+  if (isset($form_state['values']['voipblast_scheduler']['date_start'])) {
+    $start = new DateObject($form_state['values']['voipblast_scheduler']['date_start'], NULL, $format);
+    $params['delay'] = $start;
+  }
+  if (isset($form_state['values']['voipblast_scheduler']['date_end'])) {
+    $end = new DateObject($form_state['values']['voipblast_scheduler']['date_end'], NULL, $format);
+  }
+  if (isset($start) || isset($end)) {
+    $insert = array(
+      'queue_name' => $params['queue_name'],
+      'tag' => $params['tags'],
+    );
+    if (isset($start)) {
+      $insert['date_start'] = $start->format('U');
+    }
+    if (isset($end)) {
+      $insert['date_end'] = $end->format('U');
+    }
+    db_insert('voipblast_scheduler')
+      ->fields($insert)
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_date_popup_pre_validate_alter().
+ */
+function voipblast_scheduler_date_popup_pre_validate_alter($element, &$form_state, &$input) {
+  if (0 === strpos($element['#name'], 'scheduler[date_')) {
+    // If date is given but time is not, give midnight as the time.
+    if (!empty($input['date']) && empty($input['time'])) {
+      $exploded_format = explode(' ', $element['#date_format']);
+      $input['time'] = date(end($exploded_format), strtotime('today midnight'));
+    }
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function voipblast_scheduler_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'voipblast_scheduler') . '/views',
+  );
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function voipblast_scheduler_views_data_alter(&$data) {
+  $data['advancedqueue_tags']['tag_blast'] = array(
+    'title' => t('VoIP Blast Scheduler relationship'),
+    'relationship' => array(
+      'base' => 'voipblast_scheduler', // Table we're joining to.
+      'base field' => 'tag', // Field on the joined table.
+      'field' => 'tag', // Real field name on the 'foo' table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('VoIP Blast'),
+      'title' => t('VoIP Blast Schedule tag'),
+      'help' => t('Relates to the name of a blast and any schedule.'),
+    ),
+  );
+}

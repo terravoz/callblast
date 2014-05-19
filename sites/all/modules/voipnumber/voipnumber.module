@@ -1,0 +1,81 @@
+<?php
+
+define('VOIPNUMBER_ACTIVE', 1);
+define('VOIPNUMBER_VERIFIED', 2);
+define('VOIPNUMBER_DEFAULT', 4);
+
+define('VOIPNUMBER_PSTN', 1);
+define('VOIPNUMBER_SIP', 2);
+define('VOIPNUMBER_SMS', 3);
+define('VOIPNUMBER_MOBILE', 4);
+define('VOIPNUMBER_WORK', 5);
+define('VOIPNUMBER_HOME', 6);
+define('VOIPNUMBER_FAX', 7);
+
+/*Custom hooks*/
+/**
+ * Implementation of hook_get_voipnumber_by_eid().
+ *
+ * Returns numbers provided by voipnumber module (voipnumber CCK and voipnumber user profile)
+ */
+function voipnumber_get_voipnumber_by_eid($entity_id, $entity_type = NULL) {
+  $numbers = array();
+  $voipnumber_data = db_select('voipnumber', 'vn')
+    ->fields('vn')
+    ->condition('entity_id' , $entity_id);
+  if($entity_type) {
+    $voipnumber_data->condition('entity_type' , $entity_type);
+  }
+  $voipnumber_data = $voipnumber_data->execute();
+  while($voipnumber = $voipnumber_data->fetchAssoc()) {
+    $numbers[] = new VoipNumber($voipnumber);
+  }
+  return $numbers;
+}
+
+
+/**
+ * Implementation of hook_get_voipnumber_by_phone_number().
+ *
+ * Returns numbers provided by voipnumber module (voipnumber CCK and voipnumber user profile)
+ */
+function voipnumber_get_voipnumber_by_phone_number($number, $entity_type = NULL) {
+  $numbers = array();
+  $voipnumber_data = db_select('voipnumber', 'vn')
+    ->fields('vn')
+    ->condition('phone_number' , $number);
+  if($entity_type) {
+    $voipnumber_data->condition('entity_type' , $entity_type);
+  }
+  $voipnumber_data = $voipnumber_data->execute();
+  while($voipnumber = $voipnumber_data->fetchAssoc()) {
+    $numbers[] = new VoipNumber($voipnumber);
+  }
+  return $numbers;
+}
+
+
+/**
+ * Implementation of hook_get_eid_by_phone_number().
+ *
+ * Returns entity ids provided by voipnumber module (voipnumber CCK and voipnumber user profile)
+ */
+function voipnumber_get_eid_by_phone_number($number, $entity_type = NULL) {
+  $eids = array();
+  $voipnumber_data = db_select('voipnumber', 'vn')
+    ->fields('vn', array('entity_id'))
+    ->condition('phone_number' , $number);
+  if($entity_type) {
+    $voipnumber_data->condition('entity_type' , $entity_type);
+  }
+  $voipnumber_data->distinct();
+  $voipnumber_data =  $voipnumber_data->execute();
+
+  while($row = $voipnumber_data->fetchAssoc()) {
+    if($row['entity_id']) {
+      $eids[$row['entity_id']] = $row['entity_id'];
+    }
+  }
+  return $eids;
+}
+

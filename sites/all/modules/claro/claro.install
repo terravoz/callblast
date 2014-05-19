@@ -1,0 +1,51 @@
+<?php
+/**@file
+ * Implementation of hook_install().
+ */
+function claro_install() {
+  //Create claro lexicon
+  $lexicon = array(
+   'lexicon' => 'claro_lexicon',
+   'description' => 'this is Claro VoIP Voice lexicon',
+  );
+  voipvoice_create_lexicon($lexicon);
+  //@todo: to create folders we need to change ownership of directory to www-data
+  // sudo chown -R www-data voipvoice
+
+  //Create claro voices
+  $voice1 = array(
+   'name' => 'claro',
+   'gender' => 'woman',
+   'description' => 'This is woman English Claro voice.',
+   'language' => 'en',
+   'lexicon' => 'claro_lexicon',
+  );
+  voipvoice_create_voice($voice1);
+
+  $voice2 = array(
+   'name' => 'claro-spanish',
+   'gender' => 'woman',
+   'description' => 'This is woman Spanish Claro voice.',
+   'language' => 'es',
+   'lexicon' => 'claro_lexicon',
+  );
+  voipvoice_create_voice($voice2);
+
+  //Import phrases
+  //_claro_phrases();
+
+  //Import mp3 voices
+  //voipvoice_import_voices(drupal_get_path('module','claro').'/claro.zip', 'claro');
+  //voipvoice_import_voices(drupal_get_path('module','claro').'/claro-spanish.zip', 'claro-spanish');
+
+  //Make sure that mp3 is enabled
+  variable_set('voipvoice_allowed_extensions', array('wav' => 'wav', 'mp3' => 'mp3'));
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function claro_uninstall() {
+ voipvoice_delete_lexicon('claro_lexicon');
+}
+

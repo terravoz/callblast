@@ -1,0 +1,8 @@
+; $Id$
+name = VoIP Number Field
+description = Provides VoIP Number Field.
+dependencies[] = voipnumber
+dependencies[] = voipcall
+dependencies[] = field
+package = VoIP Drupal
+core = 7.x

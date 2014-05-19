@@ -1,0 +1,250 @@
+<?php
+/**
+* @file
+* Relates VoIP Number with the Blast
+*/
+//include_once 'voipnumber_blast.features.inc';
+
+
+/**
+ * Helper, and example, function to add text to default queue.
+ *
+ * @param object $voipnumber
+ *   Destination number to send text to.
+ * @param string $text
+ *   Text to send.
+ * @param array $options
+ *   'delay' => Number of seconds to wait before sending text (Default: 0),
+ *   'tags' => Array of tags to add to the item.
+ */
+function voipnumber_blast_add_text($blast_id, $voipnumber, $text, $options = array()) {
+
+  // This is the same as voipqueue_add_dial().
+  $queue = DrupalQueue::get('voipblast_texts');
+  $queue->createQueue();
+
+  // First create a VoipCall object to queue.
+  $call = new VoipCall(array());
+  // Only the destination number need be set.
+  $call->setDestNumber($voipnumber->getNumber());
+  $call = $call->save();
+
+  $voipnumber_blast = array(
+    'nid' => $blast_id,
+    'vnid' => $voipnumber->getVnid(),
+    'cid' => $call->getCid(),
+  );
+
+  drupal_write_record('voipnumber_blast', $voipnumber_blast);
+  // Create a VoipQueue item for sending text.
+  $item = new VoipQueueText($call, $text);
+
+  // Add options if they are required.
+  if (isset($options['delay'])) {
+    $item->setDelay($delay);
+  }
+  if (isset($options['tags'])) {
+    $item->tags = $options['tags'];
+  }
+
+  // Add the item to the queue.
+  $queue->createItem($item);
+}
+
+/**
+ * Implementation of hook_form_alter()
+ */
+function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
+ if($form_id == 'broadcast_node_form') {
+   drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
+   $form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
+    $form['actions']['submit']['#submit'][]  = 'voipnumber_blast_broadcast_node_form_submit';
+   $form['actions']['submit']['#prefix'] =  l('Preview selected contacts', 'contacts-preview',
+     array('attributes' => array('class' => array('button'), 'target'=>'_blank', 'id' => 'contacts-preview')));
+  }
+
+  return $form;
+}
+
+/*Store phone numbers from selected groups*/
+function voipnumber_blast_broadcast_node_form_validate($form, &$form_state) {
+  $nids = voipnumber_blast_get_nids_from_groups($form_state['values']['field_select_destination']['und']);
+  $form_state['values']['field_phone_numbers']['und'] = array();
+  foreach($nids as $nid) {
+    $form_state['values']['field_phone_numbers']['und'][] = array('target_id'=> $nid);
+  }
+}
+
+function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
+  //dpm($form_state);
+  $phone_numbers = array();
+  //$queue_name = $form_state['values']['title'];
+  $blast_id = $form_state['nid'];
+  $lang = $form_state['values']['language'];
+  //fix: for some reason body changed to eng
+  $message = $form_state['values']['body'][$lang][0]['value'];
+
+  //$type = $form_state['values']['field_broadcast_type']['und'][0]['value'];
+  //@todo: use type?
+  //dpm($form_state);
+  $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
+  //dpm($phone_numbers);
+  /*foreach($phone_numbers as $vn) {
+    dpm($vn->getNumber());
+  }*/
+  drupal_set_message('Announcement queued for '.count($phone_numbers).' phone numbers.');
+
+  voipnumber_blast_create_queue($blast_id, $phone_numbers, $message);
+
+  drupal_goto('admin/voip/claro/summary');
+}
+
+function voipnumber_blast_get_numbers_from_groups($groups) {
+  $all_nids = array();
+  $phone_numbers = array();
+  foreach($groups as $group) {
+    if($group['value'] == 'all') {
+      return voipnumber_blast_get_all_numbers();
+    }
+    $nids = taxonomy_select_nodes($group['value']);
+    $all_nids = array_merge((array)$all_nids, (array)$nids);
+  }
+
+  foreach($all_nids as $nid) {
+    $node = node_load($nid);
+    if(isset($node->field_phone_number['und'][0]['vnid'])) {
+      $vn = VoipNumber::load($node->field_phone_number['und'][0]['real_vnid']);
+      $phone_numbers[$vn->getNumber()] = $vn;
+    }
+  }
+
+  return $phone_numbers;
+}
+
+function voipnumber_blast_get_nids_from_groups($groups) {
+  $all_nids = array();
+  $phone_numbers = array();
+  foreach($groups as $group) {
+    if($group['value'] == 'all') {
+      return voipnumber_blast_get_all_phone_nids();
+    }
+    $nids = taxonomy_select_nodes($group['value']);
+    $all_nids = array_merge((array)$all_nids, (array)$nids);
+  }
+  $return_nids = array();
+  foreach($all_nids as $nid) {
+    $return_nids[$nid] = $nid;
+  }
+
+  return $return_nids;
+}
+
+function voipnumber_blast_get_all_numbers() {
+  $phone_numbers = array();
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'phone_number')
+    ->fieldCondition('field_opt_in', 'value', 1)
+    ->execute();
+
+  if (!empty($entities['node'])) {
+    foreach($entities['node'] as $ent_node) {
+      $node = node_load($ent_node->nid);
+      //if($node->status) {
+        if(isset($node->field_phone_number['und'][0]['vnid'])) {
+          $vn = VoipNumber::load($node->field_phone_number['und'][0]['real_vnid']);
+          $phone_numbers[$vn->getNumber()] = $vn;
+        }
+      //}
+    }
+  }
+  return $phone_numbers;
+}
+
+function voipnumber_blast_get_all_phone_nids() {
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'phone_number')
+    ->fieldCondition('field_opt_in', 'value', 1)
+    ->execute();
+  $return_nids = array();
+  if (!empty($entities['node'])) {
+    foreach($entities['node'] as $ent_node) {
+      $return_nids[$ent_node->nid] = $ent_node->nid;
+    }
+  }
+  return $return_nids;
+}
+
+function voipnumber_blast_create_queue($blast_id, $phone_numbers, $message) {
+  $options = array(
+    //'queue_name' => $type,
+    'tags' => array($blast_id),
+  );
+  foreach($phone_numbers as $voipnumber) {
+    //voipqueue_add_text($recipient, $message, $options);
+    voipnumber_blast_add_text($blast_id, $voipnumber, $message, $options);
+  }
+}
+
+function voipnumber_blast_get_voipcall($blast_id, $vnid) {
+  $query = db_select('voipnumber_blast', 'vb');
+  $query->fields('vb');
+  $query->condition('nid' , $blast_id);
+  $query->condition('vnid' , $vnid);
+  $query = $query->execute();
+  $result = $query->fetchObject();
+  if($result) {
+    $voipcall = VoipCall::load($result->cid);
+    return $voipcall;
+  }
+
+  return NULL;
+}
+
+function voipnumber_blast_status($status) {
+  switch ($status) {
+    default:
+      $description = t('Processing error.');
+      break;
+    case VoipCall::TEXT_FAILED:
+    case VoipCall::TEXT_INVALID:
+      $description = t('Processing error.');
+      break;
+    case VoipCall::TEXT_NOT_SENT:
+    case VoipCall::TEXT_SENDING:
+      $description = t('Not processed.');
+      break;
+    case VoipCall::TEXT_SENT:
+      $description = t('Processed.');
+      break;
+  }
+  return $description;
+}
+
+function voipnumber_blast_additional_info($call) {
+  $status = $call->getTextStatus();
+  if (!$status) {
+    $description = $call->getErrorMessage();
+  }
+  else {
+    switch ($status) {
+      default:
+        $description = $call->getErrorMessage();
+        break;
+      case VoipCall::TEXT_FAILED:
+      case VoipCall::TEXT_INVALID:
+        $description = $call->getErrorMessage();
+        break;
+      case VoipCall::TEXT_NOT_SENT:
+      case VoipCall::TEXT_SENDING:
+        $description = t('SMS not sent.');
+        break;
+      case VoipCall::TEXT_SENT:
+        $description = t('SMS sent.');
+        break;
+    }
+  }
+
+  return $description;
+}

@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Webform Scheduler module install/schema hooks.
+ *
+ * @author Daniel Imhoff
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function voipblast_scheduler_schema() {
+  $schema = array();
+
+  $schema['voipblast_scheduler'] = array(
+    'description' => 'Table for storing the information for scheduling voipblasts.',
+    'fields' => array(
+      'queue_name' => array(
+        'description' => 'The queue name of the blast.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'tag' => array(
+        'description' => 'The tag of the blast.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'date_start' => array(
+        'description' => 'Timestamp of when the voipblast is scheduled to start.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'date_end' => array(
+        'description' => 'Timestamp of when the voipblast is scheduled to end.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('queue_name', 'tag'),
+  );
+
+  return $schema;
+}

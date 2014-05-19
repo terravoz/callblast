@@ -1,0 +1,15 @@
+name = VoIP blast feature
+description = Create blast view for users with a phone field.
+core = 7.x
+package = VoIP Drupal
+version = 7.x-1.0
+project = voipblast_feature
+dependencies[] = features
+dependencies[] = phone
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[field_base][] = field_phone
+features[field_instance][] = user-user-field_phone
+features[views_view][] = voipblast_create
+features_exclude[dependencies][ctools] = ctools

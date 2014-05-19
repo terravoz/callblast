@@ -1,0 +1,179 @@
+<?php
+/**@file
+ * Implementation of hook_install().
+ */
+function voipvoice_install() {
+  variable_set('voipvoice_directory','voipvoice');
+
+   //Load module to get access to API functions
+  module_load_include('module', 'voipvoice', 'voipvoice');
+
+  //Create default lexicon
+  $lexicon = array(
+   'lexicon' => 'default',
+   'description' => 'this is default VoIP Voice lexicon',
+  );
+  voipvoice_create_lexicon($lexicon);
+
+  //Create default "log" voice
+  //@todo: this fails during install
+  $voice = array(
+   'name' => 'log',
+   'gender' => 'neutral',
+   'description' => 'This voice is only for logging purposes.',
+   'language' => 'en',
+   'lexicon' => 'default',
+  );
+  voipvoice_create_voice($voice);
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function voipvoice_uninstall() {
+  $voice_path = file_default_scheme() . '://' . variable_get('voipvoice_directory', 'voipvoice');
+  _voip_voice_delete_dir($voice_path);
+
+  variable_del('voipvoice_directory');
+  variable_del('voipvoice_default');
+  variable_del('voipvoice_default_man');
+  variable_del('voipvoice_default_woman');
+}
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function voipvoice_schema() {
+  $schema['voipvoice_phrases'] = array(
+    'description' => '',
+    'fields' => array(
+      'pid' => array(
+        'description' => 'Primary Key: Unique voice ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'phrase_hash' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Phrase hash',
+      ),
+      'phrase' => array(
+        'type' => 'text',
+        'size' => 'big',
+      ),
+      'lexicon' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Lexicon code.',
+      ),
+      'args' => array(
+        'type' => 'text',
+        'size' => 'normal',
+      ),
+    ),
+    //TODO: This is not working
+    //'unique keys' => array('voice' => array('voice'), 'phrase_hash' => array('phrase_hash')),
+    'primary key' => array('pid'),
+  );
+
+   $schema['voipvoice_voices'] = array(
+    'description' => '',
+    'fields' => array(
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Voice code.',
+      ),
+      'gender' => array(
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Voice gender.',
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Voice description.',
+      ),
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Base language of the voice.',
+      ),
+      'lexicon' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Lexicon this voice belongs to.',
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+   $schema['voipvoice_lexicons'] = array(
+    'description' => '',
+    'fields' => array(
+      'lexicon' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Lexicon name.',
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Lexicon description.',
+      ),
+    ),
+    'primary key' => array('lexicon'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_requirements().
+ */
+function voipvoice_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime' || $phase == 'install') {
+    // File paths
+    $voice_dir = file_default_scheme() . '://' . variable_get('voipvoice_directory', 'voipvoice');
+    $voice_dir_created = file_prepare_directory($voice_dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
+    if (!$voice_dir_created) {
+      $requirements['voice_dirs'] = array(
+        'value' => t('Missing directory.'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t("The VoIP Voice module's voice directory %voipvoice is missing.", array('%voipvoice' => $voice_dir)),
+      );
+    }
+    else {
+      $requirements['voice_dirs'] = array(
+        'value' => t('Exists (%path).', array('%path' => $voice_dir)),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    $requirements['voice_dirs']['title'] = t('VoIP Voice module directory');
+  }
+
+  return $requirements;
+}

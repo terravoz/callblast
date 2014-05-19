@@ -1,0 +1,222 @@
+diff --git a/feeds.api.php b/feeds.api.php
+index 14a8555..c930972 100644
+--- a/feeds.api.php
++++ b/feeds.api.php
+@@ -292,6 +292,17 @@ function hook_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_nam
+       'callback' => 'my_module_set_target2',
+       'real_target' => 'my_node_field_two', // Specify real target field on node.
+     );
++    $targets['my_node_field3'] = array(
++      'name' => t('My third custom node field'),
++      'description' => t('Description of what my third custom node field does.'),
++      'callback' => 'my_module_set_target3',
++
++      // Set optional_unique to TRUE and specify unique_callbacks to allow the
++      // target to be unique. Existing entities can be updated based on unique
++      // targets.
++      'optional_unique' => TRUE,
++      'unique_callbacks' => array('my_module_mapper_unique'),
++    );
+   }
+ }
+ 
+@@ -369,5 +380,38 @@ function my_module_form_callback($mapping, $target, $form, $form_state) {
+ }
+ 
+ /**
++ * Example of the unique_callbacks specified in
++ * hook_feeds_processor_targets_alter().
++ *
++ * @param string $target
++ *   A string identifying the unique target on the entity.
++ * @param mixed $value
++ *   The unique value to be checked.
++ * @param string $entity_type
++ *   Entity type for the entity to be processed.
++ * @param string $bundle_name
++ *   Bundle name for the entity to be processed.
++ *
++ * @return int|string|null
++ *   Feeds processor existing entity ID.
++ *   Or NULL if no existing entity is found.
++ *
++ * @see hook_feeds_processor_targets_alter()
++ * @see FeedsProcessor::existingEntityId()
++ */
++function my_module_mapper_unique($target, $value, $entity_type, $bundle_name) {
++  // Example for if the target is a field.
++  $query = new EntityFieldQuery();
++  $result = $query->entityCondition('entity_type', $entity_type)
++    ->entityCondition('bundle', $bundle_name)
++    ->fieldCondition($target, 'value', $value, '=')
++    ->execute();
++  if (isset($result[$entity_type])) {
++    $ids = array_keys($result[$entity_type]);
++    return reset($ids);
++  }
++}
++
++/**
+  * @}
+  */
+diff --git a/feeds.info b/feeds.info
+index 0ce45e0..151408c 100644
+--- a/feeds.info
++++ b/feeds.info
+@@ -38,6 +38,7 @@ files[] = tests/feeds_mapper_field.test
+ files[] = tests/feeds_mapper_file.test
+ files[] = tests/feeds_mapper_path.test
+ files[] = tests/feeds_mapper_profile.test
++files[] = tests/feeds_mapper_unique.test
+ files[] = tests/feeds_mapper.test
+ files[] = tests/feeds_mapper_config.test
+ files[] = tests/feeds_fetcher_file.test
+diff --git a/plugins/FeedsProcessor.inc b/plugins/FeedsProcessor.inc
+index 6666276..ec8f454 100755
+--- a/plugins/FeedsProcessor.inc
++++ b/plugins/FeedsProcessor.inc
+@@ -761,6 +761,17 @@ abstract class FeedsProcessor extends FeedsPlugin {
+         case 'guid':
+           $entity_id = $query->condition('guid', $value)->execute()->fetchField();
+           break;
++        default:
++          $targets = $this->getMappingTargets();
++          if (isset($targets[$target]['unique_callbacks'])) {
++            $callbacks = $targets[$target]['unique_callbacks'];
++            foreach ($callbacks as $callback) {
++              if (is_callable($callback) && $entity_id = call_user_func_array($callback, array($target, $value, $this->entityType(), $this->bundle()))) {
++                // Stop at the first unique ID returned by a callback.
++                break;
++              }
++            }
++          }
+       }
+       if (isset($entity_id)) {
+         // Return with the content id found.
+diff --git a/tests/feeds_mapper_unique.test b/tests/feeds_mapper_unique.test
+new file mode 100644
+index 0000000..4007ce1
+--- /dev/null
++++ b/tests/feeds_mapper_unique.test
+@@ -0,0 +1,82 @@
++<?php
++
++/**
++ * @file
++ * Test case for unique target callbacks.
++ */
++
++/**
++ * Class for testing Feeds <em>content</em> mapper.
++ */
++class FeedsMapperUniqueTestCase extends FeedsMapperTestCase {
++  public static function getInfo() {
++    return array(
++      'name' => 'Mapper: Unique target callbacks',
++      'description' => 'Test unique target callbacks in mappers.',
++      'group' => 'Feeds',
++    );
++  }
++
++  /**
++   * Test mapping target "unique_callbacks".
++   */
++  public function test() {
++    // Turn on unique callbacks.
++    variable_set('feeds_tests_mapper_unique', TRUE);
++
++    // Create content type.
++    $typename = $this->createContentType(array(), array(
++      'alpha' => 'text',
++    ));
++
++    // Create two nodes. Put unique value into field field_alpha.
++    $node1 = $this->drupalCreateNode(array(
++      'type' => $typename,
++      'field_alpha' => array(
++        LANGUAGE_NONE => array(
++          0 => array(
++            'value' => 'Ut wisi',
++          ),
++        ),
++      ),
++    ));
++    $node2 = $this->drupalCreateNode(array(
++      'type' => $typename,
++      'field_alpha' => array(
++        LANGUAGE_NONE => array(
++          0 => array(
++            'value' => 'Lorem',
++          ),
++        ),
++      ),
++    ));
++
++    // Create and configure importer.
++    $this->createImporterConfiguration('Syndication', 'syndication');
++    $this->setPlugin('syndication', 'FeedsFileFetcher');
++    $this->setPlugin('syndication', 'FeedsCSVParser');
++    $this->setSettings('syndication', 'FeedsNodeProcessor', array('bundle' => $typename, 'update_existing' => 2));
++    $this->addMappings('syndication', array(
++      0 => array(
++        'source' => 'title',
++        'target' => 'title',
++      ),
++      1 => array(
++        'source' => 'alpha',
++        'target' => 'test_target',
++        'unique' => TRUE,
++        'textfield' => 'required',
++      ),
++    ));
++
++    // Import CSV file.
++    $this->importFile('syndication', $this->absolutePath() . '/tests/feeds/content.csv');
++    $this->assertText('Updated 2 nodes');
++
++    // Ensure the updated nodes have the expected title now.
++    $node1 = node_load($node1->nid, NULL, TRUE);
++    $this->assertEqual('Ut wisi enim ad minim veniam', $node1->title, 'Node 1 has the expected title');
++    $node2 = node_load($node2->nid, NULL, TRUE);
++    $this->assertEqual('Lorem ipsum', $node2->title, 'Node 2 has the expected title');
++  }
++}
+diff --git a/tests/feeds_tests.module b/tests/feeds_tests.module
+index 399708b..39eacdd 100644
+--- a/tests/feeds_tests.module
++++ b/tests/feeds_tests.module
+@@ -112,6 +112,13 @@ function feeds_tests_feeds_processor_targets_alter(&$targets, $entity_type, $bun
+     'summary_callback' => 'feeds_tests_mapper_summary',
+     'form_callback' => 'feeds_tests_mapper_form',
+   );
++
++  // Sets unique callbacks for FeedsMapperUniqueTestCase.
++  $enabled = variable_get('feeds_tests_mapper_unique');
++  if (!empty($enabled)) {
++    $targets['test_target']['optional_unique'] = TRUE;
++    $targets['test_target']['unique_callbacks'] = array('feeds_tests_mapper_unique');
++  }
+ }
+ 
+ /**
+@@ -205,3 +212,20 @@ function feeds_tests_mapper_form($mapping, $target, $form, $form_state) {
+     ),
+   );
+ }
++
++/**
++ * Callback for unique_callbacks for test_target mapper.
++ *
++ * @see feeds_tests_feeds_processor_targets_alter()
++ */
++function feeds_tests_mapper_unique($target, $value, $entity_type, $bundle_name) {
++  $query = new EntityFieldQuery();
++  $result = $query->entityCondition('entity_type', $entity_type)
++    ->entityCondition('bundle', $bundle_name)
++    ->fieldCondition('field_alpha', 'value', $value, '=')
++    ->execute();
++  if (isset($result[$entity_type])) {
++    $ids = array_keys($result[$entity_type]);
++    return reset($ids);
++  }
++}

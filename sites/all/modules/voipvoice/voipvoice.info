@@ -1,0 +1,8 @@
+; $Id$
+name = "VoIP Voice"
+description = "Adds v() for voice translating"
+package = VoIP Drupal
+dependencies[] = voipcall
+dependencies[] = locale
+dependencies[] = audiorecorderfield
+core = 7.x

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VoIP blast feature feature.
+ */
+
+include_once 'voipblast_feature.features.inc';

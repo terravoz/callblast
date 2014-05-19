@@ -1,0 +1,304 @@
+<?php
+
+module_load_include('inc', 'voipdrupal_multinumber', 'voipdrupal_multinumber_ahah');
+
+/**
+ * Implements hook_menu().
+ */
+function voipdrupal_multinumber_menu() {
+  $items = array();
+
+  $items['admin/voip/call/multinumber'] = array(
+    'title' => 'VoIP Multinumber configuration',
+    'description' => 'Add multiple numbers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('voipdrupal_multinumber_admin_form', NULL),
+    'access arguments' => array('administer voipcall setup'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_voipscript_load_script().
+ */
+function voipdrupal_multinumber_voipscript_load_script($script_name, $options = NULL) {
+  switch ($script_name) {
+    case 'voipdrupal_multinumber_script':
+      $script = new VoipScript('voipdrupal_multinumber_script');
+      $options['dest_number'] = '%dest_number';
+      $script->addGosub('voipdrupal_multinumber_process_script', $options);
+      $script->addHangup();
+      break;
+    case 'voipdrupal_multinumber_process_script':
+      $script = new VoipScript('voipdrupal_multinumber_process_script');
+
+      $multinumber_script_name = db_select('voipdrupal_multinumber', 'n')
+        ->fields('n', array('script'))
+        ->condition('phone_number', $options['dest_number'])
+        ->execute()
+        ->fetchField();
+
+      if (!empty($multinumber_script_name)) {
+        $script->addGosub($multinumber_script_name);
+      }
+      else{
+        $no_script_behaviour = variable_get('voipdrupal_multinumber_no_number', 1);
+        if($no_script_behaviour == 2) {
+          $default_script = variable_get('voipdrupal_multinumber_default_script', 'voipcall_default_inbound_call_script');
+          $script->addGosub($default_script);
+        }
+        else {
+          $script->addReject();
+        }
+      }
+  }
+
+  return $script;
+}
+
+/**
+ * Implements hook_voipscript_get_script_names().
+ */
+function voipdrupal_multinumber_voipscript_get_script_names() {
+  $script_names[] = 'voipdrupal_multinumber_script';
+  return $script_names;
+}
+
+/**
+ * Form implementation
+ */
+function voipdrupal_multinumber_admin_form($form, &$form_state) {
+  if (!empty($form_state['storage'])) {
+    return confirm_form($form, 'Are you sure you want to delete the numbers?', 'admin/voip/call/multinumber');
+  }
+  else {
+    // remove multinumber script to avoid loop
+    $scripts = VoipScript::getScriptNames();
+    unset($scripts['voipdrupal_multinumber_script']);
+    // Build the config form
+    $form['voipdrupal_multinumber_no_number'] = array(
+      '#title' => t('What to do if the call is not directed to any of the phone numbers above?'),
+      '#type' => 'radios',
+      '#options' => array(
+        1 => t('Reject the call'),
+        2 => t('Execute the following script:'),
+      ),
+      '#default_value' => variable_get('voipdrupal_multinumber_no_number', 1),
+    );
+
+    $form['voipdrupal_multinumber_default_script'] = array(
+      '#type' => 'select',
+      '#options' => $scripts,
+      '#default_value' => variable_get('voipdrupal_multinumber_default_script', 'voipcall_default_inbound_call_script'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="voipdrupal_multinumber_no_number"]' => array('value' => 2),
+        ),
+      ),
+    );
+
+    $form['markup'] = array(
+      '#markup' => t('
+          <p>
+          <strong>Number</strong><br>
+          Destination number received in incoming VoIP Drupal calls.<br>
+          Number must be in the <a target="_blank" href="http://en.wikipedia.org/wiki/E.164">E.164</a> format.<br>
+          Supported formats include:
+          <ul>
+          <li>tel: Phone Number - must be proceeded by a + and the country code (i.e. +14155551212 for a US #)</li>
+          <li>sip: SIP protocol address (i.e. sip:username@domain.com)</li>
+          </ul>
+          <br>
+          <strong>Inbound call script name</strong><br>
+          Name of the dialplan script to be used whenever the system receives a phone call.
+          </p>
+      '),
+      '#type' => 'markup',
+    );
+
+    $form['markup_table'] = array(
+      '#markup' => t('
+          <table>
+            <thead><tr><th class="delete">Delete</th><th class="number">Number</th><th class="inbound">Inbound call script name</th> </tr></thead>
+          '),
+      '#type' => 'markup',
+    );
+
+
+    $numbers_data = db_select('voipdrupal_multinumber', 'n')->fields('n');
+    $numbers_data = $numbers_data->execute();
+
+    if (!isset($form_state['voipdrupal_multinumber_ahah_number_count'])) {
+      $form_state['voipdrupal_multinumber_ahah_number_count'] = 1;
+    }
+
+    while ($number = $numbers_data->fetchAssoc()) {
+      $numbers[] = $number;
+    }
+
+    if (isset($numbers)) {
+      $count_numbers = count($numbers);
+      if ($count_numbers > $form_state['voipdrupal_multinumber_ahah_number_count']) {
+        $form_state['voipdrupal_multinumber_ahah_number_count'] = $count_numbers;
+      }
+    }
+
+    for ($i = 0; $i < $form_state['voipdrupal_multinumber_ahah_number_count']; $i++) {
+
+      $form['number'][$i]['delete'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => 0,
+        '#prefix' => '<tr><td>',
+        '#suffix' => '</td>',
+      );
+
+      $form['number'][$i]['phone_number'] = array(
+        '#type' => 'textfield',
+        '#default_value' => isset($numbers[$i]['phone_number']) ? $numbers[$i]['phone_number'] : '',
+        '#prefix' => '<td>',
+        '#suffix' => '</td>',
+      );
+
+      $form['number'][$i]['script'] = array(
+        '#type' => 'select',
+        '#options' => $scripts,
+        '#default_value' => isset($numbers[$i]['script']) ? $numbers[$i]['script'] : 'voipcall_default_inbound_call_script',
+        '#prefix' => '<td>',
+        '#suffix' => '</td></tr>',
+      );
+    }
+
+    $form['number']['#tree'] = TRUE;
+
+    $form['number']['#prefix'] = '<tbody id="number-fieldset-wrapper">';
+    $form['number']['#suffix'] = '</tbody>';
+
+
+    $form['markup_table_footer'] = array(
+      '#markup' => t('</table>'),
+      '#type' => 'markup',
+    );
+
+    $form['number_ahah_number'] = array(
+      '#type' => 'submit',
+      '#value' => t('Add Number'),
+      '#submit' => array('voipdrupal_multinumber_ahah_add_more_numbers'),
+      '#ajax' => array(
+        'callback' => 'voipdrupal_multinumber_ahah_add_more_callback',
+        'wrapper' => 'number-fieldset-wrapper',
+      ),
+    );
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save'),
+      '#prefix' => '<div class="form-actions form-wrapper" id="edit-actions">',
+    );
+
+    /* $form['delete'] = array(
+       '#type' => 'submit',
+       '#value' => t('Delete'),
+       '#submit' => array('voipdrupal_multinumber_admin_form_delete_submit'),
+       '#suffix' => '</div>',
+     );
+   */
+    return $form;
+  }
+
+}
+
+
+/**
+ * Validates the submission of the configuration form.
+ */
+function voipdrupal_multinumber_admin_form_validate($form, &$form_state) {
+  if(isset($form_state['storage']['values'])) {
+    return;
+  }
+  $values = $form_state['values'];
+  foreach ($values['number'] as $i=>$data) {
+    if (!empty($data['phone_number']) && $data['delete']){
+      $form_state['storage']['values'] = $values;
+      $form_state['rebuild'] = TRUE;
+    }
+    if (!empty($data['phone_number']) && !empty($data['script'])) {
+      // E.164 check + at the beggining any number between 5 and 15 characters length at the end
+      /*if (!preg_match("/^[+][0-9]{5,15}$/", $data['phone_number'])) {
+        form_set_error('number]['.$i.'][phone_number', t('Number must be in the <a target="_blank" href="http://en.wikipedia.org/wiki/E.164">E.164</a> format.'));
+      }
+*/
+      // validate all numbers are unique
+      $numbers[] = $data['phone_number'];
+      foreach (array_count_values($numbers) as $num) {
+        if ($num > 1) {
+          form_set_error('number]['.$i.'][phone_number', t('Numbers have to be unique.'));
+        }
+      }
+
+      // validate script
+      $script = VoipScript::loadScript($data['script']);
+      if (!$script) {
+        form_set_error('number]['.$i.'][script', t('Invalid inbound call script name: @script_name.', array('@script_name' => $data['script'])));
+      }
+    }
+  }
+}
+
+/**
+ * Submit a configuration form.
+ */
+function voipdrupal_multinumber_admin_form_submit($form, &$form_state) {
+  $values = isset($form_state['storage']['values']) ? $form_state['storage']['values'] : $form_state['values'];
+  //dpm($values);
+  if(isset($form_state['storage']['values'])) {
+    unset($form_state['storage']);
+  }
+
+  variable_set('voipdrupal_multinumber_no_number', $values['voipdrupal_multinumber_no_number']);
+  variable_set('voipdrupal_multinumber_default_script', $values['voipdrupal_multinumber_default_script']);
+
+  $deleted = 0;
+  // Remove unecessary values
+  unset($form_state['values']['number']['number_ahah_number']);
+  // Truncate old values
+  db_truncate('voipdrupal_multinumber')->execute();
+
+  // store values
+  foreach ($values['number'] as $data) {
+    if(!empty($data['phone_number']) && $data['delete']) {
+      $deleted++;
+    }
+    if (!empty($data['phone_number']) && !empty($data['script']) && !$data['delete']) {
+      $record = array(
+        "phone_number" => $data['phone_number'],
+        "script" => $data['script'],
+      );
+      drupal_write_record('voipdrupal_multinumber', $record);
+    }
+  }
+  $status = 'Phone numbers have been saved. Don\'t forget to set "voipdrupal_multinumber_script" as default Inbound call script in <a href="/admin/voip/call/settings">Default call configuration</a>';
+  drupal_set_message($status);
+
+  if ($deleted) {
+    drupal_set_message(t($deleted . ' numbers deleted.'));
+  }
+}
+/*
+function voipdrupal_multinumber_admin_form_delete_submit($form, &$form_state) {
+  $deleted = 0;
+  // store values
+  foreach ($form_state['values']['number'] as $data) {
+    if (!empty($data['phone_number']) && $data['delete']) {
+      db_delete('voipdrupal_multinumber')
+        ->condition('phone_number', $data['phone_number'])
+        ->execute();
+      $deleted++;
+    }
+  }
+
+  if ($deleted) {
+    drupal_set_message(t($deleted . ' numbers deleted.'));
+  }
+}
+*/

@@ -1,0 +1,13 @@
+core = 7.x
+name = "VoIP Queue"
+description = Implements queue for outgoing Voip Calls.
+package = "VoIP Drupal"
+
+dependencies[] = voip
+dependencies[] = advancedqueue
+
+files[] = voipqueue.queue.inc
+files[] = voipqueue.test
+
+; views
+files[] = views/voipqueue_handler_field_status.inc

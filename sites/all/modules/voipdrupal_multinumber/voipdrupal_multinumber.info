@@ -1,0 +1,6 @@
+; $Id$
+name = VoIP Multi Number
+description = Allows to add extra numbers for VoIP.
+dependencies[] = voipcall
+package = VoIP Drupal
+core = 7.x

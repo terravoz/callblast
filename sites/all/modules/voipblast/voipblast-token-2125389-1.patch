@@ -1,0 +1,22 @@
+diff --git a/voipblast.module b/voipblast.module
+index a5a5375..45ebe68 100644
+--- a/voipblast.module
++++ b/voipblast.module
+@@ -407,7 +407,7 @@ function voipblast_add_dial_file_action($entity, $context) {
+   if (isset($context['delay'])) {
+     $options['delay'] = $context['delay'];
+   }
+- 
++
+   voipqueue_add_dial($call, $options);
+   // @todo get id (not returned) and register the file usage.
+   // file_usage_add($file, 'voipblast', $queue, $id);
+@@ -553,7 +553,7 @@ function voipblast_check_unique_tag($queue_name, $tag) {
+ function voipblast_defaults($name = NULL) {
+   $defaults = array(
+     // The token of the field on the recipient entity with the phone number.
+-    'voipblast_recipient' => variable_get('voipblast_recipient', 'user:phone'),
++    'voipblast_recipient' => variable_get('voipblast_recipient', '[user:phone]'),
+     // The VoIP script for the outgoing call.
+     'voipblast_outgoing_script' => variable_get('voipblast_outgoing_script', 'voipblast_outgoing_file_script'),
+     // The maximum length of a outgoing call.

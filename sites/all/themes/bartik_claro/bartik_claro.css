@@ -1,0 +1,7 @@
+.breadcrumb{
+  display:none;
+}
+
+.not-logged-in #field-phone-number-add-more-wrapper fieldset{
+   display:none;
+}

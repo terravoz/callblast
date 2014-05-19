@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * Implementation of hook_get_voipnumber_by_eid().
+ *
+ * Returns numbers provided by voipnumber module (voipnumber CCK and voipnumber user profile)
+ */
+function voipnumber_sms_get_voipnumber_by_eid($entity_id, $entity_type = NULL) {
+  $account = user_load($entity_id);
+  if (isset($account->sms_user)) {
+    $number = $account->sms_user[0]['number'];
+    $name = 'SMS Framework (' . $number . ')';
+    $voipnumber = new VoipNumber();
+    $voipnumber->setNumber($number);
+    $voipnumber->setType(VOIPNUMBER_SMS);
+    $voipnumber->setName($name);
+    $voipnumber->setUid($entity_id);
+    $numbers[] = $voipnumber;
+  }
+  return $numbers;
+}
+
+
+/**
+ * Implementation of hook_get_eid_by_phone_number().
+ *
+ * Returns entity ids provided by voipnumber module (voipnumber CCK and voipnumber user profile)
+ */
+function voipnumber_sms_get_eid_by_phone_number($number, $entity_type = NULL) {
+  $uids = array();
+  $query = db_select('sms_user', 's')
+  ->fields('s', array('uid'))
+  ->condition('number' , $number)
+  ->execute();
+  while ($temp = $query->fetchAssoc()) {
+    if ($temp['uid'] != "") {
+      $uids[$temp['uid']] = $temp['uid'];
+    }
+  }
+  return $uids;
+}

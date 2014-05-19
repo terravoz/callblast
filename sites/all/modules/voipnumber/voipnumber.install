@@ -1,0 +1,163 @@
+<?php
+/**@file
+ * Implementation of hook_install().
+ */
+function voipnumber_install() {
+  module_load_include('inc', 'voipnumber', 'voipnumber_country_codes');
+  voipnumber_import_data();
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function voipnumber_uninstall() {
+  //Delete module variables
+  db_delete('variable')
+    ->condition('name', 'voipnumber_%%', 'LIKE')
+    ->execute();
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function voipnumber_schema() {
+
+  /**
+   * voipnumber_dialing_codes table
+   *
+   * This table list countries and their dialing codes.
+   */
+  $schema['voipnumber_dialing_codes'] = array(
+    'fields' => array(
+      'country' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'code' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+    ),
+    'primary key' => array('country'),
+  );
+
+  /**
+   * voipnumber table
+   *
+   * This table stores VoIPNumber objects
+   */
+  $schema['voipnumber'] = array(
+    'fields' => array(
+      'vnid' => array(
+        'description' => t('VNID'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => NULL
+      ),
+      'country_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => NULL,
+      ),
+      'phone_number' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'type' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_id' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+      ),
+      'entity_type' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+      ),
+    ),
+    'primary key' => array('vnid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Add entity_id and entity_type fields.
+ * Migrate data.
+ * Remove uid and nid fields.
+ */
+
+
+function voipnumber_update_7100() {
+  db_add_field('voipnumber', 'entity_id',
+      array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+      )
+  );
+  db_add_field('voipnumber', 'entity_type',
+      array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+      )
+  );
+
+  $voipnumber_data = db_select('voipnumber', 'vn')
+  ->fields('vn', array('vnid','nid','uid'))
+  ->execute();
+
+  while($row = $voipnumber_data->fetchAssoc()) {
+    if($row['nid']) {
+      $updated = db_update('voipnumber')
+      ->fields(array(
+          'entity_id' => $row['nid'],
+          'entity_type' => 'node',
+      ))
+      ->condition('vnid', $row['vnid'])
+      ->execute();
+    } elseif($row['uid']) {
+      $updated = db_update('voipnumber')
+      ->fields(array(
+          'entity_id' => $row['uid'],
+          'entity_type' => 'user',
+      ))
+      ->condition('vnid', $row['vnid'])
+      ->execute();
+    }
+  }
+
+  db_drop_field('voipnumber', 'uid');
+  db_drop_field('voipnumber', 'nid');
+
+  return t('VoIP Number Update 7100 ran successfully.');
+}
+

@@ -1,0 +1,7 @@
+.voipnumber-advanced-hidden{
+display:none;
+}
+
+#edit-instance .voipnumber-advanced-hidden{
+  display:block;
+}

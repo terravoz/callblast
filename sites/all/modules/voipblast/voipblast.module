@@ -1,0 +1,574 @@
+<?php
+
+/**
+ * @file
+ * Form customizations for VoIP calls.
+ */
+
+/****
+ * Hooks.
+ */
+
+/**
+ * Implements hook_enable().
+ *
+ * Register our queues as Voip Queues.
+ */
+function voipblast_enable() {
+  variable_set('queue_class_voipblast_calls', 'VoipQueue');
+  variable_set('queue_class_voipblast_texts', 'VoipQueue');
+}
+
+/**
+ * Implements hook_disable().
+ *
+ * Register our queues as Voip Queues.
+ */
+function voipblast_disable() {
+  variable_del('queue_class_voipblast_calls');
+  variable_del('queue_class_voipblast_texts');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function voipblast_menu() {
+  $items = array(
+    'admin/voip/blast' => array(
+      'title' => 'VoIP call blast',
+      'description' => 'Default settings for call blasts.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('voipblast_admin_settings'),
+      'access arguments' => array('administer voip drupal framework'),
+      'file' => 'voipblast.admin.inc',
+    ),
+    'admin/voip/blast/configure' => array(
+      'title' => 'Configure',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+    ),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_voipscript_get_script_names().
+ */
+function voipblast_voipscript_get_script_names() {
+  return array(
+    'voipblast_outgoing_file_script',
+  );
+}
+
+/**
+ * Implements hook_voipscript_load_script().
+ */
+function voipblast_voipscript_load_script($script_name, $params = NULL) {
+  if ($script_name == 'voipblast_outgoing_file_script') {
+    module_load_include('inc', 'voipblast', 'voipblast.script');
+    return _voipblast_outgoing_file_script($params['fid']);
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function voipblast_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'voipblast') . '/views',
+  );
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function voipblast_action_info() {
+  return array(
+    'voipblast_add_dial_file_action' => array(
+      'type' => 'system',
+      'label' => t('VoIP Blast: call with audio file'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+    'voipblast_add_text_action' => array(
+      'type' => 'system',
+      'label' => t('VoIP Blast: send a text message'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function voipblast_form_alter(&$form, &$form_state, $form_id) {
+  if (strpos($form_id, 'views_form_') === 0) {
+    $voipblast_field = _voipblast_get_field($form_state['build_info']['args'][0]);
+  }
+  if (empty($voipblast_field)) {
+    return;
+  }
+
+  $form_state['cache'] = TRUE;
+
+  if ($form_state['step'] == 'views_form_views_form') {
+    $form = voipblast_operations_form($form, $form_state, $voipblast_field);
+  }
+}
+
+/**
+ * Add form options to appropriate views.
+ *
+ * Lifted from VBO; uses VBO js and theme.
+ */
+function voipblast_operations_form($form, $form_state, $voipblast_field) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'views_bulk_operations') . '/js/views_bulk_operations.js';
+  $form['#attached']['css'][] = drupal_get_path('module', 'views_bulk_operations') . '/css/views_bulk_operations.css';
+  $form['#prefix'] = '<div class="vbo-views-form">';
+  $form['#suffix'] = '</div>';
+
+  // Force browser to reload the page if Back is hit.
+  if (!empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/msie/i', $_SERVER['HTTP_USER_AGENT'])) {
+    drupal_add_http_header('Cache-Control', 'no-cache'); // works for IE6+
+  }
+  else {
+    drupal_add_http_header('Cache-Control', 'no-store'); // works for Firefox and other browsers
+  }
+
+  // Set by JS to indicate that all rows on all pages are selected.
+  $form['select_all'] = array(
+    '#type' => 'hidden',
+    '#attributes' => array('class' => 'select-all-rows'),
+    '#default_value' => FALSE,
+  );
+
+  // The submit button added by Views Form API might be used by a non-VBO Views
+  // Form handler. If there's no such handler on the view, hide the button.
+  $has_other_views_form_handlers = FALSE;
+  foreach ($voipblast_field->view->field as $field) {
+    if (property_exists($field, 'views_form_callback') || method_exists($field, 'views_form')) {
+      if (!($field instanceof voipblast_handler_field_operations)) {
+        $has_other_views_form_handlers = TRUE;
+      }
+    }
+  }
+  if (!$has_other_views_form_handlers) {
+    $form['actions']['submit']['#access'] = FALSE;
+  }
+
+  $form['select'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Operations'),
+    '#collapsible' => TRUE,
+    '#attributes' => array('class' => array('container-inline')),
+  );
+  $options = array(0 => t('- Choose an operation -'));
+  foreach ($voipblast_field->get_selected_operations() as $operation_id => $operation) {
+    $options[$operation_id] = $operation; //  $operation->label();
+  }
+
+  // Create dropdown and submit button.
+  $form['select']['operation'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+  );
+  $form['select']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Execute'),
+    '#validate' => array('voipblast_operations_form_validate'),
+    '#submit' => array('voipblast_operations_form_submit'),
+  );
+
+  // Adds the "select all" functionality if the view has results.
+  // If the view is using a table style plugin, the markup gets moved to
+  // a table row below the header.
+  if (!empty($voipblast_filed->view->result)) {
+    $form['select_all_markup'] = array(
+      '#type' => 'markup',
+      '#markup' => theme('views_bulk_operations_select_all', array('view' => $voipblast_field->view, 'enable_select_all_pages' => TRUE)),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Validate callback.
+ */
+function voipblast_operations_form_validate($form, &$form_state) {
+  $voipblast_field = _voipblast_get_field($form_state['build_info']['args'][0]);
+
+  if (!empty($form_state['triggering_element']['#operation_id'])) {
+    $form_state['values']['operation'] = $form_state['triggering_element']['#operation_id'];
+  }
+  if (!$form_state['values']['operation']) {
+    form_set_error('operation', t('No operation selected. Please select an operation to perform.'));
+  }
+
+  $row_selected = FALSE;
+  foreach ((array) $form_state['values'][$voipblast_field->options['id']] as $row => $value) {
+    if ($value) {
+      $row_selected = TRUE;
+    }
+  }
+  if (! $row_selected) {
+    form_set_error($voipblast_field->options['id'], t('No row selected. Check at least one.'));
+  }
+}
+
+function voipblast_operations_form_submit($form, &$form_state) {
+  $voipblast_field = _voipblast_get_field($form_state['build_info']['args'][0]);
+  $selection = $form_state['values'][$voipblast_field->options['id']];
+  voipblast_operations_operation($form_state['values']['operation'], $selection, $voipblast_field);
+}
+
+/**
+ * @todo split.
+ */
+function voipblast_operations_operation($operation, $selection, $voipblast_field) {
+  $lookup = array(
+    'pause' => VOIPQUEUE_STATUS_DELAYED,
+    'start' => ADVANCEDQUEUE_STATUS_QUEUED,
+    'delete' => ADVANCEDQUEUE_STATUS_FAILURE,
+  );
+  $status = $lookup[$operation];
+  foreach ($selection as $row) {
+    if ($row) {
+      list($queue_name, $tag) = explode(':', $row);
+      if ($queue_name && $tag) {
+        // @todo SQL only.
+        // Actually should query each item and use itself to change status; to
+        // handle (if it is running/if it needs to do cleanup for delete etc.)
+        if ($operation == 'pause') {
+          $query = db_query("UPDATE {advancedqueue} a INNER JOIN {advancedqueue_tags} t ON a.item_id = t.item_id SET a.status = :status, a.expire = :expire WHERE t.tag = :tag AND a.name = :queue AND a.status != :processing", array(':status' => $status, ':expire' => 2147483647, ':tag' => $tag, ':queue' => $queue_name, ':processing' => ADVANCEDQUEUE_STATUS_PROCESSING));
+        }
+        else {
+          $query = db_query("UPDATE {advancedqueue} a INNER JOIN {advancedqueue_tags} t ON a.item_id = t.item_id SET a.status = :status WHERE t.tag = :tag AND a.name = :queue AND a.status != :processing", array(':status' => $status, ':tag' => $tag, ':queue' => $queue_name, ':processing' => ADVANCEDQUEUE_STATUS_PROCESSING));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Gets the VBO field if it exists on the passed-in view.
+ *
+ * @return
+ *  The field object if found. Otherwise, FALSE.
+ */
+function _voipblast_get_field($view) {
+  foreach ($view->field as $field_name => $field) {
+    if ($field instanceof voipblast_handler_field_operations) {
+      // Add in the view object for convenience.
+      $field->view = $view;
+      return $field;
+    }
+  }
+  return FALSE;
+}
+
+
+/**
+ * Implements hook_views_bulk_operations_form_alter().
+ */
+function voipblast_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
+  // Add confimed action submit callback for call, to change file status.
+  if ($form_state['step'] == 'views_bulk_operations_config_form'
+      && $form_state['operation']->operationId == 'action::voipblast_add_dial_file_action') {
+    if ($vbo->options['vbo_operations']['action::voipblast_add_dial_file_action']['skip_confirmation']) {
+      array_unshift($form['actions']['submit']['#submit'], 'voipblast_bulk_add_dial_action_confirm_submit');
+    }
+  }
+
+  if ($form_state['step'] == 'views_bulk_operations_confirm_form'
+      && $form_state['operation']->operationId == 'action::voipblast_add_dial_file_action') {
+    array_unshift($form['actions']['submit']['#submit'], 'voipblast_bulk_add_dial_action_confirm_submit');
+  }
+}
+
+/****
+ * Action and form callbacks.
+ */
+
+/**
+ * Return a form definition so the Add dial action can be configured.
+ *
+ * @param $context
+ *   Default values (if we are editing an existing action instance).
+ *
+ * @return
+ *   Form definition.
+ *
+ * @see voipblast_add_dial_file_action_validate()
+ * @see voipblast_add_dial_file_action_submit()
+ */
+function voipblast_add_dial_file_action_form($context) {
+  // Set default values for form.
+  if (!isset($context['file'])) {
+    $context['file'] = '';
+  }
+
+  $form['recipient'] = array(
+    '#type' => 'hidden',
+    '#value' => voipblast_defaults('voipblast_recipient'),
+  );
+  $form['tag'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#description' => t('A unique tag to identify the VoIP call blast.'),
+    '#default_value' => isset($context['tag']) ? $context['tag'] : '',
+  );
+  $form['voipscript'] = array(
+    '#type' => 'hidden',
+    '#value' => voipblast_defaults('voipblast_outgoing_script'),
+  );
+  $form['file'] = element_info('managed_file');
+  $form['file']['#title'] = t('Audio file');
+  $form['file']['#upload_location'] = 'public://voipblast';
+  $form['file']['#upload_validators'] = array(
+    'file_validate_size' => array(file_upload_max_size()),
+    'file_validate_extensions' => array('mp3', 'wav'),
+  );
+  $form['file']['#description'] = theme('file_upload_help', array('description' => 'The audio file to be played for the call.', 'upload_validators' => $form['file']['#upload_validators']));
+
+  return $form;
+}
+
+/**
+ * Validate system_send_email_action form submissions.
+ */
+function voipblast_add_dial_file_action_validate($form, $form_state) {
+  $form_values = $form_state['values'];
+  // @todo Validate the phone number or token - if possible.
+  // @todo Validate JSON parameters
+  if (voipblast_check_unique_tag('voipblast_calls', $form_state['values']['tag'])) {
+    form_set_error('tag', t('Name already exists for a VoIP text blast.'));
+  }
+}
+
+/**
+ * Process system_send_email_action form submissions.
+ */
+function voipblast_add_dial_file_action_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+  // Note, because this is just for a VBO we have not made the file permenant
+  // or associated with this module yet. This happens when the operation is
+  // confirmed; see voipblast_bulk_add_dial_action_confirm_submit().
+  $params = array(
+    'queue_name' => 'voipblast_calls',
+    'recipient' => $form_values['recipient'],
+    'voipscript'   => $form_values['voipscript'],
+    'tags' => array($form_values['tag']),
+    'file' => $form_values['file'],
+  );
+  if (module_exists('voipblast_scheduler')) {
+    voipblast_scheduler_action_submit($form, $form_state, $params);
+  }
+
+  return $params;
+}
+
+/**
+ * Action to add an call to the queue.
+ *
+ * @param object $entity
+ *   An optional node object, which will be added as $context['node'] if
+ *   provided.
+ * @param array $context
+ *   Array with the following elements:
+ *   - 'recipient': Call recipient. This will be passed through token_replace().
+ *   - 'voipscript': Name of script to use for call.
+ *   - 'params': JSON array of pararameters to pass to voipscript. This will be
+ *   passed through token_replace().
+ *   - Other elements will be used as the data for token replacement.
+ *
+ * @ingroup actions
+ */
+function voipblast_add_dial_file_action($entity, $context) {
+  if (empty($context['node'])) {
+    $context['node'] = $entity;
+  }
+
+  $recipient = token_replace($context['recipient'], $context);
+
+  $script = VoipScript::loadScript($context['voipscript'], array('fid' => $context['file']));
+  $call = new VoipCall(array());
+  $call->setDestNumber($recipient);
+  $call->setScript($script);
+
+  $options = array(
+    'queue_name' => $context['queue_name'],
+    'max_length' => voipblast_defaults('voipblast_max_length'),
+    'retries' => voipblast_defaults('voipblast_retries'),
+    'retry_delay' => voipblast_defaults('voipblast_retry_delay'),
+    'tags' => $context['tags'],
+  );
+  if (isset($context['delay'])) {
+    $options['delay'] = $context['delay'];
+  }
+
+  voipqueue_add_dial($call, $options);
+  // @todo get id (not returned) and register the file usage.
+  // file_usage_add($file, 'voipblast', $queue, $id);
+  watchdog('action', 'Call to %recipient added to queue', array('%recipient' => $recipient));
+}
+
+/**
+ * Confirmed bulk operation to add dial action.
+ *
+ * The action form submit handler is called before the user confirms the action.
+ * This is an additional submit handler only on a confirmed
+ * views_bulk_opereratiom.
+ */
+function voipblast_bulk_add_dial_action_confirm_submit($form, $form_state) {
+  $fid = $form_state['operation']->formOptions['file'];
+  $file = file_load($fid);
+  $file->status = FILE_STATUS_PERMANENT;
+  file_save($file);
+}
+
+/**
+ * Return a form definition so the Add text action can be configured.
+ *
+ * @param $context
+ *   Default values (if we are editing an existing action instance).
+ *
+ * @return
+ *   Form definition.
+ *
+ * @see voipblast_add_text_action_validate()
+ * @see voipblast_add_text_action_submit()
+ */
+function voipblast_add_text_action_form($context) {
+  // Set default values for form.
+  if (!isset($context['recipient'])) {
+    $context['recipient'] = '';
+  }
+  if (!isset($context['message'])) {
+    $context['message'] = '';
+  }
+
+  $form['recipient'] = array(
+    '#type' => 'hidden',
+    '#value' => voipblast_defaults('voipblast_recipient'),
+  );
+  $form['tag'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#description' => t('A unique tag to identify the VoIP text blast.'),
+    '#default_value' => isset($context['tag']) ? $context['tag'] : '',
+  );
+ $form['message'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Message'),
+    '#default_value' => $context['message'],
+    '#maxlength' => '140',
+    '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
+  );
+  return $form;
+}
+
+/**
+ * Validate system_send_email_action form submissions.
+ */
+function voipblast_add_text_action_validate($form, $form_state) {
+  $form_values = $form_state['values'];
+  // @todo Validate the phone number or token - if possible.
+  if (voipblast_check_unique_tag('voipblast_texts', $form_state['values']['tag'])) {
+    form_set_error('tag', t('Name already exists for a VoIP text blast.'));
+  }
+}
+
+/**
+ * Process system_send_email_action form submissions.
+ */
+function voipblast_add_text_action_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'queue_name' => 'voipblast_texts',
+    'recipient' => $form_values['recipient'],
+    'tags' => array($form_values['tag']),
+    'message'   => $form_values['message'],
+  );
+  if (module_exists('voipblast_scheduler')) {
+    voipblast_scheduler_action_submit($form, $form_state, $params);
+  }
+
+  return $params;
+}
+
+/**
+ * Action to add an SMS to the queue.
+ *
+ * @param object $entity
+ *   An optional node object, which will be added as $context['node'] if
+ *   provided.
+ * @param array $context
+ *   Array with the following elements:
+ *   - 'recipient': SMS recipient. This will be passed through token_replace().
+ *   - 'message': The message to send. This will be passed through
+ *     token_replace().
+ *   - 'tags': Array of tags to add to queuded item.
+ *   - Other elements will be used as the data for token replacement.
+ *
+ * @ingroup actions
+ */
+function voipblast_add_text_action($entity, $context) {
+  if (empty($context['node'])) {
+    $context['node'] = $entity;
+  }
+
+  $recipient = token_replace($context['recipient'], $context);
+  $message = token_replace($context['message'], $context);
+  $options = array(
+    'queue_name' => $context['queue_name'],
+    'tags' => $context['tags'],
+  );
+  if (isset($context['delay'])) {
+    $options['delay'] = $context['delay'];
+  }
+  watchdog('debug', 'options '.print_r($options,true));
+  voipqueue_add_text($recipient, $message, $options);
+  watchdog('action', 'SMS to %recipient added to queue', array('%recipient' => $recipient));
+}
+
+/**
+ * Helper function to check for unique combinations of queue_name:tag.
+ */
+function voipblast_check_unique_tag($queue_name, $tag) {
+  $query = db_select('advancedqueue', 'a');
+  $query->fields('a', array('item_id'));
+  $query->join('advancedqueue_tags', 't', 't.item_id = a.item_id');
+  $query->condition('a.name', $queue_name, '=');
+  $query->condition('t.tag', $tag, '=');
+  $query->countQuery();
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Defaults function.
+ */
+function voipblast_defaults($name = NULL) {
+  $defaults = array(
+    // The token of the field on the recipient entity with the phone number.
+    'voipblast_recipient' => variable_get('voipblast_recipient', '[user:phone]'),
+    // The VoIP script for the outgoing call.
+    'voipblast_outgoing_script' => variable_get('voipblast_outgoing_script', 'voipblast_outgoing_file_script'),
+    // The maximum length of a outgoing call.
+    'voipblast_max_length' => variable_get('voipblast_max_length', 600),
+    // The number of retries to make if a call fails.
+    'voipblast_retries' => variable_get('voipblast_retries', 2),
+    // The time to delay in seconds between retries.
+    'voipblast_retry_delay' => variable_get('voipblast_retry_delay', 60),
+  );
+
+  if (is_null($name)) {
+    return $defaults;
+  }
+  else {
+    return $defaults[$name];
+  }
+}

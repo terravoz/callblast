@@ -1,0 +1,42 @@
+VoIPVoice.module
+--------------------------------------------------------------------------------
+API
+
+To create new lexicon use voipvoice_create_lexicon($lexicon):
+<?php
+ $lexicon = array(
+   'lexicon' => 'demo_lexicon',
+   'description' => 'this is demo lexicon',
+  );
+  voipvoice_create_lexicon($lexicon);
+?>
+
+
+To create new VoIP voice called "my-demo" that belongs to "demo" lexicon use voipvoice_create_voice($voice):
+<?php  
+  $voice = array(
+   'name' => 'my-demo',
+   'gender' => 'man',
+   'description' => 'This is man English demo voice.',
+   'language' => 'en',
+   'lexicon' => 'demo_lexicon',
+  );
+  voipvoice_create_voice($voice);
+?>
+
+To import phrase recordings in "my-demo" voice use voipvoice_import_voices($zip_archive, $voice_id):
+<?php 
+//$zip_archive is absolute path to where your exported phrase recordings are stored
+$zip_archive = drupal_get_path('module','demo').'/demo.zip';
+voipvoice_import_voices($zip_archive, 'my-demo');
+?>
+
+To delete "demo" lexicon, together with all its voices, phrases and phrase recordings use voipvoice_delete_lexicon($lexicon_name):
+<?php 
+voipvoice_delete_lexicon('demo');
+?>
+
+To delete "my-demo" voice, together with all its phrases and phrase recordings use voipvoice_delete_voice($voice_code):
+<?php 
+voipvoice_delete_voice('my-demo');
+?>

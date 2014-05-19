@@ -1,0 +1,12 @@
+core = 7.x
+name = "VoIP Call Blast"
+description = Make and contol batches of calls
+package = "VoIP Drupal"
+
+dependencies[] = voipqueue
+dependencies[] = views
+dependencies[] = token
+dependencies[] = views_bulk_operations
+
+files[] = views/voipblast_handler_field_operations.inc
+files[] = voipblast.rules.inc

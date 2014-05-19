@@ -1,0 +1,51 @@
+<?php
+/**@file
+ * Implementation of hook_install().
+ */
+function voipdrupal_multinumber_install() {
+  //module_load_include('inc', 'voipnumber', 'voipnumber_country_codes');
+  //voipnumber_import_data();
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function voipdrupal_multinumber_uninstall() {
+  //Delete module variables
+  //db_delete('variable')
+  //  ->condition('name', 'voipnumber_%%', 'LIKE')
+  //  ->execute();
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function voipdrupal_multinumber_schema() {
+
+  /**
+   * voipdrupal_multinumber table
+   *
+   * This table list phone numbers and scripts.
+   */
+  $schema['voipdrupal_multinumber'] = array(
+    'fields' => array(
+      'phone_number' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'script' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+    ),
+    'primary key' => array('phone_number'),
+  );
+
+  return $schema;
+}
+
+
