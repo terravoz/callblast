@@ -76,26 +76,15 @@ function voipnumber_blast_broadcast_node_form_validate($form, &$form_state) {
 }
 
 function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
-  //dpm($form_state);
   $phone_numbers = array();
-  //$queue_name = $form_state['values']['title'];
   $blast_id = $form_state['nid'];
   $lang = $form_state['values']['language'];
   //fix: for some reason body changed to eng
   $message = $form_state['values']['body'][$lang][0]['value'];
 
-  //$type = $form_state['values']['field_broadcast_type']['und'][0]['value'];
-  //@todo: use type?
-  //dpm($form_state);
   $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
-  //dpm($phone_numbers);
-  /*foreach($phone_numbers as $vn) {
-    dpm($vn->getNumber());
-  }*/
   drupal_set_message('Announcement queued for '.count($phone_numbers).' phone numbers.');
-
   voipnumber_blast_create_queue($blast_id, $phone_numbers, $message);
-
   drupal_goto('admin/voip/claro/summary');
 }
 

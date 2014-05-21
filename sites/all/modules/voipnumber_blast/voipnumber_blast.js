@@ -30,11 +30,11 @@ Drupal.behaviors.voipnumber_blast = { attach: function (context, settings) {
               e.preventDefault();
           }
           else if(groupIDsquery == 'all') {
-              $(this).attr("href",  "/nannyvan_dev2/contacts-preview");
+              $(this).attr("href",  Drupal.settings.basePath +"contacts-preview");
           }
           else {
               groupIDsquery = groupIDsquery.replace("all+", "");
-              $(this).attr("href",  "/nannyvan_dev2/contacts-preview/" + groupIDsquery);
+              $(this).attr("href",  Drupal.settings.basePath +"contacts-preview/" + groupIDsquery);
           }
       });
     }
