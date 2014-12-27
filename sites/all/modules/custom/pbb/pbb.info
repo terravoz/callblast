@@ -1,0 +1,9 @@
+core = "7.x"
+description = "PBB custom module"
+name = "PBB custom module"
+dependencies[] = voip
+dependencies[] = audio_announcements
+package = "other"
+project = "other"
+
+

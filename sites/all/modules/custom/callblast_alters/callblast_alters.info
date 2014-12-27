@@ -1,0 +1,10 @@
+core = "7.x"
+description = "Callblast module for form alters and hooks"
+name = "Callblast Alters"
+dependencies[] = voip
+dependencies[] = voipqueue
+dependencies[] = voipnumber_blast
+package = "other"
+project = "other"
+
+

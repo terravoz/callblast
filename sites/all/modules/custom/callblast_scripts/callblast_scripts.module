@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file Provides various VoIP Drupal Scripts for the Callblast
+ */
+
+foreach (array('callblast_scripts.scripts.inc') as $file) {
+  require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . $file);
+}

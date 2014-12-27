@@ -1,0 +1,13 @@
+diff --git a/voipqueue.module b/voipqueue.module
+index ae3bf92..215d1f5 100644
+--- a/voipqueue.module
++++ b/voipqueue.module
+@@ -479,7 +479,7 @@ function voipqueue_add_dial($call, $options = array()) {
+   }
+ 
+   if (isset($options['tags'])) {
+-    $item->tags = $option['tags'];
++    $item->tags = $options['tags'];
+   }
+ 
+   // Add the item to the queue.

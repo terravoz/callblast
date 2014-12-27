@@ -15,26 +15,6 @@ define('VOIPQUEUE_STATUS_DELAYED', -2);
  */
 
 /**
- * Implements hook_enable().
- *
- * Register default Voip Queue class.
- * Other queues created it is the responsibility of the caller to make sure the
- * correct class is used. Either by setting
- * 'queue_default_class' variable, for the whole site, or 'queue_class_'
- * . $name.
- */
-function voipqueue_enable() {
-  variable_set('queue_class_voipqueue_calls', 'VoipQueue');
-}
-
-/**
- * Implements hook_disable().
- */
-function voipqueue_disable() {
-  variable_del('queue_class_voipqueue_calls');
-}
-
-/**
  * Implements hook_cron().
  */
 function voipqueue_cron() {
@@ -317,7 +297,6 @@ function voipqueue_add_dial_action($entity, $context) {
 }
 
 
-
 /**
  * Worker callback functions.
  */
@@ -450,7 +429,9 @@ function voipqueue_call_hangup($item) {
  *   'retry_delay' => Minumum number of seconds to wait between attempts to
  *     redial (default: 60).
  *   'delay' => Time to wait until starting to attempt to call in seconds
- *     (deault: 0).
+ *     (default: 0).
+ *   'queue_name' => The name of the machine name of the queue to use. This
+ *     must be registered as a VoipQueue. (default: 'voipqueue_calls')
  *
  * @param VoipCall $call
  *   Call object. Containing at minimum a VoipScript and a destination
@@ -498,7 +479,7 @@ function voipqueue_add_dial($call, $options = array()) {
   }
 
   if (isset($options['tags'])) {
-    $item->tags = $option['tags'];
+    $item->tags = $options['tags'];
   }
 
   // Add the item to the queue.
@@ -508,18 +489,26 @@ function voipqueue_add_dial($call, $options = array()) {
 /**
  * Helper, and example, function to add text to default queue.
  *
+ * Options:
+ *   'delay' => Number of seconds to wait before sending text (Default: 0),
+ *   'tags' => Array of tags to add to the item.
+ *   'queue_name' => The name of the machine name of the queue to use. This
+ *     must be registered as a VoipQueue. (default: 'voipqueue_texts')
+ *
  * @param string $number
  *   Destination number to send text to.
  * @param string $text
  *   Text to send.
  * @param array $options
- *   'delay' => Number of seconds to wait before sending text (Default: 0),
- *   'tags' => Array of tags to add to the item.
+ *   Keyed array of options.
  */
 function voipqueue_add_text($number, $text, $options = array()) {
 
-  // This is the same as voipqueue_add_dial().
-  $queue = DrupalQueue::get('voipblast_texts');
+  // The queue 'voipqueue_calls' is the default queue and is registered with
+  // Drupal queue as a VoipQueue. If you create a new queue you will need to
+  // register it. See voipqueue_init() for example registering class.
+  $queue_name = isset($options['queue_name']) ? $options['queue_name'] : 'voipqueue_texts';
+  $queue = DrupalQueue::get($queue_name);
   $queue->createQueue();
 
   // First create a VoipCall object to queue.
@@ -532,7 +521,7 @@ function voipqueue_add_text($number, $text, $options = array()) {
 
   // Add options if they are required.
   if (isset($options['delay'])) {
-    $item->setDelay($delay);
+    $item->setDelay($options['delay']);
   }
   if (isset($options['tags'])) {
     $item->tags = $options['tags'];

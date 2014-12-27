@@ -1,0 +1,10 @@
+Add to crontab
+sudo crontab -e
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+*/15 * * * * /usr/bin/drush -r /data/var/www/claroquesi advancedqueue --all --timeout=900 -l http://whatsupserver.media.mit.edu/claroquesi
+
+CUSTOM MODULES:
+callblast_alters
+feeds (added patch for unique fields https://drupal.org/node/661606)
+voipnumber_blast
+
