@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function voipnumber_blast_schema() {
+  /**
+   * dialing_plan table
+   *
+   */
+  $schema['voipnumber_blast'] = array(
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The Blast nid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'vnid' => array(
+        'description' => 'VoIP Number vnid related to Blast.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'cid' => array(
+        'description' => 'VoIP Call cid related to Blast.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+    ),
+    'primary key' => array('nid', 'vnid'),
+  );
+
+  return $schema;
+}
