@@ -3,6 +3,7 @@ description = "PBB custom module"
 name = "PBB custom module"
 dependencies[] = voip
 dependencies[] = audio_announcements
+dependencies[] = callblast_alters
 package = "other"
 project = "other"
 

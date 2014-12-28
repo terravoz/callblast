@@ -123,13 +123,13 @@ function _callblast_scripts_sms_process_request($msg, $caller_number, $dest_numb
           $node->status = 1;
           $node->field_opt_in['und'][0]['value'] = 1; //verify
           $node->field_phone_number['und'][0]['vnid'] = $caller_number;
-          $language = callblast_scripts_number_to_lang($dest_number);
+          $language = callblast_alters_number_to_lang($dest_number);
           $node->field_language['und'][0]['value'] = $language;
           // create the node
           node_save($node);
           //@todo: verify number
           if ($node->nid) {
-            $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to NannyVan App');
+            $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to VoIP Drupal CallBlast');
           }
           else {
             watchdog('callblast_scripts', 'Error saving phone number: ' . print_r($node, TRUE), array(), WATCHDOG_ERROR);
