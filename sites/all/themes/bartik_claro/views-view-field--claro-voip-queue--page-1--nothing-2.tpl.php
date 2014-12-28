@@ -25,5 +25,26 @@
 <?php 
 $nid = $row->advancedqueue_tags_tag;
 $node = node_load($nid);
-print $node->body['und'][0]['value'];
+//dpm($node);
+$blast_type = $node->field_blast_type['und'][0]['value'];
+
+switch($blast_type) {
+  case 'sms':
+    //SMS announcement
+    //fix: for some reason body changed to eng
+    $message = $node->body[$node->language][0]['value'];
+    print "SMS announcement: '$message'";
+    break;
+  case 'voice':
+  case 'voice_script':
+    if($blast_type == 'voice') {
+      $voice_say = $node->field_voice_announcement['und'][0]['value'];
+      print "Voice announcement: '$voice_say'";
+    }
+    else {
+      $voip_script = $node->field_voip_script['und'][0]['value'];
+      print "Voice announcement using: '$voip_script'";
+    }
+    break;
+}
 ?>

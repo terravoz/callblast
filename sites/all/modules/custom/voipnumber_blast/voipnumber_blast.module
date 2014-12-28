@@ -79,8 +79,7 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
   $phone_numbers = array();
   $blast_id = $form_state['nid'];
   $lang = $form_state['values']['language'];
-  //fix: for some reason body changed to eng
-  $message = $form_state['values']['body'][$lang][0]['value'];
+
   $blast_type = $form_state['values']['field_blast_type']['und'][0]['value'];
   $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
   drupal_set_message('Announcement queued for '.count($phone_numbers).' phone numbers.');
@@ -92,6 +91,8 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
   switch($blast_type) {
     case 'sms':
       //SMS announcement
+      //fix: for some reason body changed to eng
+    $message = $form_state['values']['body'][$lang][0]['value'];
       foreach($phone_numbers as $voipnumber) {
         voipnumber_blast_add_text($blast_id, $voipnumber, $message, $options);
       }
@@ -106,12 +107,12 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
       }
       else {
         //Get selected script
-        watchdog('debug', 'voice script '.$form_state['values']['field_voip_script']['und'][0]['value']);
         $script = VoipScript::loadScript($form_state['values']['field_voip_script']['und'][0]['value']);
       }
     //Options
     $options['retries'] = voipblast_defaults('voipblast_retries');
     $options['retry_delay'] = voipblast_defaults('voipblast_retry_delay');
+    $options['queue_name'] = 'voipblast_voice';
 
       foreach($phone_numbers as $voipnumber) {
         // First create a VoipCall object to queue.
@@ -245,48 +246,62 @@ function voipnumber_blast_get_voipcall($blast_id, $vnid) {
   return NULL;
 }
 
-function voipnumber_blast_status($status) {
-  switch ($status) {
-    default:
-      $description = t('Processing error.');
-      break;
-    case VoipCall::TEXT_FAILED:
-    case VoipCall::TEXT_INVALID:
-      $description = t('Processing error.');
-      break;
-    case VoipCall::TEXT_NOT_SENT:
-    case VoipCall::TEXT_SENDING:
-      $description = t('Not processed.');
-      break;
-    case VoipCall::TEXT_SENT:
-      $description = t('Processed.');
-      break;
-  }
-  return $description;
-}
-
-function voipnumber_blast_additional_info($call) {
-  $status = $call->getTextStatus();
-  if (!$status) {
-    $description = $call->getErrorMessage();
-  }
-  else {
+function voipnumber_blast_status($call, $blast) {
+  $blast_type = $blast->field_blast_type['und'][0]['value'];
+  if($blast_type == 'sms') {
+    $status = $call->getTextStatus();
     switch ($status) {
       default:
-        $description = $call->getErrorMessage();
+        $description = t('Processing error.');
         break;
       case VoipCall::TEXT_FAILED:
       case VoipCall::TEXT_INVALID:
-        $description = $call->getErrorMessage();
+        $description = t('Processing error.');
         break;
       case VoipCall::TEXT_NOT_SENT:
       case VoipCall::TEXT_SENDING:
-        $description = t('SMS not sent.');
+        $description = t('Not processed.');
         break;
       case VoipCall::TEXT_SENT:
-        $description = t('SMS sent.');
+        $description = t('Processed.');
         break;
     }
+  }
+  else {
+    $description = $call->getCallStatusDescription();
+  }
+
+  return $description;
+}
+
+function voipnumber_blast_additional_info($call, $blast) {
+  $blast_type = $blast->field_blast_type['und'][0]['value'];
+  if($blast_type == 'sms') {
+    $status = $call->getTextStatus();
+    if (!$status) {
+      $description = $call->getErrorMessage();
+    }
+    else {
+      switch ($status) {
+        default:
+          $description = $call->getErrorMessage();
+          break;
+        case VoipCall::TEXT_FAILED:
+        case VoipCall::TEXT_INVALID:
+          $description = $call->getErrorMessage();
+          break;
+        case VoipCall::TEXT_NOT_SENT:
+        case VoipCall::TEXT_SENDING:
+          $description = t('SMS not sent.');
+          break;
+        case VoipCall::TEXT_SENT:
+          $description = t('SMS sent.');
+          break;
+      }
+    }
+  }
+  else {
+    $description = $call->getCallStatusDescription();
   }
 
   return $description;

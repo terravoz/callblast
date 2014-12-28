@@ -20,7 +20,6 @@ class AdvancedQueue implements DrupalReliableQueueInterface {
   }
 
   public function createItem($data) {
-    watchdog('debug', 'aq data '.print_r($data,true));
     $query = db_insert('advancedqueue')
       ->fields(array(
         'name' => $this->name,

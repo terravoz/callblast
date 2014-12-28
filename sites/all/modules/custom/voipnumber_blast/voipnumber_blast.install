@@ -1,6 +1,20 @@
 <?php
 
 /**
+ * Implements hook_enable().
+ *
+ * Register default Voip Queue class.
+ * Other queues created it is the responsibility of the caller to make sure the
+ * correct class is used. Either by setting
+ * 'queue_default_class' variable, for the whole site, or 'queue_class_'
+ * . $name.
+ */
+function voipnumber_blast_enable() {
+  variable_set('queue_class_voipblast_voice', 'VoipQueue');
+  variable_set('queue_class_voipblast_texts', 'VoipQueue');
+}
+
+/**
  * Implements hook_schema().
  */
 function voipnumber_blast_schema() {

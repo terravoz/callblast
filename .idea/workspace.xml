@@ -28,102 +28,113 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="callblast_alters.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.625" vertical-offset="1215" max-vertical-offset="6165">
-              <caret line="96" column="42" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="voipnumber_blast.module" pinned="false" current-in-tab="false">
+      <file leaf-file-name="voipnumber_blast.module" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.2" vertical-offset="700" max-vertical-offset="4440">
-              <caret line="57" column="36" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="1417" max-vertical-offset="4665">
+              <caret line="109" column="22" selection-start-line="109" selection-start-column="22" selection-end-line="109" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="voipnumber_blast.info" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.info">
+      <file leaf-file-name="voipcall.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.07874016" vertical-offset="0" max-vertical-offset="381">
-              <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+            <state vertical-scroll-proportion="2.24" vertical-offset="5212" max-vertical-offset="15660">
+              <caret line="340" column="42" selection-start-line="340" selection-start-column="18" selection-end-line="340" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="voipblast.info" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipblast/voipblast.info">
+      <file leaf-file-name="views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="525">
+              <caret line="28" column="57" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="57" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="callblast_scripts.scripts.inc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_scripts/callblast_scripts.scripts.inc">
+      <file leaf-file-name="voipqueue.module" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.0" vertical-offset="0" max-vertical-offset="2445">
-              <caret line="24" column="32" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="32" />
+            <state vertical-scroll-proportion="-3.46" vertical-offset="7372" max-vertical-offset="8025">
+              <caret line="506" column="42" selection-start-line="506" selection-start-column="40" selection-end-line="506" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pbb.scripts.inc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
+      <file leaf-file-name="system.queue.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/system/system.queue.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.041667" vertical-offset="2537" max-vertical-offset="3615">
-              <caret line="182" column="32" selection-start-line="182" selection-start-column="32" selection-end-line="182" selection-end-column="32" />
+            <state vertical-scroll-proportion="-2.1666667" vertical-offset="1103" max-vertical-offset="5595">
+              <caret line="80" column="25" selection-start-line="80" selection-start-column="25" selection-end-line="80" selection-end-column="25" />
+              <folding>
+                <marker date="1416428669000" expanded="true" signature="8596:8649" placeholder="SELECT COUNT..." />
+                <marker date="1416428669000" expanded="true" signature="9072:9162" placeholder="SELECT data,..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="voipqueue.install" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.install">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="465">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="19" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="callblast_scripts.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_scripts/callblast_scripts.module">
+      <file leaf-file-name="voipnumber_blast.install" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.install">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="180">
-              <caret line="6" column="56" selection-start-line="6" selection-start-column="56" selection-end-line="6" selection-end-column="56" />
+            <state vertical-scroll-proportion="-0.98" vertical-offset="26" max-vertical-offset="885">
+              <caret line="5" column="33" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="voipscript.inc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipscript.inc">
+      <file leaf-file-name="advancedqueue.module" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.9" vertical-offset="17310" max-vertical-offset="20205">
-              <caret line="1167" column="38" selection-start-line="1167" selection-start-column="19" selection-end-line="1167" selection-end-column="38" />
+            <state vertical-scroll-proportion="-3.46" vertical-offset="7" max-vertical-offset="825">
+              <caret line="15" column="2" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="2" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="claro.scripts.inc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/claro/claro.scripts.inc">
+      <file leaf-file-name="voipqueue.queue.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.queue.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.125" vertical-offset="1140" max-vertical-offset="13650">
-              <caret line="97" column="27" selection-start-line="94" selection-start-column="6" selection-end-line="97" selection-end-column="27" />
-              <folding />
+            <state vertical-scroll-proportion="-4.96" vertical-offset="682" max-vertical-offset="7860">
+              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+              <folding>
+                <marker date="1419764676000" expanded="true" signature="2536:2683" placeholder="SELECT data,..." />
+                <marker date="1419764676000" expanded="true" signature="4886:4976" placeholder="SELECT count..." />
+                <marker date="1419764676000" expanded="true" signature="5287:5413" placeholder="SELECT COUNT..." />
+                <marker date="1419764676000" expanded="true" signature="5677:5809" placeholder="SELECT data,..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="voipscriptsamples.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipscriptsamples/voipscriptsamples.module">
+      <file leaf-file-name="advancedqueue.queue.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.queue.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.3" vertical-offset="5475" max-vertical-offset="8370">
-              <caret line="388" column="52" selection-start-line="388" selection-start-column="32" selection-end-line="388" selection-end-column="52" />
-              <folding />
+            <state vertical-scroll-proportion="-10.083333" vertical-offset="58" max-vertical-offset="1680">
+              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding>
+                <marker date="1419707989000" expanded="true" signature="1008:1085" placeholder="SELECT COUNT..." />
+                <marker date="1419707989000" expanded="true" signature="1508:1622" placeholder="SELECT data,..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -143,7 +154,6 @@
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/README" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.info" />
-        <option value="$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_scripts/callblast_scripts.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_scripts/callblast_scripts.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module" />
@@ -156,6 +166,12 @@
         <option value="$PROJECT_DIR$/sites/all/modules/custom/audio_announcements/audio_announcements.scripts.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/README.md" />
+        <option value="$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php" />
+        <option value="$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module" />
+        <option value="$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.queue.inc" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.install" />
+        <option value="$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.queue.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module" />
       </list>
     </option>
@@ -263,6 +279,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="themes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sites" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="all" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="themes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bartik_claro" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -734,6 +776,36 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="claro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sites" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="all" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="custom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="callblast_scripts" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -841,6 +913,32 @@
               <option name="myItemId" value="all" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="advancedqueue" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sites" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="all" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -902,7 +1000,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3281493" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3281493" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -942,102 +1040,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6723" max-vertical-offset="8025">
-          <caret line="464" column="41" selection-start-line="464" selection-start-column="22" selection-end-line="464" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipblast/voipblast.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5808" max-vertical-offset="8655">
-          <caret line="403" column="65" selection-start-line="403" selection-start-column="4" selection-end-line="403" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="270" max-vertical-offset="6375">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding>
-            <element signature="e#6#53#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1401" max-vertical-offset="4245">
-          <caret line="109" column="24" selection-start-line="109" selection-start-column="15" selection-end-line="109" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipscriptui/voipscriptui.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7560">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6455" max-vertical-offset="8025">
-          <caret line="446" column="42" selection-start-line="446" selection-start-column="42" selection-end-line="446" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipblast/voipblast.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="33" max-vertical-offset="8655">
-          <caret line="17" column="43" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipvoice/voipvoice.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="12948" max-vertical-offset="24990">
-          <caret line="646" column="7" selection-start-line="646" selection-start-column="2" selection-end-line="646" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1860" max-vertical-offset="18060">
-          <caret line="134" column="46" selection-start-line="134" selection-start-column="18" selection-end-line="134" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7890">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#6#53#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.info">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="255">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="617">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-19.26923" vertical-offset="204" max-vertical-offset="795">
@@ -1081,13 +1083,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.install">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.18421052" vertical-offset="105" max-vertical-offset="675">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal_multinumber/voipdrupal_multinumber.info">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="594">
@@ -1112,14 +1107,6 @@
             <marker date="1398431024000" expanded="true" signature="-1:-1" placeholder="..." />
             <marker date="1398431024000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6723" max-vertical-offset="8025">
-          <caret line="464" column="41" selection-start-line="464" selection-start-column="22" selection-end-line="464" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1338,18 +1325,141 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/claro/claro.module">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.2" vertical-offset="700" max-vertical-offset="4440">
-          <caret line="57" column="36" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="36" />
+        <state vertical-scroll-proportion="-3.1" vertical-offset="565" max-vertical-offset="7890">
+          <caret line="62" column="26" selection-start-line="62" selection-start-column="10" selection-end-line="62" selection-end-column="26" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.2" vertical-offset="0" max-vertical-offset="120">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--name-1.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.625" vertical-offset="0" max-vertical-offset="285">
+          <caret line="29" column="1" selection-start-line="27" selection-start-column="0" selection-end-line="29" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-3.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="210">
+          <caret line="28" column="2" selection-start-line="28" selection-start-column="2" selection-end-line="28" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.install">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-54.625" vertical-offset="234" max-vertical-offset="2010">
+          <caret line="106" column="11" selection-start-line="106" selection-start-column="11" selection-end-line="106" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.queue.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.083333" vertical-offset="58" max-vertical-offset="1680">
+          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <marker date="1419707989000" expanded="true" signature="1008:1085" placeholder="SELECT COUNT..." />
+            <marker date="1419707989000" expanded="true" signature="1508:1622" placeholder="SELECT data,..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.info">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07874016" vertical-offset="0" max-vertical-offset="381">
+        <state vertical-scroll-proportion="0.050675675" vertical-offset="0" max-vertical-offset="592">
           <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/system/system.queue.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.1666667" vertical-offset="1103" max-vertical-offset="5595">
+          <caret line="80" column="25" selection-start-line="80" selection-start-column="25" selection-end-line="80" selection-end-column="25" />
+          <folding>
+            <marker date="1416428669000" expanded="true" signature="8596:8649" placeholder="SELECT COUNT..." />
+            <marker date="1416428669000" expanded="true" signature="9072:9162" placeholder="SELECT data,..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.install">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="465">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="19" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.install">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.98" vertical-offset="26" max-vertical-offset="885">
+          <caret line="5" column="33" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="525">
+          <caret line="28" column="57" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.24" vertical-offset="5212" max-vertical-offset="15660">
+          <caret line="340" column="42" selection-start-line="340" selection-start-column="18" selection-end-line="340" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.queue.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.96" vertical-offset="682" max-vertical-offset="7860">
+          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding>
+            <marker date="1419764676000" expanded="true" signature="2536:2683" placeholder="SELECT data,..." />
+            <marker date="1419764676000" expanded="true" signature="4886:4976" placeholder="SELECT count..." />
+            <marker date="1419764676000" expanded="true" signature="5287:5413" placeholder="SELECT COUNT..." />
+            <marker date="1419764676000" expanded="true" signature="5677:5809" placeholder="SELECT data,..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/advancedqueue/advancedqueue.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.46" vertical-offset="7" max-vertical-offset="825">
+          <caret line="15" column="2" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.46" vertical-offset="7372" max-vertical-offset="8025">
+          <caret line="506" column="42" selection-start-line="506" selection-start-column="40" selection-end-line="506" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="1417" max-vertical-offset="4665">
+          <caret line="109" column="22" selection-start-line="109" selection-start-column="22" selection-end-line="109" selection-end-column="22" />
           <folding />
         </state>
       </provider>
