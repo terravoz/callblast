@@ -101,8 +101,8 @@
       <file leaf-file-name="pbb.scripts.inc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="6.309963" vertical-offset="0" max-vertical-offset="3525">
-              <caret line="228" column="1" selection-start-line="228" selection-start-column="1" selection-end-line="228" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.22140221" vertical-offset="1290" max-vertical-offset="3600">
+              <caret line="94" column="57" selection-start-line="94" selection-start-column="57" selection-end-line="94" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -1437,8 +1437,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.309963" vertical-offset="0" max-vertical-offset="3525">
-          <caret line="228" column="1" selection-start-line="228" selection-start-column="1" selection-end-line="228" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.22140221" vertical-offset="1290" max-vertical-offset="3600">
+          <caret line="94" column="57" selection-start-line="94" selection-start-column="57" selection-end-line="94" selection-end-column="57" />
           <folding />
         </state>
       </provider>

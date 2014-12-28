@@ -92,6 +92,7 @@ function pbb_voipscript_load_script($script_name, $options = NULL) {
       voipvoice_set_current_voice($voice);
 
       $signup_number = VoipCall::NormalizeNumber($options['signup_number']);
+      watchdog('debug', 'signup number '.$signup_number);
       $phone_number = callblast_alters_get_phone_number($signup_number);
 
       if ($phone_number) {
@@ -114,11 +115,12 @@ function pbb_voipscript_load_script($script_name, $options = NULL) {
         'Welcome to The PBB App! To JOIN and receive weekly text messages, text the letter "J". To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.');
 
       $script->addSendText($text, $signup_number);*/
+      $script->addLabel('message');
+      $script->addSay(v('Great! Your number has been successfully added to our text message reminders.
+      You will now receive reminders to contribute ideas and join Youth Lead the Change events!'));
 
       $script->addLabel('options_menu');
-      $p_options_menu = v("Great! Your number has been successfully added to our text message reminders.
-      You will now receive reminders to contribute ideas and join Youth Lead the Change events!
-To repeat this message, press the star key.
+      $p_options_menu = v("To repeat this message, press the star key.
 To go back to the main menu, press the pound key. ");
 
       $input_options = array(
@@ -132,6 +134,9 @@ To go back to the main menu, press the pound key. ");
       $script->addGoto('%ivr_option_selected');
 
       $script->addLabel('repeat');
+      $script->addGoto('message');
+
+      $script->addLabel('invalid_option');
       $script->addGoto('options_menu');
 
       $script->addLabel('go_back');
