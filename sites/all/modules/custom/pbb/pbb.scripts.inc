@@ -23,8 +23,8 @@ function pbb_voipscript_load_script($script_name, $options = NULL) {
   switch ($script_name) {
     default:
       break;
-    case 'claro_main_menu_script':
-      $script = new VoipScript('claro_main_menu_script');
+    case 'pbb_welcome_script':
+      $script = new VoipScript('pbb_welcome_script');
       $options['voice'] = 'pbb';
       $voice = $options['voice'];
       voipvoice_set_current_voice($voice);
@@ -137,21 +137,17 @@ To go back to the main menu, press the pound key. ");
       $script->addLabel('go_back');
       $script->addReturn();
       break;
-  }
 
-  return $script;
-}
+    case 'propose_idea_script':
+      $script = new VoipScript('propose_idea_script');
 
-function _pbb_idea_collection_script($options) {
-  $script = new VoipScript('audio_announcements_record_blog_script');
+      $voice =  $options['voice'];
+      voipvoice_set_current_voice($voice);
 
-  $voice =  $options['voice'];
-  voipvoice_set_current_voice($voice);
-
-  $script->addLabel('start');
-  $script->addSay(v('Intro message for idea collection. '));
-  $script->addLabel('options_menu');
-  $p_options_menu = v("Great! Remember, ideas have to be for physical projects to improve the city of Boston.
+      $script->addLabel('start');
+      $script->addSay(v('Intro message for idea collection. '));
+      $script->addLabel('options_menu');
+      $p_options_menu = v("Great! Remember, ideas have to be for physical projects to improve the city of Boston.
   Ideas shouldn’t be for programs and services.
   If your idea is for Schools & Education projects, press 1,
   if it is for Streets & Transportation & Community Safety projects, press 2,
@@ -160,79 +156,74 @@ function _pbb_idea_collection_script($options) {
   To hear these options again, press 8.
 ");
 
-  $input_options = array(
-    '1' => 'category1',
-    '2' => 'category2',
-    '3' => 'category3',
-    '4' => 'category4',
-    '5' => 'category5',
-    '6' => 'category6',
-    '8' => 'repeat',
-    '#' => 'invalid_option',
-    'i' => 'invalid_option',
-    't' => 'invalid_option'
-  );
-  $p_invalid_msg = v('Oops! That option is invalid. ');
-  $script->addRunIvrMenu($p_options_menu, $input_options, $p_invalid_msg);
-  $script->addGoto('setcategory');
+      $input_options = array(
+        '1' => 'category1',
+        '2' => 'category2',
+        '3' => 'category3',
+        '4' => 'category4',
+        '5' => 'category5',
+        '6' => 'category6',
+        '8' => 'repeat',
+        '#' => 'invalid_option',
+        'i' => 'invalid_option',
+        't' => 'invalid_option'
+      );
+      $p_invalid_msg = v('Oops! That option is invalid. ');
+      $script->addRunIvrMenu($p_options_menu, $input_options, $p_invalid_msg);
+      $script->addGoto('setcategory');
 
-  $script->addLabel('setcategory');
-  $script->addSet('idea_category', '%ivr_option_selected');
-  //$script->addGoto('options_menu');
+      $script->addLabel('setcategory');
+      $script->addSet('idea_category', '%ivr_option_selected');
+      //$script->addGoto('options_menu');
 
-  //Record location
-  $script->addLabel('start_recording_location');
-  // prepare the call to finish processing the recording even in case of hang up
-  //$script->addSet('voipscript_hangup_callback', '_pbb_record_on_hang_up');
-  //$script->addLog('About to start recording (%voipscript_hangup_callback)');
+      //Record location
+      $script->addLabel('start_recording_location');
+      // prepare the call to finish processing the recording even in case of hang up
+      //$script->addSet('voipscript_hangup_callback', '_pbb_record_on_hang_up');
+      //$script->addLog('About to start recording (%voipscript_hangup_callback)');
 
-  $prompt = t("Now please name the neighborhood and the streets or intersection for which your idea applies. When you are finished, press #. ");
-  $timeout = 5;
-  $end_key = '#';
-  $max_length = 200;
-  $format = 'mp3';
+      $prompt = t("Now please name the neighborhood and the streets or intersection for which your idea applies. When you are finished, press #. ");
+      $timeout = 5;
+      $end_key = '#';
+      $max_length = 200;
+      $format = 'mp3';
 
-  $script->addRecord($prompt, $timeout, $end_key, $max_length, $format);
+      $script->addRecord($prompt, $timeout, $end_key, $max_length, $format);
 
-  //$script->addLog('Back from recording (%voipscript_hangup_callback)');
-  // reset the hang up handler
-  //$script->addSet('voipscript_hangup_callback', '');
-  $script->addSet('idea_location', '%recording_public_url');
+      //$script->addLog('Back from recording (%voipscript_hangup_callback)');
+      // reset the hang up handler
+      //$script->addSet('voipscript_hangup_callback', '');
+      $script->addSet('idea_location', '%recording_public_url');
 
-  //Record idea
-  $script->addLabel('start_recording_idea');
-  // prepare the call to finish processing the recording even in case of hang up
-  //$script->addSet('voipscript_hangup_callback', '_pbb_record_on_hang_up');
-  $script->addLog('About to start recording (%voipscript_hangup_callback)');
+      //Record idea
+      $script->addLabel('start_recording_idea');
+      // prepare the call to finish processing the recording even in case of hang up
+      //$script->addSet('voipscript_hangup_callback', '_pbb_record_on_hang_up');
+      $script->addLog('About to start recording (%voipscript_hangup_callback)');
 
-  $prompt = t("Now please say describe your idea in up to 45 seconds. When you are finished, press #. ");
-  $timeout = 5;
-  $end_key = '#';
-  $max_length = 45;
-  $format = 'mp3';
+      $prompt = t("Now please say describe your idea in up to 45 seconds. When you are finished, press #. ");
+      $timeout = 5;
+      $end_key = '#';
+      $max_length = 45;
+      $format = 'mp3';
 
-  $script->addRecord($prompt, $timeout, $end_key, $max_length, $format);
+      $script->addRecord($prompt, $timeout, $end_key, $max_length, $format);
 
-  //$script->addLog('Back from recording (%voipscript_hangup_callback)');
-  // reset the hang up handler
-  //$script->addSet('voipscript_hangup_callback', '');
-  $script->addSet('idea_recording', '%recording_public_url');
+      //$script->addLog('Back from recording (%voipscript_hangup_callback)');
+      // reset the hang up handler
+      //$script->addSet('voipscript_hangup_callback', '');
+      $script->addSet('idea_recording', '%recording_public_url');
 
 
-  $script->addSet('callback_result',
-    '^_pbb_save_idea(%idea_category, %idea_location, %idea_recording, %caller_number, %source)');
+      $script->addSet('callback_result',
+        '^_pbb_save_idea(%idea_category, %idea_location, %idea_recording, %caller_number, %source)');
 
-  //$script->addSay('%callback_result');
-  $script->addGoto('end call');
+      $script->addLabel('end call');
+      $script->addSay(v('Bye bye.'));
+      $script->addHangup();
 
-  $script->addLabel('no input received');
-  $script->addSay(v("No input received. "));
-  $script->addSay(v('Please try again.'));
-  $script->addGoto('start');
-
-  $script->addLabel('end call');
-  $script->addSay(v('Bye bye.'));
-  $script->addHangup();
+      break;
+  }
 
   return $script;
 }
