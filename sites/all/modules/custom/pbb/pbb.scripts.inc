@@ -74,7 +74,7 @@ function pbb_voipscript_load_script($script_name, $options = NULL) {
       $script->addLabel('redirect');
       $script->addSay(v('Your call will now be redirected to Boston HQ. '));
       //$script->addDial('+16466993989');
-      $script->addGoto('options_menu');
+      $script->addGoto('hang_up');
 
       $script->addLabel('repeat');
       $script->addGoto('options_menu');
@@ -152,34 +152,26 @@ To go back to the main menu, press the pound key. ");
       $script->addLabel('start');
       $script->addSay(v('Intro message for idea collection. '));
       $script->addLabel('options_menu');
-      $p_options_menu = v("Great! Remember, ideas have to be for physical projects to improve the city of Boston.
+      $prompt = v("Great! Remember, ideas have to be for physical projects to improve the city of Boston.
   Ideas shouldn’t be for programs and services.
   If your idea is for Schools & Education projects, press 1,
   if it is for Streets & Transportation & Community Safety projects, press 2,
   if it is for Arts & Culture projects, press 3, if it is Parks & Environment projects press 4,
   if it is for Community Centers projects press 5, if it is for Libraries projects press 6.
-  To hear these options again, press 8.
-");
+  To hear these options again, press 8.");
+      $timeout = 5;
+      $end_key = '';
+      $num_digits = 1;
+      $script->addGetInput($prompt, $num_digits, $end_key, $timeout);
 
-      $input_options = array(
-        '1' => 'category1',
-        '2' => 'category2',
-        '3' => 'category3',
-        '4' => 'category4',
-        '5' => 'category5',
-        '6' => 'category6',
-        '8' => 'repeat',
-        '#' => 'invalid_option',
-        'i' => 'invalid_option',
-        't' => 'invalid_option'
-      );
-      $p_invalid_msg = v('Oops! That option is invalid. ');
-      $script->addRunIvrMenu($p_options_menu, $input_options, $p_invalid_msg);
-      $script->addGoto('setcategory');
+      $script->addGotoIf('setcategory', "^%input_digits >= '1' && ^%input_digits <= '6'");
+      $script->addGotoIf('options_menu', "^%input_digits == '8'");
+
+      $script->addSay(v('Oops! That option is invalid. '));
+      $script->addGoto('options_menu');
 
       $script->addLabel('setcategory');
-      $script->addSet('idea_category', '%ivr_option_selected');
-      //$script->addGoto('options_menu');
+      $script->addSet('idea_category', '%input_digits');
 
       //Record location
       $script->addLabel('start_recording_location');
