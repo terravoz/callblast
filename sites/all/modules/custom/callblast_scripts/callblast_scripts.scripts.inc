@@ -79,7 +79,7 @@ function _callblast_scripts_sms_process_request($msg, $caller_number, $dest_numb
       if(!$cmd == 'Y' && !$phone_number->field_opt_in['und'][0]['value']) {
         watchdog('debug', "received $cmd for unopted contact. Returning optin message");
         $ret = variable_get('callblast_scripts_opt_message',
-          '[Company] would like to send you SMS reminders @ this number. X/week. HELP for help. STOP to end. Msg&data rates may apply. Reply KEYWORD to confirm today.');
+          'Callblast App would like to send you SMS reminders @ this number. X/week. HELP for help. STOP to end. Msg&data rates may apply. Reply KEYWORD to confirm today.');
         return $ret;
       }
     }
@@ -104,7 +104,7 @@ function _callblast_scripts_sms_process_request($msg, $caller_number, $dest_numb
       //$nids = VoipNumber::getNidsByNumber($caller_number);
       if ($nid = reset($nids)) {
         node_delete($nid);
-        $ret = variable_get('callblast_scripts_sms_unsubscribe', 'You\'ve unsubscribed from the Domestic Worker App and should not receive further messages. Should you choose to subscribe again, text any letter to the following number: (347) 967-5500');
+        $ret = variable_get('callblast_scripts_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text \'J\' to this number.');
       }
       else {
         $ret = variable_get('callblast_scripts_sms_not_in_list', 'Number not in the list.');
