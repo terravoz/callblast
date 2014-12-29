@@ -29,7 +29,7 @@ function callblast_scripts_admin_settings_form() {
     '#title' => t('SMS help'),
     '#description' => t('Text SMS help message'),
     '#default_value' => variable_get('callblast_scripts_sms_help',
-      'Welcome to Callblast! To JOIN text the letter "J". To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.'),
+      'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.'),
 );
 
   $form['callblast_scripts_sms_welcome'] = array(
@@ -43,7 +43,7 @@ function callblast_scripts_admin_settings_form() {
     '#type' => 'textarea',
     '#title' => t('SMS Unsubscribe'),
     '#description' => t('Unsubscribe text for SMS to be sent when S command is received.'),
-    '#default_value' => variable_get('callblast_scripts_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text  \'J\' to this number.'),
+    '#default_value' => variable_get('callblast_scripts_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.'),
   );
 
   $form['callblast_scripts_sms_duplicate'] = array(
@@ -71,7 +71,7 @@ function callblast_scripts_admin_settings_form() {
     '#type' => 'textarea',
     '#title' => t('Opt-in message'),
     '#default_value' => variable_get('callblast_scripts_opt_message',
-      'Callblast App would like to send you SMS reminders @ this number. X/week. HELP for help. STOP to end. Msg&data rates may apply. Reply KEYWORD to confirm today.')
+      'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.')
   );
 
   return system_settings_form($form);
