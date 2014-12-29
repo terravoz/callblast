@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Callblast Features feature.
+ */
+
+include_once 'callblast_features.features.inc';

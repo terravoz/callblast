@@ -91,7 +91,7 @@ function _callblast_scripts_sms_process_request($msg, $caller_number, $dest_numb
     if ($phone_number) {
       $phone_number->field_opt_in['und'][0]['value'] = 1; //verify
       node_save($phone_number);
-      $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App');
+      $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App.');
     }
     else {
       $ret = t('Phone number not recognised.');
@@ -129,7 +129,7 @@ function _callblast_scripts_sms_process_request($msg, $caller_number, $dest_numb
           node_save($node);
           //@todo: verify number
           if ($node->nid) {
-            $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App');
+            $ret = variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App.');
           }
           else {
             watchdog('callblast_scripts', 'Error saving phone number: ' . print_r($node, TRUE), array(), WATCHDOG_ERROR);

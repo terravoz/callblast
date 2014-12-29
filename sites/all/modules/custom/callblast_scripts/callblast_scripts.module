@@ -36,7 +36,7 @@ function callblast_scripts_admin_settings_form() {
     '#type' => 'textarea',
     '#title' => t('SMS welcome'),
     '#description' => t('Welcome SMS for text to be sent the first time a user subscribes to the service.'),
-    '#default_value' => variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App'),
+    '#default_value' => variable_get('callblast_scripts_sms_welcome', 'Welcome to Callblast App.'),
   );
 
   $form['callblast_scripts_sms_unsubscribe'] = array(

@@ -68,10 +68,10 @@ function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
 
 /*Store phone numbers from selected groups*/
 function voipnumber_blast_broadcast_node_form_validate($form, &$form_state) {
-  $nids = voipnumber_blast_get_nids_from_groups($form_state['values']['field_select_destination']['und']);
+  $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
   $form_state['values']['field_phone_numbers']['und'] = array();
-  foreach($nids as $nid) {
-    $form_state['values']['field_phone_numbers']['und'][] = array('target_id'=> $nid);
+  foreach($phone_numbers as $phone_number) {
+    $form_state['values']['field_phone_numbers']['und'][] = array('value'=> $phone_number->getNumber());
   }
 }
 
