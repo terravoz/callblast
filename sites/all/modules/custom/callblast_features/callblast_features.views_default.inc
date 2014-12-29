@@ -96,18 +96,38 @@ function callblast_features_views_default_views() {
       'empty_column' => 0,
     ),
   );
+  /* Field: Content: VoIP Call */
+  $handler->display->display_options['fields']['field_voip_call']['id'] = 'field_voip_call';
+  $handler->display->display_options['fields']['field_voip_call']['table'] = 'field_data_field_voip_call';
+  $handler->display->display_options['fields']['field_voip_call']['field'] = 'field_voip_call';
+  $handler->display->display_options['fields']['field_voip_call']['label'] = '';
+  $handler->display->display_options['fields']['field_voip_call']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_voip_call']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_voip_call']['settings'] = array(
+    'thousand_separator' => ' ',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['fields']['field_voip_call']['group_rows'] = FALSE;
+  $handler->display->display_options['fields']['field_voip_call']['delta_offset'] = '0';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = 'Announcement title';
-  /* Field: Content: Phone numbers */
-  $handler->display->display_options['fields']['field_phone_numbers']['id'] = 'field_phone_numbers';
-  $handler->display->display_options['fields']['field_phone_numbers']['table'] = 'field_data_field_phone_numbers';
-  $handler->display->display_options['fields']['field_phone_numbers']['field'] = 'field_phone_numbers';
-  $handler->display->display_options['fields']['field_phone_numbers']['label'] = 'Phone number';
-  $handler->display->display_options['fields']['field_phone_numbers']['group_rows'] = FALSE;
-  $handler->display->display_options['fields']['field_phone_numbers']['delta_offset'] = '0';
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php_6']['id'] = 'php_6';
+  $handler->display->display_options['fields']['php_6']['table'] = 'views';
+  $handler->display->display_options['fields']['php_6']['field'] = 'php';
+  $handler->display->display_options['fields']['php_6']['label'] = 'Phone number';
+  $handler->display->display_options['fields']['php_6']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php_6']['php_output'] = '<?php 
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
+if($voipcall) {
+print $voipcall->getDestNumber();
+}
+?>';
+  $handler->display->display_options['fields']['php_6']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php_6']['php_click_sortable'] = '';
   /* Field: Content: Blast Type */
   $handler->display->display_options['fields']['field_blast_type']['id'] = 'field_blast_type';
   $handler->display->display_options['fields']['field_blast_type']['table'] = 'field_data_field_blast_type';
@@ -120,9 +140,7 @@ function callblast_features_views_default_views() {
   $handler->display->display_options['fields']['php_1']['label'] = 'Date started';
   $handler->display->display_options['fields']['php_1']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_1']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
-
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 
 if($voipcall) {
 print format_date($voipcall->getStartTime(), \'very_short\');
@@ -141,10 +159,7 @@ print \'Not processed yet\';
   $handler->display->display_options['fields']['php_3']['label'] = 'Date completed';
   $handler->display->display_options['fields']['php_3']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_3']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
-
-
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 if($voipcall) {
 print format_date($voipcall->getEndTime(), \'very_short\');
 }
@@ -162,9 +177,7 @@ print \'Not processed yet\';
   $handler->display->display_options['fields']['php']['label'] = 'Announcement status';
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
-
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 
 if($voipcall) {
 $blast = node_load(arg(4));
@@ -184,8 +197,7 @@ print \'Processing error.\';
   $handler->display->display_options['fields']['php_4']['label'] = 'Additional info';
   $handler->display->display_options['fields']['php_4']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_4']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 $blast = node_load(arg(4));
 if($voipcall) {
 print voipnumber_blast_additional_info($voipcall, $blast);
@@ -204,8 +216,7 @@ print \'Not processed\';
   $handler->display->display_options['fields']['php_5']['label'] = 'Duration';
   $handler->display->display_options['fields']['php_5']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_5']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 
 if($voipcall) {
 print $voipcall->getDuration();
@@ -221,9 +232,7 @@ print $voipcall->getDuration();
   $handler->display->display_options['fields']['php_2']['label'] = 'Call Id';
   $handler->display->display_options['fields']['php_2']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_2']['php_output'] = '<?php
-$phone_number = node_load($row->field_phone_number);
-$voipcall = voipnumber_blast_get_voipcall(arg(4), $phone_number->field_phone_number[\'und\'][0][\'real_vnid\']);
-
+$voipcall = VoipCall::load($data->field_field_voip_call[0][\'raw\']);
 
 if($voipcall) {
 print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
@@ -318,7 +327,7 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Message History';
+  $handler->display->display_options['title'] = 'Announcements History';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -616,7 +625,7 @@ print l(\'More\', \'node/\'.$row->tag);
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['claro_voip_queue'] = array(
     t('Master'),
-    t('Message History'),
+    t('Announcements History'),
     t('more'),
     t('Apply'),
     t('Reset'),

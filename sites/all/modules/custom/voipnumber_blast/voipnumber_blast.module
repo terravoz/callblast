@@ -17,6 +17,7 @@
  *   'delay' => Number of seconds to wait before sending text (Default: 0),
  *   'tags' => Array of tags to add to the item.
  */
+/*
 function voipnumber_blast_add_text($blast_id, $voipnumber, $text, $options = array()) {
 
   // This is the same as voipqueue_add_dial().
@@ -50,34 +51,36 @@ function voipnumber_blast_add_text($blast_id, $voipnumber, $text, $options = arr
   // Add the item to the queue.
   $queue->createItem($item);
 }
-
+*/
 /**
  * Implementation of hook_form_alter()
  */
 function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
  if($form_id == 'broadcast_node_form') {
    drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
-   $form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
+   //$form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
     $form['actions']['submit']['#submit'][]  = 'voipnumber_blast_broadcast_node_form_submit';
    $form['actions']['submit']['#prefix'] =  l('Preview selected contacts', 'contacts-preview',
      array('attributes' => array('class' => array('button'), 'target'=>'_blank', 'id' => 'contacts-preview')));
+   unset($form['field_voip_call']);
   }
 
   return $form;
 }
 
 /*Store phone numbers from selected groups*/
-function voipnumber_blast_broadcast_node_form_validate($form, &$form_state) {
+/*function voipnumber_blast_broadcast_node_form_validate($form, &$form_state) {
   $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
   $form_state['values']['field_phone_numbers']['und'] = array();
   foreach($phone_numbers as $phone_number) {
     $form_state['values']['field_phone_numbers']['und'][] = array('value'=> $phone_number->getNumber());
   }
-}
+}*/
 
 function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
   $phone_numbers = array();
   $blast_id = $form_state['nid'];
+  $blast = node_load($blast_id);
   $lang = $form_state['values']['language'];
 
   $blast_type = $form_state['values']['field_blast_type']['und'][0]['value'];
@@ -94,7 +97,38 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
       //fix: for some reason body changed to eng
     $message = $form_state['values']['body'][$lang][0]['value'];
       foreach($phone_numbers as $voipnumber) {
-        voipnumber_blast_add_text($blast_id, $voipnumber, $message, $options);
+        //voipnumber_blast_add_text($blast_id, $voipnumber, $message, $options);
+        // This is the same as voipqueue_add_dial().
+        $queue = DrupalQueue::get('voipblast_texts');
+        $queue->createQueue();
+
+        // First create a VoipCall object to queue.
+        $call = new VoipCall(array());
+        // Only the destination number need be set.
+        $call->setDestNumber($voipnumber->getNumber());
+        $call = $call->save();
+
+        /*$voipnumber_blast = array(
+          'nid' => $blast_id,
+          'vnid' => $voipnumber->getVnid(),
+          'cid' => $call->getCid(),
+        );
+
+        drupal_write_record('voipnumber_blast', $voipnumber_blast);*/
+        $blast->field_voip_call['und'][]['value'] = $call->getCid();
+        // Create a VoipQueue item for sending text.
+        $item = new VoipQueueText($call, $message);
+
+        // Add options if they are required.
+        if (isset($options['delay'])) {
+          $item->setDelay($options['delay']);
+        }
+        if (isset($options['tags'])) {
+          $item->tags = $options['tags'];
+        }
+
+        // Add the item to the queue.
+        $queue->createItem($item);
       }
       break;
     case 'voice':
@@ -125,19 +159,22 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
         $call = $call->save();
 
         //Store blast entity
-        $voipnumber_blast = array(
+        /*$voipnumber_blast = array(
           'nid' => $blast_id,
           'vnid' => $voipnumber->getVnid(),
           'cid' => $call->getCid(),
         );
-        drupal_write_record('voipnumber_blast', $voipnumber_blast);
+        drupal_write_record('voipnumber_blast', $voipnumber_blast);*/
 
+        //Store VoIP Call reference in the Announcement content type
+        $blast->field_voip_call['und'][]['value'] = $call->getCid();
 
         //Add to queue
         voipqueue_add_dial($call, $options);
       }
       break;
   }
+  node_save($blast);
 
   drupal_goto('admin/voip/callblast/summary');
 }
@@ -163,7 +200,7 @@ function voipnumber_blast_get_numbers_from_groups($groups) {
 
   return $phone_numbers;
 }
-
+/*
 function voipnumber_blast_get_nids_from_groups($groups) {
   $all_nids = array();
   $phone_numbers = array();
@@ -181,7 +218,7 @@ function voipnumber_blast_get_nids_from_groups($groups) {
 
   return $return_nids;
 }
-
+*/
 function voipnumber_blast_get_all_numbers() {
   $phone_numbers = array();
   $query = new EntityFieldQuery();
@@ -203,7 +240,7 @@ function voipnumber_blast_get_all_numbers() {
   }
   return $phone_numbers;
 }
-
+/*
 function voipnumber_blast_get_all_phone_nids() {
   $query = new EntityFieldQuery();
   $entities = $query->entityCondition('entity_type', 'node')
@@ -218,6 +255,7 @@ function voipnumber_blast_get_all_phone_nids() {
   }
   return $return_nids;
 }
+*/
 /*
 function voipnumber_blast_create_queue($blast_id, $phone_numbers, $message, $blast_type) {
   $options = array(
@@ -231,6 +269,7 @@ function voipnumber_blast_create_queue($blast_id, $phone_numbers, $message, $bla
   }
 }
 */
+/*
 function voipnumber_blast_get_voipcall($blast_id, $vnid) {
   $query = db_select('voipnumber_blast', 'vb');
   $query->fields('vb');
@@ -245,7 +284,7 @@ function voipnumber_blast_get_voipcall($blast_id, $vnid) {
 
   return NULL;
 }
-
+*/
 function voipnumber_blast_status($call, $blast) {
   $blast_type = $blast->field_blast_type['und'][0]['value'];
   if($blast_type == 'sms') {

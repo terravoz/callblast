@@ -17,11 +17,9 @@ function voipnumber_blast_enable() {
 /**
  * Implements hook_schema().
  */
+/*
 function voipnumber_blast_schema() {
-  /**
-   * dialing_plan table
-   *
-   */
+
   $schema['voipnumber_blast'] = array(
     'fields' => array(
       'nid' => array(
@@ -50,4 +48,13 @@ function voipnumber_blast_schema() {
   );
 
   return $schema;
+}
+*/
+/**
+ * Implements hook_update_N().
+ */
+function voipnumber_blast_update_7101() {
+  db_drop_table('voipnumber_blast');
+
+  return t('VoIP Number Blast Update 7101 ran successfully.') /* $ret */;
 }
