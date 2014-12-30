@@ -335,7 +335,7 @@ function callblast_alters_opt_in($entity, $context = array()) {
   node_save($entity);
 }
 
-function callblast_alters_callblast_alters_opt_out($entity, $context = array()) {
+function callblast_alters_opt_out($entity, $context = array()) {
   $entity->field_opt_in['und'][0]['value'] = 0;
   node_save($entity);
 }
