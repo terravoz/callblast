@@ -3,5 +3,6 @@ description = VoIP Drupal Callblast backbone
 core = 7.x
 dependencies[] = voipqueue
 dependencies[] = voipnumberfield
+dependencies[] = voipblast
 package = "Callblast"
 

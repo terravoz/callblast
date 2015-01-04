@@ -43,7 +43,7 @@ class VoipPlivoCloudServer extends VoipServer {
     if ($voices[$voice_id]['region']) {
       $voice_region = $voices[$voice_id]['language'] . '-' . $voices[$voice_id]['region'];
     }
-    else{
+    else {
       //some languages like arabic doesn't have region
       $voice_region = $voices[$voice_id]['language'];
     }
@@ -74,31 +74,31 @@ class VoipPlivoCloudServer extends VoipServer {
     $auth_id = $server_config['voipplivocloud_auth_id'];
     $auth_token = $server_config['voipplivocloud_auth_token'];
 
-	  $caller_number = ($voipcall->getCallerNumber())
+    $caller_number = ($voipcall->getCallerNumber())
       ? $voipcall->getCallerNumber()
       : variable_get('voipcall_cid_number', NULL);
     $dest_number = $voipcall->getDestNumber();
 
-   // (re)start the session associated with the call
+    // (re)start the session associated with the call
     $voip_session = VoipSession::getSessionByNumber($caller_number, $dest_number);
     if ($voip_session) {
       $voip_session->resetTimer();
-	   //we must preserve cid
-	  $cid = $voip_session->getCid();
-	  //load existing call
-	  $voipcall = VoipCall::load($cid);
+      //we must preserve cid
+      $cid = $voip_session->getCid();
+      //load existing call
+      $voipcall = VoipCall::load($cid);
     }
     else {
       $voip_session = new VoipSession();
       $voip_session->setOriginNumber($caller_number);
       $voip_session->setDestinationNumber($dest_number);
 
-	  // Update call variables
+      // Update call variables
       $voipcall->setSource('drupal');
       $voipcall->setDirection(VoipCall::OUTBOUND);
-	    $voipcall->save();
+      $voipcall->save();
       $cid = $voipcall->getCid();
-	    $voip_session->setCid($cid);
+      $voip_session->setCid($cid);
     }
     $voip_session->save();
 
@@ -113,15 +113,16 @@ class VoipPlivoCloudServer extends VoipServer {
       'from' => $caller_number,
       'answer_url' => $answer_url,
       'hangup_url' => $hangup_url,
-      'machine_detection' => 'true', //Used to detect if the call has been answered by a machine.
+      'machine_detection' => 'true',
+      //Used to detect if the call has been answered by a machine.
     );
 
     // Instantiate a new Plivo Client
-    try{
+    try {
       $client = new RestAPI($auth_id, $auth_token);
       $response = $client->make_call($params);
-      if(isset($response['response']['error'])){
-        switch($response['status']) {
+      if (isset($response['response']['error'])) {
+        switch ($response['status']) {
           case '400':
           case '401':
             $error_msg = $response['response']['error'];
@@ -144,8 +145,7 @@ class VoipPlivoCloudServer extends VoipServer {
       else {
         $rc = TRUE;
       }
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       // wrong auth token and auth sid or if you your ip is not allowed in ALLOWED_IPS
       $error_msg = t('Wrong auth token and auth sid or ip is not allowed.');
       $voipcall->setErrorMessage($error_msg);
@@ -187,30 +187,30 @@ class VoipPlivoCloudServer extends VoipServer {
     $voip_session = VoipSession::getSessionByNumber($from, $to);
     if ($voip_session) {
       $voip_session->resetTimer();
-	    $cid = $voip_session->getCid();
-	    //load existing call
-	    $voipcall = VoipCall::load($cid);
+      $cid = $voip_session->getCid();
+      //load existing call
+      $voipcall = VoipCall::load($cid);
     }
     else {
       $voip_session = new VoipSession();
       $voip_session->setOriginNumber($from);
       $voip_session->setDestinationNumber($to);
 
-	  // update call variables
+      // update call variables
       $voipcall->setSource('drupal');
-      if(!$voipcall->getDirection()) {
+      if (!$voipcall->getDirection()) {
         $voipcall->setDirection(VoipCall::OUTBOUND);
       }
-      if(!$voipcall->getCallChannel()) {
+      if (!$voipcall->getCallChannel()) {
         $voipcall->setCallChannel('text');
       }
 
       if (!$voipcall->getCallNetwork()) {
         $voipcall->setCallNetwork('sms');
       }
-	    $voipcall->save();
+      $voipcall->save();
       $cid = $voipcall->getCid();
-	    $voip_session->setCid($cid);
+      $voip_session->setCid($cid);
     }
 
     $voip_session->save();
@@ -231,7 +231,7 @@ class VoipPlivoCloudServer extends VoipServer {
 
     try {
       // Instantiate a new Plivo Rest Client
-      $client  = new RestAPI($auth_id, $auth_token);
+      $client = new RestAPI($auth_id, $auth_token);
       $params = array(
         'src' => $from,
         'dst' => $to,
@@ -240,13 +240,14 @@ class VoipPlivoCloudServer extends VoipServer {
       );
       $response = $client->send_message($params);
 
-      if(isset($response['response']['error'])){
-        switch($response['status']) {
+      if (isset($response['response']['error'])) {
+        switch ($response['status']) {
           case '400':
           case '401':
             $error_msg = $response['response']['error'];
             $voipcall->setErrorMessage($error_msg);
             $voipcall->setCallStatus(VoipCall::ERROR);
+            $voipcall->setTextStatus(VoipCall::TEXT_FAILED);
             $voipcall->save();
             $rc = FALSE;
             break;
@@ -264,8 +265,7 @@ class VoipPlivoCloudServer extends VoipServer {
       else {
         $rc = TRUE;
       }
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       // wrong auth token and auth sid or if you your ip is not allowed in ALLOWED_IPS
       $error_msg = t('Wrong auth token and auth sid or ip is not allowed.');
       $voipcall->setErrorMessage($error_msg);
@@ -308,31 +308,30 @@ class VoipPlivoCloudServer extends VoipServer {
       $params = array(
         'call_uuid' => $call_id,
       );
-       try {
-         // Instantiate a new Plivo Rest Client
-         $client = new RestAPI($auth_id, $auth_token);
-         $response = $client->hangup_call($params);
+      try {
+        // Instantiate a new Plivo Rest Client
+        $client = new RestAPI($auth_id, $auth_token);
+        $response = $client->hangup_call($params);
 
-         // update call based on response
-         if (isset($response['response']['error'])) {
-           $msg = "Plivo hangup command failed: @error";
-           $params = array('@error' => $response['response']['error']);
-           $voipcall->report_error('voipplivocloud', $msg, $params);
-         }
-         else {
-           $voipcall->setHangupReason(VoipCall::HANGUP_API_REQUEST);
-           $voipcall->save();
-           $rc = TRUE;
-         }
-       }
-       catch (Exception $e) {
-         // wrong auth token and auth sid or if you your ip is not allowed in ALLOWED_IPS
-         $error_msg = t('Wrong auth token and auth sid or ip is not allowed.');
-         $msg = "Plivo hangup command failed: @error";
-         $params = array('@error' => $error_msg);
-         $voipcall->report_error('voipplivocloud', $msg, $params);
-         $rc = FALSE;
-       }
+        // update call based on response
+        if (isset($response['response']['error'])) {
+          $msg = "Plivo hangup command failed: @error";
+          $params = array('@error' => $response['response']['error']);
+          $voipcall->report_error('voipplivocloud', $msg, $params);
+        }
+        else {
+          $voipcall->setHangupReason(VoipCall::HANGUP_API_REQUEST);
+          $voipcall->save();
+          $rc = TRUE;
+        }
+      } catch (Exception $e) {
+        // wrong auth token and auth sid or if you your ip is not allowed in ALLOWED_IPS
+        $error_msg = t('Wrong auth token and auth sid or ip is not allowed.');
+        $msg = "Plivo hangup command failed: @error";
+        $params = array('@error' => $error_msg);
+        $voipcall->report_error('voipplivocloud', $msg, $params);
+        $rc = FALSE;
+      }
 
     }
 
@@ -403,7 +402,7 @@ class VoipPlivoCloudServer extends VoipServer {
 
     // Instantiate a new Plivo Rest Client
     try {
-	  $client = new RestAPI($auth_id, $auth_token);
+      $client = new RestAPI($auth_id, $auth_token);
 
       //Request a account information as a way to test the server connectivity
       voip_error_reset();
@@ -427,172 +426,271 @@ class VoipPlivoCloudServer extends VoipServer {
   static function _get_available_voices() {
     $voices = array();
     $voices['plivo-arabic'] = array(
-      'language' => 'arabic', 'voice' => 'man',
+      'language' => 'arabic',
+      'voice' => 'man',
       'description' => 'plivo-arabic (' . t('Male voice in Arabic') . ')'
     );
 
-	$voices['plivo-chinese-woman'] = array(
-      'language' => 'zh', 'region' => 'CN', 'voice' => 'woman',
-      'description' => 'plivo-chinese-woman (' . t('Female voice in Chinese'). ')'
+    $voices['plivo-chinese-woman'] = array(
+      'language' => 'zh',
+      'region' => 'CN',
+      'voice' => 'woman',
+      'description' => 'plivo-chinese-woman (' . t('Female voice in Chinese') . ')'
     );
-	$voices['plivo-chinese-man'] = array(
-      'language' => 'zh', 'region' => 'CN', 'voice' => 'man',
-      'description' => 'plivo-chinese-man (' . t('Male voice in Chinese'). ')'
-    );
-
-	$voices['plivo-czech-woman'] = array(
-      'language' => 'cs', 'region' => 'CZ', 'voice' => 'woman',
-      'description' => 'plivo-czech-woman (' . t('Female voice in Czech'). ')'
-    );
-
-	$voices['plivo-danish-woman'] = array(
-      'language' => 'da', 'region' => 'dk', 'voice' => 'woman',
-      'description' => 'plivo-danish-woman (' . t('Female voice in Danish'). ')'
+    $voices['plivo-chinese-man'] = array(
+      'language' => 'zh',
+      'region' => 'CN',
+      'voice' => 'man',
+      'description' => 'plivo-chinese-man (' . t('Male voice in Chinese') . ')'
     );
 
-	$voices['plivo-german-woman'] = array(
-      'language' => 'de', 'region' => 'DE', 'voice' => 'woman',
-      'description' => 'plivo-german-woman (' . t('Female voice in German'). ')'
-    );
-	$voices['plivo-german-man'] = array(
-      'language' => 'de', 'region' => 'DE', 'voice' => 'man',
-      'description' => 'plivo-german-man (' . t('Male voice in German'). ')'
+    $voices['plivo-czech-woman'] = array(
+      'language' => 'cs',
+      'region' => 'CZ',
+      'voice' => 'woman',
+      'description' => 'plivo-czech-woman (' . t('Female voice in Czech') . ')'
     );
 
-	$voices['plivo-greek-woman'] = array(
-      'language' => 'el', 'region' => 'GR', 'voice' => 'woman',
-      'description' => 'plivo-greek-woman (' . t('Female voice in Greek'). ')'
+    $voices['plivo-danish-woman'] = array(
+      'language' => 'da',
+      'region' => 'dk',
+      'voice' => 'woman',
+      'description' => 'plivo-danish-woman (' . t('Female voice in Danish') . ')'
     );
 
-	$voices['plivo-australian-woman'] = array(
-      'language' => 'en', 'region' => 'AU', 'voice' => 'woman',
-      'description' => 'plivo-australian-woman (' . t('Female voice in English (Australia)'). ')'
+    $voices['plivo-danish-man'] = array(
+      'language' => 'da',
+      'region' => 'dk',
+      'voice' => 'man',
+      'description' => 'plivo-danish-man (' . t('Male voice in Danish') . ')'
+    );
+
+    $voices['plivo-german-woman'] = array(
+      'language' => 'de',
+      'region' => 'DE',
+      'voice' => 'woman',
+      'description' => 'plivo-german-woman (' . t('Female voice in German') . ')'
+    );
+    $voices['plivo-german-man'] = array(
+      'language' => 'de',
+      'region' => 'DE',
+      'voice' => 'man',
+      'description' => 'plivo-german-man (' . t('Male voice in German') . ')'
+    );
+
+    $voices['plivo-greek-woman'] = array(
+      'language' => 'el',
+      'region' => 'GR',
+      'voice' => 'woman',
+      'description' => 'plivo-greek-woman (' . t('Female voice in Greek') . ')'
+    );
+
+    $voices['plivo-australian-woman'] = array(
+      'language' => 'en',
+      'region' => 'AU',
+      'voice' => 'woman',
+      'description' => 'plivo-australian-woman (' . t('Female voice in English (Australia)') . ')'
+    );
+
+    $voices['plivo-australian-man'] = array(
+      'language' => 'en',
+      'region' => 'AU',
+      'voice' => 'man',
+      'description' => 'plivo-australian-man (' . t('Male voice in English (Australia)') . ')'
     );
 
     $voices['plivo-canada-woman'] = array(
-      'language' => 'en', 'region' => 'CA', 'voice' => 'woman',
-      'description' => 'plivo-canada-woman (' . t('Female voice in English (Canada)'). ')'
+      'language' => 'en',
+      'region' => 'CA',
+      'voice' => 'woman',
+      'description' => 'plivo-canada-woman (' . t('Female voice in English (Canada)') . ')'
     );
 
     $voices['plivo-uk-woman'] = array(
-      'language' => 'en', 'region' => 'GB', 'voice' => 'woman',
-      'description' => 'plivo-uk-woman (' . t('Female voice in English (UK)'). ')'
+      'language' => 'en',
+      'region' => 'GB',
+      'voice' => 'woman',
+      'description' => 'plivo-uk-woman (' . t('Female voice in English (UK)') . ')'
     );
-	$voices['plivo-uk-man'] = array(
-      'language' => 'en', 'region' => 'GB', 'voice' => 'man',
-      'description' => 'plivo-uk-man (' . t('Male voice in English (UK)'). ')'
-    );
-
-	$voices['plivo-us-woman'] = array(
-      'language' => 'en', 'region' => 'US', 'voice' => 'woman',
-      'description' => 'plivo-us-woman (' . t('Female voice in English (US)'). ')'
-    );
-	$voices['plivo-us-man'] = array(
-      'language' => 'en', 'region' => 'US', 'voice' => 'man',
-      'description' => 'plivo-us-man (' . t('Male voice in English (US)'). ')'
+    $voices['plivo-uk-man'] = array(
+      'language' => 'en',
+      'region' => 'GB',
+      'voice' => 'man',
+      'description' => 'plivo-uk-man (' . t('Male voice in English (UK)') . ')'
     );
 
-	$voices['plivo-spanish-woman'] = array(
-      'language' => 'es', 'region' => 'ES', 'voice' => 'woman',
-      'description' => 'plivo-spanish-woman (' . t('Female voice in Spanish'). ')'
+    $voices['plivo-us-woman'] = array(
+      'language' => 'en',
+      'region' => 'US',
+      'voice' => 'woman',
+      'description' => 'plivo-us-woman (' . t('Female voice in English (US)') . ')'
     );
-	$voices['plivo-spanish-man'] = array(
-      'language' => 'es', 'region' => 'ES', 'voice' => 'man',
-      'description' => 'plivo-spanish-man (' . t('Male voice in Spanish'). ')'
-    );
-
-	$voices['plivo-usspanish-woman'] = array(
-      'language' => 'es', 'region' => 'US', 'voice' => 'woman',
-      'description' => 'plivo-usspanish-woman (' . t('Female voice in Spanish (US)'). ')'
-    );
-	$voices['plivo-usspanish-man'] = array(
-      'language' => 'es', 'region' => 'US', 'voice' => 'man',
-      'description' => 'plivo-usspanish-man (' . t('Male voice in Spanish (US)'). ')'
+    $voices['plivo-us-man'] = array(
+      'language' => 'en',
+      'region' => 'US',
+      'voice' => 'man',
+      'description' => 'plivo-us-man (' . t('Male voice in English (US)') . ')'
     );
 
-	$voices['plivo-finland-woman'] = array(
-      'language' => 'fi', 'region' => 'FI', 'voice' => 'woman',
-      'description' => 'plivo-finland-woman (' . t('Female voice in Finnish'). ')'
+    $voices['plivo-spanish-woman'] = array(
+      'language' => 'es',
+      'region' => 'ES',
+      'voice' => 'woman',
+      'description' => 'plivo-spanish-woman (' . t('Female voice in Spanish') . ')'
+    );
+    $voices['plivo-spanish-man'] = array(
+      'language' => 'es',
+      'region' => 'ES',
+      'voice' => 'man',
+      'description' => 'plivo-spanish-man (' . t('Male voice in Spanish') . ')'
     );
 
-	$voices['plivo-franceca-woman'] = array(
-      'language' => 'fr', 'region' => 'CA', 'voice' => 'woman',
-      'description' => 'plivo-franceca-woman (' . t('Female voice in French (Canada)'). ')'
+    $voices['plivo-usspanish-woman'] = array(
+      'language' => 'es',
+      'region' => 'US',
+      'voice' => 'woman',
+      'description' => 'plivo-usspanish-woman (' . t('Female voice in Spanish (US)') . ')'
     );
-	$voices['plivo-franceca-man'] = array(
-      'language' => 'fr', 'region' => 'CA', 'voice' => 'man',
-      'description' => 'plivo-franceca-man (' . t('Male voice in French (Canada)'). ')'
-    );
-
-	$voices['plivo-france-woman'] = array(
-      'language' => 'fr', 'region' => 'FR', 'voice' => 'woman',
-      'description' => 'plivo-france-woman (' . t('Female voice in French'). ')'
-    );
-	$voices['plivo-france-man'] = array(
-      'language' => 'fr', 'region' => 'FR', 'voice' => 'man',
-      'description' => 'plivo-france-man (' . t('Male voice in French'). ')'
+    $voices['plivo-usspanish-man'] = array(
+      'language' => 'es',
+      'region' => 'US',
+      'voice' => 'man',
+      'description' => 'plivo-usspanish-man (' . t('Male voice in Spanish (US)') . ')'
     );
 
-	$voices['plivo-hungary-woman'] = array(
-      'language' => 'hu', 'region' => 'HU', 'voice' => 'woman',
-      'description' => 'plivo-hungary-woman (' . t('Female voice in Hungarian'). ')'
+    $voices['plivo-finland-woman'] = array(
+      'language' => 'fi',
+      'region' => 'FI',
+      'voice' => 'woman',
+      'description' => 'plivo-finland-woman (' . t('Female voice in Finnish') . ')'
     );
 
-	$voices['plivo-italy-woman'] = array(
-      'language' => 'it', 'region' => 'IT', 'voice' => 'woman',
-      'description' => 'plivo-italy-woman (' . t('Female voice in Italian'). ')'
+    $voices['plivo-franceca-woman'] = array(
+      'language' => 'fr',
+      'region' => 'CA',
+      'voice' => 'woman',
+      'description' => 'plivo-franceca-woman (' . t('Female voice in French (Canada)') . ')'
     );
-	$voices['plivo-italy-man'] = array(
-      'language' => 'it', 'region' => 'IT', 'voice' => 'man',
-      'description' => 'plivo-italy-man (' . t('Male voice in Italian'). ')'
+    $voices['plivo-franceca-man'] = array(
+      'language' => 'fr',
+      'region' => 'CA',
+      'voice' => 'man',
+      'description' => 'plivo-franceca-man (' . t('Male voice in French (Canada)') . ')'
     );
 
-	//bug in Plivo cloud it should be ja-JP instead of jp-JP
-	$voices['plivo-japan-woman'] = array(
-      'language' => 'ja', 'region' => 'JP', 'voice' => 'woman',
-      'description' => 'plivo-japan-woman (' . t('Female voice in Japanese'). ')'
+    $voices['plivo-france-woman'] = array(
+      'language' => 'fr',
+      'region' => 'FR',
+      'voice' => 'woman',
+      'description' => 'plivo-france-woman (' . t('Female voice in French') . ')'
     );
-	$voices['plivo-japan-man'] = array(
-      'language' => 'jp', 'region' => 'JP', 'voice' => 'man',
+    $voices['plivo-france-man'] = array(
+      'language' => 'fr',
+      'region' => 'FR',
+      'voice' => 'man',
+      'description' => 'plivo-france-man (' . t('Male voice in French') . ')'
+    );
+
+    $voices['plivo-hungary-woman'] = array(
+      'language' => 'hu',
+      'region' => 'HU',
+      'voice' => 'woman',
+      'description' => 'plivo-hungary-woman (' . t('Female voice in Hungarian') . ')'
+    );
+
+    $voices['plivo-italy-woman'] = array(
+      'language' => 'it',
+      'region' => 'IT',
+      'voice' => 'woman',
+      'description' => 'plivo-italy-woman (' . t('Female voice in Italian') . ')'
+    );
+    $voices['plivo-italy-man'] = array(
+      'language' => 'it',
+      'region' => 'IT',
+      'voice' => 'man',
+      'description' => 'plivo-italy-man (' . t('Male voice in Italian') . ')'
+    );
+
+    //bug in Plivo cloud it should be ja-JP instead of jp-JP
+    $voices['plivo-japan-woman'] = array(
+      'language' => 'ja',
+      'region' => 'JP',
+      'voice' => 'woman',
+      'description' => 'plivo-japan-woman (' . t('Female voice in Japanese') . ')'
+    );
+    $voices['plivo-japan-man'] = array(
+      'language' => 'jp',
+      'region' => 'JP',
+      'voice' => 'man',
       'description' => 'plivo-japan-man (' . t('Male voice in Japanese')
     );
 
-	$voices['plivo-dutch-woman'] = array(
-      'language' => 'nl', 'region' => 'NL', 'voice' => 'woman',
-      'description' => 'plivo-dutch-woman (' . t('Female voice in Dutch'). ')'
+    $voices['plivo-dutch-woman'] = array(
+      'language' => 'nl',
+      'region' => 'NL',
+      'voice' => 'woman',
+      'description' => 'plivo-dutch-woman (' . t('Female voice in Dutch') . ')'
     );
-	$voices['plivo-dutch-man'] = array(
-      'language' => 'nl', 'region' => 'NL', 'voice' => 'man',
-      'description' => 'plivo-dutch-man (' . t('Male voice in Dutch'). ')'
-    );
-
-	$voices['plivo-poland-woman'] = array(
-      'language' => 'pl', 'region' => 'PL', 'voice' => 'woman',
-      'description' => 'plivo-poland-woman (' . t('Female voice in Polish'). ')'
-    );
-
-	$voices['plivo-brazil-woman'] = array(
-      'language' => 'pt', 'region' => 'BR', 'voice' => 'woman',
-      'description' => 'plivo-brazil-woman (' . t('Female voice in Portuguese (Brazil)'). ')'
+    $voices['plivo-dutch-man'] = array(
+      'language' => 'nl',
+      'region' => 'NL',
+      'voice' => 'man',
+      'description' => 'plivo-dutch-man (' . t('Male voice in Dutch') . ')'
     );
 
-	$voices['plivo-portugal-woman'] = array(
-      'language' => 'pt', 'region' => 'PT', 'voice' => 'woman',
-      'description' => 'plivo-portugal-woman (' . t('Female voice in Portuguese (Portugal)'). ')'
+    $voices['plivo-poland-woman'] = array(
+      'language' => 'pl',
+      'region' => 'PL',
+      'voice' => 'woman',
+      'description' => 'plivo-poland-woman (' . t('Female voice in Polish') . ')'
     );
 
-	$voices['plivo-russian-woman'] = array(
-      'language' => 'ru', 'region' => 'RU', 'voice' => 'woman',
-      'description' => 'plivo-russian-woman (' . t('Female voice in Russian'). ')'
-    );
-	$voices['plivo-russian-man'] = array(
-      'language' => 'ru', 'region' => 'RU', 'voice' => 'man',
-      'description' => 'plivo-russian-man (' . t('Male voice in Russian'). ')'
+    $voices['plivo-poland-man'] = array(
+      'language' => 'pl',
+      'region' => 'PL',
+      'voice' => 'man',
+      'description' => 'plivo-poland-man (' . t('Male voice in Polish') . ')'
     );
 
-	$voices['plivo-sweden-woman'] = array(
-      'language' => 'sv', 'region' => 'SE', 'voice' => 'woman',
-      'description' => 'plivo-sweden-woman (' . t('Female voice in Swedish'). ')'
+    $voices['plivo-brazil-woman'] = array(
+      'language' => 'pt',
+      'region' => 'BR',
+      'voice' => 'woman',
+      'description' => 'plivo-brazil-woman (' . t('Female voice in Portuguese (Brazil)') . ')'
+    );
+
+    $voices['plivo-brazil-man'] = array(
+      'language' => 'pt',
+      'region' => 'BR',
+      'voice' => 'man',
+      'description' => 'plivo-brazil-man (' . t('Male voice in Portuguese (Brazil)') . ')'
+    );
+
+    $voices['plivo-portugal-woman'] = array(
+      'language' => 'pt',
+      'region' => 'PT',
+      'voice' => 'woman',
+      'description' => 'plivo-portugal-woman (' . t('Female voice in Portuguese (Portugal)') . ')'
+    );
+
+    $voices['plivo-russian-woman'] = array(
+      'language' => 'ru',
+      'region' => 'RU',
+      'voice' => 'woman',
+      'description' => 'plivo-russian-woman (' . t('Female voice in Russian') . ')'
+    );
+    $voices['plivo-russian-man'] = array(
+      'language' => 'ru',
+      'region' => 'RU',
+      'voice' => 'man',
+      'description' => 'plivo-russian-man (' . t('Male voice in Russian') . ')'
+    );
+
+    $voices['plivo-sweden-woman'] = array(
+      'language' => 'sv',
+      'region' => 'SE',
+      'voice' => 'woman',
+      'description' => 'plivo-sweden-woman (' . t('Female voice in Swedish') . ')'
     );
 
     return $voices;
@@ -603,7 +701,7 @@ class VoipPlivoCloudServer extends VoipServer {
   * Tropo doesn't return + sign so we need to add it
   *
   */
-  static function NormalizeNumber($number){
+  static function NormalizeNumber($number) {
     return VoipCall::NormalizeNumber($number);
   }
 }

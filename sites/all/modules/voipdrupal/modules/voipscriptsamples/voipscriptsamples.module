@@ -89,7 +89,7 @@ function _voipscriptsamples_load_sample_scripts($script_name) {
       '2' => 'weather report',
       '3' => 'sms',
       '4' => 'record',
-	  '5' => 'callback',
+	    '5' => 'callback',
       '#' => 'hang up',
       'i' => 'hang up',
       't' => 'hang up',

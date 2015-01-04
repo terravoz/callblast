@@ -42,7 +42,7 @@ function voipplivocore_call_handler($server, $plivo_action, $cid = NULL) {
   // validate $_REQUEST to avoid hack attempts
   if(!call_user_func('_voip'.$server.'_validate_request')) {
     $msg = '_voip_plivocore_call_handler called with invalid AccountSid: @sid';
-    $params = array('@sid' => $incoming_sid);
+    $params = array('@sid' => $_SERVER["HTTP_X_PLIVO_SIGNATURE"]);
     watchdog('voipplivocore', $msg, $params, WATCHDOG_WARNING);
     return FALSE; // TODO: should we return an error response to the server?
   }
@@ -339,6 +339,7 @@ function voipplivocore_call_handler($server, $plivo_action, $cid = NULL) {
        case 'process_sms_callback':
          $call = _voipplivocore_process_sms_response($call, $_REQUEST);
          if(strtolower($call->getCallChannel()) == 'text') {
+           $call->setEndTime();
            // update sms status
            $call->save();
            // since 'process_sms_callback' is asynchronous, go back
@@ -982,6 +983,9 @@ function _voipplivocore_send_response($response) {
   $output .= '<Response>';
   $output .= $response;
   $output .= '</Response>';
+  if(voip_debug()) {
+    watchdog('voipplivocore', print_r($output,true));
+  }
   drupal_add_http_header('Content-Type', 'text/xml; charset=utf-8');
   print $output;
   return TRUE;

@@ -100,7 +100,7 @@ class VoipPlivoFrameworkServer extends VoipServer {
       'To' => $dest_number,
       # User Number to Call
       'Gateways' => $gateways,
-      # Gateway string to try dialing our separated by comma. First in list will be tried first
+      # Gateway string to try dialing out separated by comma. First in list will be tried first
       'GatewayCodecs' => $gateway_codecs,
       # Codec string as needed by FS for each gateway separated by comma
       'GatewayTimeouts' => $gateway_timeouts,

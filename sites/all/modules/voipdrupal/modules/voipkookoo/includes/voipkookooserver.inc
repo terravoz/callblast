@@ -231,6 +231,7 @@ watchdog('debug', 'dial url '.$kookoo_url);
       // differentiate between processing errors and higher-level errors
       $voipcall->setErrorMessage($error_msg);
       $voipcall->setCallStatus(VoipCall::ERROR);
+      $voipcall->setTextStatus(VoipCall::TEXT_FAILED);
       $voipcall->save();
       $rc = FALSE;
     }

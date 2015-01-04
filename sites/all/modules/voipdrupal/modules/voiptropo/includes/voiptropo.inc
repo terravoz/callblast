@@ -1404,6 +1404,7 @@ function _voiptropo_handle_ongoing_calls($result, $tropo_action, $cid, $event_ty
       case 'process_send_sms':
       case 'process_sms_callback':
         $call = _voiptropo_process_sms_response($call, $event_type);
+        $call->setEndTime();
         break;
     }
   }

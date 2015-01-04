@@ -140,6 +140,7 @@ function sms_actions_sms_actions() {
   );
   return $sms_actions;
 }
+
 //@todo: add unknown command
 function sms_actions_get_action($cmd){
   $sms_actions_keywords = variable_get('sms_actions_keywords', '');

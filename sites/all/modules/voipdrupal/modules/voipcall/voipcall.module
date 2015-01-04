@@ -479,9 +479,12 @@ function voipcall_play_beep() {
  * @see http://drupal.org/node/1354
  */
 function theme_voipcall_play_beep() {
+  //Use output control otherwise this will be broken if caching is enabled
+  ob_start();
   $filename = drupal_get_path('module', 'voipcall') . '/sound/beep.mp3';
-  header('Content-Type: audio/mpeg');
+  drupal_add_http_header('Content-Type', 'audio/mpeg');
   return readfile($filename);
+  ob_end_clean();
 }
 
 /**

@@ -296,6 +296,7 @@ function _voipkookoo_call_handler($kookoo_action = NULL, $cid = NULL) {
       case 'process_sms_callback':
         $call = _voipkookoo_process_sms_response($call, $_REQUEST);
         if (strtolower($call->getCallChannel()) == 'text') {
+          $call->setEndTime();
           // update sms status
           $call->save();
           // since 'process_sms_callback' is asynchronous, go back
