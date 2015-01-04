@@ -24,15 +24,22 @@ function sms_actions_menu() {
 }
 
 function sms_actions_admin_settings_form() {
+  $form['sms_actions_help'] = array(
+    '#type' => 'item',
+    '#title' => 'SMS actions',
+    '#markup' => 'Case insensitive comma seperated list of keywords for SMS actions. You can add new SMS action by
+    implementing hook_sms_actions().',
+  );
   $sms_actions = module_invoke_all('sms_actions');
   foreach($sms_actions as $key => $sms_action) {
-    $form['sms_actions_'.$key] = array(
+    $form['sms_actions_action_'.$key] = array(
       '#type' => 'textfield',
-      '#title' => t('Keyword for '.$sms_action['title']),
-      '#description' => t('Case insensitive comma seperated list of keywords for '.$sms_action['description']),
-      '#default_value' => variable_get('sms_actions_'.$key, ''),
+      '#title' => t('Keywords for '.$sms_action['title']),
+      '#description' => t('Keywords for '.$sms_action['description']),
+      '#default_value' => variable_get('sms_actions_action_'.$key, ''),
     );
   }
+
   $form['sms_actions_sms_help'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS help'),
@@ -92,23 +99,21 @@ function sms_actions_admin_settings_form_validate($form, &$form_state){
   $sms_actions = module_invoke_all('sms_actions');
   $all_keywords = array();
   foreach($sms_actions as $key => $sms_action) {
-    if($form_state['values']['sms_actions_'.$key]){
+    if($form_state['values']['sms_actions_action_'.$key]){
       $keywords = explode(',',strtoupper($form_state['values']['sms_actions_'.$key]));
       foreach($keywords as $keyword) {
         $keyword = trim($keyword);
         if(isset($all_keywords[$keyword])){
-          form_set_error('sms_actions_'.$key, 'Duplicated keyword '.$keyword);
+          form_set_error('sms_actions_action_'.$key, 'Duplicated keyword '.$keyword);
         }
         $all_keywords[$keyword] = $sms_action['callback'];
       }
     }
   }
   $form_state['data']['sms_actions_keywords'] = $all_keywords;
-  dpm($all_keywords);
 }
 
 function sms_actions_admin_settings_form_submit($form, &$form_state) {
-  dpm($form_state);
   variable_set('sms_actions_keywords', $form_state['data']['sms_actions_keywords']);
 }
 
