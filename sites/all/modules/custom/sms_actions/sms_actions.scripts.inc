@@ -40,11 +40,22 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
     case 'sms_actions_sms_process_request_script':
       //Helper script to process SMS request
       $script = new VoipScript('sms_actions_sms_process_request_script');
-      $text = _sms_actions_sms_process_request($options['text'], $options['caller_number'], $options['dest_number'], $options['call_id']);
+      //$text = _sms_actions_sms_process_request($options['text'], $options['caller_number'], $options['dest_number'], $options['call_id']);
 
-      if ($text) {
-        $script->addSendText($text);
-        $script->addLog("sending $text");
+      $options['caller_number'] = VoipCall::NormalizeNumber($options['caller_number']);
+      $options['text'] = trim($options['text']);
+      if ($options['text']) {
+        $request = explode(" ", $options['text']);
+        $cmd = strtoupper($request[0]);
+        $sms_action = sms_actions_get_action($cmd);
+        watchdog('debug', 'keyword='.$cmd.' using '.$sms_action);
+        if (!$sms_action) {
+          $text = variable_get('sms_actions_sms_unknown', 'Unknown command.');
+          $script->addSendText($text);
+        }
+        else {
+          call_user_func($sms_action, $script, $options);
+        }
       }
 
       $script->addHangup();
@@ -57,6 +68,7 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
 /**
  * Process incoming SMS messages
  */
+/*
 function _sms_actions_sms_process_request($msg, $caller_number, $dest_number, $call_id) {
   watchdog('sms_actions', "In _sms_actions_sms_process_request with $msg, $caller_number, $dest_number");
   $caller_number = VoipCall::NormalizeNumber($caller_number);
@@ -76,3 +88,4 @@ watchdog('debug', 'keyword='.$cmd.' using '.$sms_action);
 
   return $ret;
 }
+*/

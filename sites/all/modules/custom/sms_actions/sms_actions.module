@@ -149,51 +149,51 @@ function sms_actions_get_action($cmd){
 }
 
 /* SMS Actions */
-function sms_actions_action_subscribe($msg, $caller_number, $dest_number, $call_id) {
-  $phone_number = VoipNumber::getVoipNumbersByNumber($caller_number, 'node', 'phone_number');
+function sms_actions_action_subscribe(&$script, $options) {
+  $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
   if ($phone_number) {
     //Number already exists
-    $ret = variable_get('sms_actions_sms_unknown', 'Number already registered.');
+    $text = variable_get('sms_actions_sms_unknown', 'Number already registered.');
   }
   else {
     $node->type = 'phone_number';
-    $node->title = $caller_number;
+    $node->title = $options['caller_number'];
     $node->language = 'und';
     $node->status = 1;
     $node->field_opt_in['und'][0]['value'] = 1; //verify
-    $node->field_phone_number['und'][0]['vnid'] = $caller_number;
-    $language = callblast_alters_number_to_lang($dest_number);
+    $node->field_phone_number['und'][0]['vnid'] = $options['caller_number'];
+    $language = callblast_alters_number_to_lang($options['dest_number']);
     $node->field_language['und'][0]['value'] = $language;
     // create the node
     node_save($node);
     //@todo: verify number
     if ($node->nid) {
-      $ret = variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.');
+      $text = variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.');
     }
     else {
       watchdog('sms_actions', 'Error saving phone number: ' . print_r($node, TRUE), array(), WATCHDOG_ERROR);
-      $ret = t('System error. Please try again later.');
+      $text = t('System error. Please try again later.');
     }
   }
 
-  return $ret;
+  $script->addSendText($text);
 }
 
-function sms_actions_action_unsubscribe($msg, $caller_number, $dest_number, $call_id) {
+function sms_actions_action_unsubscribe(&$script, $options) {
   //Stop getting messages
-  $nids = VoipNumber::getEidsByNumber($caller_number, 'node');
+  $nids = VoipNumber::getEidsByNumber($options['caller_number'], 'node');
   if ($nid = reset($nids)) {
     node_delete($nid);
-    $ret = variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.');
+    $text = variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.');
   }
   else {
-    $ret = variable_get('sms_actions_sms_not_in_list', 'Number not in the list.');
+    $text = variable_get('sms_actions_sms_not_in_list', 'Number not in the list.');
   }
-  return $ret;
+  $script->addSendText($text);
 }
 
-function sms_actions_action_help($msg, $caller_number, $dest_number, $call_id) {
-  $ret = variable_get('sms_actions_sms_help',
+function sms_actions_action_help(&$script, $options) {
+  $text = variable_get('sms_actions_sms_help',
     'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.');
-  return $ret;
+  $script->addSendText($text);
 }
