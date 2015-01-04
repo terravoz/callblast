@@ -1,7 +1,0 @@
-core = "7.x"
-description = "Callblast module for VoIP Scripts"
-name = "Callblast Scripts"
-dependencies[] = voip
-package = "Callblast"
-
-

@@ -33,7 +33,6 @@ function callblast_alters_cron() {
   // See if any nodes use the terms. If none, delete the terms.
   foreach ($terms as $term) {
     if (callblast_alters_custom_helper_taxonomy_term_count_nodes($term->tid) == 0) {
-      watchdog('callblast_alters', "Autodeleting group ".$term->name);
       taxonomy_term_delete($term->tid);
     }
   }
@@ -129,20 +128,6 @@ function callblast_alters_broadcast_node_test($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }*/
 
-
-function callblast_alters_get_phone_number($phone_number) {
-  $query = db_select('voipnumber', 'vn');
-  $query->fields('vn');
-  $query->condition('phone_number' , $phone_number);
-  $query->leftJoin('field_data_field_phone_number', 'pn','pn.field_phone_number_vnid=vn.vnid');
-  $query = $query->execute();
-  $result = $query->fetchObject();
-  if($result) {
-    $phone_number = node_load($result->entity_id);
-    return $phone_number;
-  }
-  return NULL;
-}
 /*
 function _callblast_alters_get_phone_numbers() {
   $phone_numbers = array();
@@ -405,13 +390,10 @@ function _callblast_alters_taxonomy_create_tags($tags, $vid) {
         'name' => $typed_term,
         'vocabulary_machine_name' => $vocabulary->machine_name,
       );
-      watchdog('debug', print_r($item, true));
       $term = (object) $item;
       taxonomy_term_save($term);
-      watchdog('debug', print_r($term, true));
       $item['tid'] = $term->tid;
       $value[] = (array) $term;
-      watchdog('debug1', print_r($value, true));
     }
   }
 

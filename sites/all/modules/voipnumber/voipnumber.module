@@ -39,13 +39,18 @@ function voipnumber_get_voipnumber_by_eid($entity_id, $entity_type = NULL) {
  *
  * Returns numbers provided by voipnumber module (voipnumber CCK and voipnumber user profile)
  */
-function voipnumber_get_voipnumber_by_phone_number($number, $entity_type = NULL) {
+function voipnumber_get_voipnumber_by_phone_number($number, $entity_type = NULL, $entity_bundle = NULL) {
   $numbers = array();
   $voipnumber_data = db_select('voipnumber', 'vn')
     ->fields('vn')
     ->condition('phone_number' , $number);
   if($entity_type) {
     $voipnumber_data->condition('entity_type' , $entity_type);
+    if($entity_type == 'node' && $entity_bundle) {
+      //Support search by node bundles
+      $voipnumber_data->leftJoin('node', 'n','n.nid=vn.entity_id');
+      $voipnumber_data->condition('n.type' , $entity_bundle);
+    }
   }
   $voipnumber_data = $voipnumber_data->execute();
   while($voipnumber = $voipnumber_data->fetchAssoc()) {

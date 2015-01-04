@@ -1,0 +1,9 @@
+core = "7.x"
+description = "SMS actions for VoIP Drupal"
+name = "SMS Actions"
+dependencies[] = voip
+dependencies[] = voipnumber
+dependencies[] = callblast_alters
+package = "VoIP Drupal"
+
+

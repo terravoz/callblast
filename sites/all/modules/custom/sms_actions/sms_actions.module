@@ -1,0 +1,193 @@
+<?php
+
+/**
+ * @file Provides various VoIP Drupal Scripts for the Callblast
+ */
+
+foreach (array('sms_actions.scripts.inc') as $file) {
+  require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . $file);
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function sms_actions_menu() {
+  $items['admin/voip/sms_actions'] = array(
+    'title' => 'SMS Actions',
+    'description' => 'SMS Actions config',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sms_actions_admin_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function sms_actions_admin_settings_form() {
+  $sms_actions = module_invoke_all('sms_actions');
+  foreach($sms_actions as $key => $sms_action) {
+    $form['sms_actions_'.$key] = array(
+      '#type' => 'textfield',
+      '#title' => t('Keyword for '.$sms_action['title']),
+      '#description' => t('Case insensitive comma seperated list of keywords for '.$sms_action['description']),
+      '#default_value' => variable_get('sms_actions_'.$key, ''),
+    );
+  }
+  $form['sms_actions_sms_help'] = array(
+    '#type' => 'textarea',
+    '#title' => t('SMS help'),
+    '#description' => t('Text SMS help message'),
+    '#default_value' => variable_get('sms_actions_sms_help',
+      'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.'),
+);
+
+  $form['sms_actions_sms_welcome'] = array(
+    '#type' => 'textarea',
+    '#title' => t('SMS welcome'),
+    '#description' => t('Welcome SMS for text to be sent the first time a user subscribes to the service.'),
+    '#default_value' => variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.'),
+  );
+
+  $form['sms_actions_sms_unsubscribe'] = array(
+    '#type' => 'textarea',
+    '#title' => t('SMS Unsubscribe'),
+    '#description' => t('Unsubscribe text for SMS to be sent when S command is received.'),
+    '#default_value' => variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.'),
+  );
+
+  $form['sms_actions_sms_duplicate'] = array(
+    '#type' => 'textarea',
+    '#title' => t('SMS Duplicate number'),
+    '#description' => t('Text for SMS to be sent when number tries to register again. '),
+    '#default_value' => variable_get('sms_actions_sms_unknown', 'Number already registered.'),
+  );
+
+  $form['sms_actions_sms_not_in_list'] = array(
+    '#type' => 'textarea',
+    '#title' => t('SMS Not in list'),
+    '#description' => t('Text for SMS to be sent when number tries to unsubscribe but he is not registered. '),
+    '#default_value' => variable_get('sms_actions_sms_not_in_list', 'Number not in the list.'),
+  );
+
+  $form['sms_actions_sms_unknown'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Unknown command'),
+    '#description' => t('SMS for unknown command.'),
+    '#default_value' => variable_get('sms_actions_sms_unknown', 'Unknown command.'),
+  );
+
+  $form['sms_actions_opt_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Opt-in message'),
+    '#default_value' => variable_get('sms_actions_opt_message',
+      'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.')
+  );
+
+  $form['#submit'][] = 'sms_actions_admin_settings_form_submit';
+
+  return system_settings_form($form);
+}
+
+function sms_actions_admin_settings_form_validate($form, &$form_state){
+  $sms_actions = module_invoke_all('sms_actions');
+  $all_keywords = array();
+  foreach($sms_actions as $key => $sms_action) {
+    if($form_state['values']['sms_actions_'.$key]){
+      $keywords = explode(',',strtoupper($form_state['values']['sms_actions_'.$key]));
+      foreach($keywords as $keyword) {
+        $keyword = trim($keyword);
+        if(isset($all_keywords[$keyword])){
+          form_set_error('sms_actions_'.$key, 'Duplicated keyword '.$keyword);
+        }
+        $all_keywords[$keyword] = $sms_action['callback'];
+      }
+    }
+  }
+  $form_state['data']['sms_actions_keywords'] = $all_keywords;
+  dpm($all_keywords);
+}
+
+function sms_actions_admin_settings_form_submit($form, &$form_state) {
+  dpm($form_state);
+  variable_set('sms_actions_keywords', $form_state['data']['sms_actions_keywords']);
+}
+
+/**
+ * Implementation of hook_sms_actions().
+ */
+function sms_actions_sms_actions() {
+  $sms_actions = array(
+    'subscribe' => array(
+      'callback' => 'sms_actions_action_subscribe',
+      'title' => 'SMS subscription',
+      'description' => 'SMS subscription',
+    ),
+    'unsubscribe' => array(
+      'callback' => 'sms_actions_action_unsubscribe',
+      'title' => 'SMS unsubscription',
+      'description' => 'SMS unsubscription',
+    ),
+    'help' => array(
+      'callback' => 'sms_actions_action_help',
+      'title' => 'SMS help',
+      'description' => 'SMS help',
+    ),
+  );
+  return $sms_actions;
+}
+//@todo: add unknown command
+function sms_actions_get_action($cmd){
+  $sms_actions_keywords = variable_get('sms_actions_keywords', '');
+  $sms_action_callback = isset($sms_actions_keywords[$cmd]) ? $sms_actions_keywords[$cmd] : '';
+  return $sms_action_callback;
+}
+
+/* SMS Actions */
+function sms_actions_action_subscribe($msg, $caller_number, $dest_number, $call_id) {
+  $phone_number = VoipNumber::getVoipNumbersByNumber($caller_number, 'node', 'phone_number');
+  if ($phone_number) {
+    //Number already exists
+    $ret = variable_get('sms_actions_sms_unknown', 'Number already registered.');
+  }
+  else {
+    $node->type = 'phone_number';
+    $node->title = $caller_number;
+    $node->language = 'und';
+    $node->status = 1;
+    $node->field_opt_in['und'][0]['value'] = 1; //verify
+    $node->field_phone_number['und'][0]['vnid'] = $caller_number;
+    $language = callblast_alters_number_to_lang($dest_number);
+    $node->field_language['und'][0]['value'] = $language;
+    // create the node
+    node_save($node);
+    //@todo: verify number
+    if ($node->nid) {
+      $ret = variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.');
+    }
+    else {
+      watchdog('sms_actions', 'Error saving phone number: ' . print_r($node, TRUE), array(), WATCHDOG_ERROR);
+      $ret = t('System error. Please try again later.');
+    }
+  }
+
+  return $ret;
+}
+
+function sms_actions_action_unsubscribe($msg, $caller_number, $dest_number, $call_id) {
+  //Stop getting messages
+  $nids = VoipNumber::getEidsByNumber($caller_number, 'node');
+  if ($nid = reset($nids)) {
+    node_delete($nid);
+    $ret = variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.');
+  }
+  else {
+    $ret = variable_get('sms_actions_sms_not_in_list', 'Number not in the list.');
+  }
+  return $ret;
+}
+
+function sms_actions_action_help($msg, $caller_number, $dest_number, $call_id) {
+  $ret = variable_get('sms_actions_sms_help',
+    'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.');
+  return $ret;
+}

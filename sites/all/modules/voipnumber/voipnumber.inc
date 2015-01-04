@@ -61,12 +61,18 @@ class VoipNumber {
    * @param $number
    *   String representing either a SIP or an ITU E.164 number
    *
+   * @param $entity_type
+   *   String representing entity type (eg: user, node, block, etc...)
+   *
+   * @param $entity_bundle
+   *   String representing entity bundle. Currently supports only node bundles (eg: page, article, etc...)
+   *
    * @return
    *   Array of VoIP number objects.
    */
-  public static function getVoipNumbersByNumber($number, $entity_type = NULL) {
+  public static function getVoipNumbersByNumber($number, $entity_type = NULL, $entity_bundle = NULL) {
     //Invoke hook_get_voip_numbers()
-    $numbers = module_invoke_all('get_voipnumber_by_phone_number', $number, $entity_type);
+    $numbers = module_invoke_all('get_voipnumber_by_phone_number', $number, $entity_type, $entity_bundle);
     return $numbers;
   }
 

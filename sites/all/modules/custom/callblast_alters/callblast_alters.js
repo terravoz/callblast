@@ -34,7 +34,6 @@
 
       //Hide admin options from broadcast and episode content types
       $('#broadcast-node-form .vertical-tabs').hide();
-      $('#episode-node-form .vertical-tabs').hide();
 
       //Select all phone numbers
       //$('#broadcast-node-form #edit-field-phone-numbers-und option').attr('selected', 'selected');
