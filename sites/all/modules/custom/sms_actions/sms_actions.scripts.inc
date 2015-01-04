@@ -65,7 +65,7 @@ function _sms_actions_sms_process_request($msg, $caller_number, $dest_number, $c
     $request = explode(" ", $msg);
     $cmd = strtoupper($request[0]);
     $sms_action = sms_actions_get_action($cmd);
-
+watchdog('debug', 'keyword='.$cmd.' using '.$sms_action);
     if (!$sms_action) {
       $ret = variable_get('sms_actions_sms_unknown', 'Unknown command.');
     }

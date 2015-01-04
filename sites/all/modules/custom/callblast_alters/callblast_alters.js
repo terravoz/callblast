@@ -39,7 +39,6 @@
       //$('#broadcast-node-form #edit-field-phone-numbers-und option').attr('selected', 'selected');
       //Hide phone numbers field
       $('#broadcast-node-form #edit-field-phone-numbers').hide();
-
     }
   };
 
