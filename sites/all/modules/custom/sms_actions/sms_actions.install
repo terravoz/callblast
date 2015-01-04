@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ *
+ */
+function sms_actions_uninstall() {
+  //Delete module variables
+  db_delete('variable')
+    ->condition('name', 'sms_actions_%%', 'LIKE')
+    ->execute();
+}

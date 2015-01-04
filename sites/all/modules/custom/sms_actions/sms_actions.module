@@ -100,7 +100,7 @@ function sms_actions_admin_settings_form_validate($form, &$form_state){
   $all_keywords = array();
   foreach($sms_actions as $key => $sms_action) {
     if($form_state['values']['sms_actions_action_'.$key]){
-      $keywords = explode(',',strtoupper($form_state['values']['sms_actions_'.$key]));
+      $keywords = explode(',',strtoupper($form_state['values']['sms_actions_action_'.$key]));
       foreach($keywords as $keyword) {
         $keyword = trim($keyword);
         if(isset($all_keywords[$keyword])){
