@@ -131,14 +131,21 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
         $queue->createItem($item);
       }
       break;
-    case 'voice':
+    case 'voice_text':
+    case 'voice_audio':
     case 'voice_script':
-      if($blast_type == 'voice') {
+      if($blast_type == 'voice_text') {
         //VoIP script that reads the voice announcement
         $script = new VoipScript('voipnumber_read_announcement');
         $script->addSay($form_state['values']['field_voice_announcement']['und'][0]['value']);
         $script->addHangup();
       }
+    else if($blast_type == 'voice_audio') {
+      //VoIP script that reads the voice announcement
+      $script = new VoipScript('voipnumber_play_announcement');
+      //$script->addSay(file_create_url($form_state['values']['field_voice_audio']['und'][0]['uri']));
+      $script->addHangup();
+    }
       else {
         //Get selected script
         $script = VoipScript::loadScript($form_state['values']['field_voip_script']['und'][0]['value']);

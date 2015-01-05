@@ -35,7 +35,7 @@ switch($blast_type) {
     $message = $node->body[$node->language][0]['value'];
     print "SMS announcement: '$message'";
     break;
-  case 'voice':
+  case 'voice_text':
   case 'voice_script':
     if($blast_type == 'voice') {
       $voice_say = $node->field_voice_announcement['und'][0]['value'];

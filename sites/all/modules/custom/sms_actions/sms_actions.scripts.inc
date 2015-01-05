@@ -40,8 +40,6 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
     case 'sms_actions_sms_process_request_script':
       //Helper script to process SMS request
       $script = new VoipScript('sms_actions_sms_process_request_script');
-      //$text = _sms_actions_sms_process_request($options['text'], $options['caller_number'], $options['dest_number'], $options['call_id']);
-
       $options['caller_number'] = VoipCall::NormalizeNumber($options['caller_number']);
       $options['text'] = trim($options['text']);
       if ($options['text']) {
@@ -54,38 +52,63 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
           $script->addSendText($text);
         }
         else {
-          call_user_func($sms_action, $script, $options);
+          //call_user_func($sms_action, $script, $options);
+          $script->addGosub($sms_action, $options);
         }
       }
 
       $script->addHangup();
       break;
+    case 'sms_actions_action_subscribe':
+      $script = new VoipScript('sms_actions_action_subscribe');
+      $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
+      if ($phone_number) {
+        //Number already exists
+        $text = variable_get('sms_actions_sms_unknown', 'Number already registered.');
+      }
+      else {
+        $node->type = 'phone_number';
+        $node->title = $options['caller_number'];
+        $node->language = 'und';
+        $node->status = 1;
+        $node->field_opt_in['und'][0]['value'] = 1; //verify
+        $node->field_phone_number['und'][0]['vnid'] = $options['caller_number'];
+        $language = callblast_alters_number_to_lang($options['dest_number']);
+        $node->field_language['und'][0]['value'] = $language;
+        // create the node
+        node_save($node);
+        //@todo: verify number
+        if ($node->nid) {
+          $text = variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.');
+        }
+        else {
+          watchdog('sms_actions', 'Error saving phone number: ' . print_r($node, TRUE), array(), WATCHDOG_ERROR);
+          $text = t('System error. Please try again later.');
+        }
+      }
+
+      $script->addSendText($text);
+      break;
+    case 'sms_actions_action_unsubscribe':
+      $script = new VoipScript('sms_actions_action_unsubscribe');
+      //Stop getting messages
+      $nids = VoipNumber::getEidsByNumber($options['caller_number'], 'node');
+      if ($nid = reset($nids)) {
+        node_delete($nid);
+        $text = variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.');
+      }
+      else {
+        $text = variable_get('sms_actions_sms_not_in_list', 'Number not in the list.');
+      }
+      $script->addSendText($text);
+      break;
+    case 'sms_actions_action_help':
+      $script = new VoipScript('sms_actions_action_help');
+      $text = variable_get('sms_actions_sms_help',
+        'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.');
+      $script->addSendText($text);
+      break;
   }
 
   return $script;
 }
-
-/**
- * Process incoming SMS messages
- */
-/*
-function _sms_actions_sms_process_request($msg, $caller_number, $dest_number, $call_id) {
-  watchdog('sms_actions', "In _sms_actions_sms_process_request with $msg, $caller_number, $dest_number");
-  $caller_number = VoipCall::NormalizeNumber($caller_number);
-  $msg = trim($msg);
-  if ($msg) {
-    $request = explode(" ", $msg);
-    $cmd = strtoupper($request[0]);
-    $sms_action = sms_actions_get_action($cmd);
-watchdog('debug', 'keyword='.$cmd.' using '.$sms_action);
-    if (!$sms_action) {
-      $ret = variable_get('sms_actions_sms_unknown', 'Unknown command.');
-    }
-    else {
-      $ret = call_user_func($sms_action, $msg, $caller_number, $dest_number, $call_id);
-    }
-  }
-
-  return $ret;
-}
-*/
