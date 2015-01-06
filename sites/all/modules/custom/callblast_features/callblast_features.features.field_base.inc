@@ -63,11 +63,41 @@ function callblast_features_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         'sms' => 'SMS announcement',
-        'voice' => 'Voice announcement',
+        'voice_text' => 'Voice announcement from text',
+        'voice_audio' => 'Voice announcement from audio',
         'voice_script' => 'Voice announcement using VoIP Script',
       ),
       'allowed_values_function' => '',
       'allowed_values_php' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
+  // Exported field_base: 'field_blast_voice'
+  $field_bases['field_blast_voice'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_blast_voice',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(),
+      'allowed_values_function' => 'cck_allowed_values_php',
+      'allowed_values_php' => '$server = VoipServer::getDefaultServer();
+  $voices = VoipVoice::getVoices(NULL, NULL, NULL, $server->getId());
+return voipcall_get_voices_as_list($voices);',
     ),
     'translatable' => 0,
     'type' => 'list_text',
@@ -166,6 +196,40 @@ return $tids;',
     'settings' => array(),
     'translatable' => 0,
     'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_voice_audio'
+  $field_bases['field_voice_audio'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_voice_audio',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'foreign keys' => array(
+      'fid' => array(
+        'columns' => array(
+          'fid' => 'fid',
+        ),
+        'table' => 'file_managed',
+      ),
+    ),
+    'indexes' => array(
+      'fid' => array(
+        0 => 'fid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'file',
+    'settings' => array(
+      'display_default' => 0,
+      'display_field' => 0,
+      'uri_scheme' => 'public',
+    ),
+    'translatable' => 0,
+    'type' => 'file',
   );
 
   // Exported field_base: 'field_voip_call'

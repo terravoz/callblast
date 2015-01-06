@@ -54,15 +54,15 @@ function audiofield_players() {
     'callback' => 'audiofield_premium_beat_mini',
   );
 
-  if (module_exists('flowplayer')) {
     $players['flowplayer'] = array(
       'path' => drupal_get_path('module', 'flowplayer') . '/flowplayer/flowplayer.swf',
       'name' => 'Flowplayer',
       'download_link' => 'http://drupal.org/project/flowplayer',
       'filetypes' => array('mp3'),
       'callback' => 'audiofield_flowplayer',
+      'module' => 'flowplayer',
     );
-  }
+
 
   $players['soundmanager2'] = array(
     'path' => variable_get('audiofield_players_dir', 'sites/all/libraries/player') . "/soundmanager2",
@@ -79,25 +79,15 @@ function audiofield_players() {
     'callback' => 'audiofield_googlereader',
     'external' => TRUE,
   );
-
-  $players['jplayer'] = array(
-    'path' => variable_get('audiofield_players_dir', 'sites/all/libraries/player') . "/jplayer/jquery.jplayer.min.js",
-    'css' => variable_get('audiofield_players_dir', 'sites/all/libraries/player') . "/jplayer/jplayer.css",
-    'name' => 'jPlayer',
-    'download_link' => 'http://www.jplayer.org/download/',
-    'filetypes' => array('mp3'),
-    'callback' => 'audiofield_jplayer',
-  );
-
-  /*
-   $players['jplayer_module']=array(
-       'path' => '',
-       'name' => 'jPlayer Module',
-       'download_link' => 'http://drupal.org/project/jplayer',
-       'filetypes' => array('mp3', 'm4a', 'oga', 'webma', 'wav'),
-       'callback' => 'audiofield_jplayer_module',
-     );
-   */
+    $players['jplayer'] = array(
+      'path' => variable_get('audiofield_players_dir', 'sites/all/libraries/player') . "/jplayer/jquery.jplayer.min.js",
+      'css' => variable_get('audiofield_players_dir', 'sites/all/libraries/player') . "/jplayer/jplayer.css",
+      'name' => 'jPlayer',
+      'download_link' => 'https://www.drupal.org/project/jplayer',
+      'module' => 'jplayer',
+      'filetypes' => array('mp3'),
+      'callback' => 'audiofield_jplayer',
+    );
 
   return $players;
 }
@@ -313,59 +303,28 @@ function audiofield_googlereader($player_path, $audio_file) {
 }
 
 function theme_audiofield_googlereader($variables) {
-  $player_path = $variables['player_path'];
   $audio_file = $variables['audio_file'];
   return '<embed type="application/x-shockwave-flash" flashvars="audioUrl=' . $audio_file . '" src="http://www.google.com/reader/ui/3523697345-audio-player.swf" width="400" height="27" quality="best"></embed>';
 }
 
-function audiofield_jplayer($player_path, $audio_file) {
-  static $instanceIndex = 0;
-  if ($audio_file == '') {
-    return '- HTML5 media player for jQuery';
-  }
-  else {
-    $instanceIndex += 1;
-    $path_parts = explode('/', $player_path);
-    $audio_file_name = array_pop($path_parts);
-    $player_base_path = implode('/', $path_parts);
-    drupal_add_js($player_path);
-    $audio_players = audiofield_players();
-    drupal_add_css($audio_players['jplayer']['css']);
-    return '<div id="jquery_jplayer_' . $instanceIndex . '" class="jp-jplayer"></div>
-
-    <div class="jp-audio" id="jp_container_' . $instanceIndex . '">
-      <div class="jp-type-single">
-      <div id="jp_interface_' . $instanceIndex . '" class="jp-gui jp-interface">
-      <ul class="jp-controls">
-        <li><a href="#" class="jp-play" tabindex="1" style="display: block; ">play</a></li>
-        <li><a href="#" class="jp-pause" tabindex="1" style="display: none; ">pause</a></li>
-        <li><a href="#" class="jp-stop" tabindex="1">stop</a></li>
-        <li><a href="#" class="jp-mute" tabindex="1">mute</a></li>
-        <li><a href="#" class="jp-unmute" tabindex="1" style="display: none; ">unmute</a></li>
-      </ul>
-      <div class="jp-progress">
-        <div class="jp-seek-bar" style="width: 100%; ">
-          <div class="jp-play-bar" style="width: 0%; "></div>
-        </div>
-      </div>
-      <div class="jp-volume-bar">
-        <div class="jp-volume-bar-value" style="width: 80%; "></div>
-      </div>
-      <div class="jp-current-time">00:00</div>
-      <div class="jp-duration">00:00</div>
-  </div></div></div>
-    <script type="text/javascript" >
-          jQuery( "#jquery_jplayer_' . $instanceIndex . '" ).jPlayer({
-            swfPath: "' . $player_base_path . '",
-			supplied : "mp3",
-			 wmode: "window",
-			cssSelectorAncestor: "#jp_container_' . $instanceIndex . '",
-			ready: function() {
-              jQuery(this).jPlayer( "setMedia", {
-                  mp3 : "' . $audio_file . '"
-              });
-            }
-          });
-      </script>';
-  }
+function audiofield_jplayer($player_path, $audio_file, $options) {
+  return theme(
+    'jplayer',
+    array(
+      'entity_type' => $options['entity_type'],
+      'entity' => $options['entity'],
+      'field_name' => $options['instance']['field_name'],
+      'items' => $options['items'],
+      'settings' => array(
+    'autoplay' => 0,
+    'solution' => 'html, flash',
+    'preload' => 'metadata',
+    'volume' => 80,
+    'muted' => FALSE,
+    'repeat' => 'none',
+    'backgroundColor' => '000000',
+    'mode' => 'playlist',
+  ),
+    )
+  );
 }

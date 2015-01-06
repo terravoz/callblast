@@ -1113,7 +1113,7 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $handler->display->display_options['filters']['field_opt_in_value']['expose']['operator'] = 'field_opt_in_value_op';
   $handler->display->display_options['filters']['field_opt_in_value']['expose']['identifier'] = 'field_opt_in_value';
   $handler->display->display_options['filters']['field_opt_in_value']['is_grouped'] = TRUE;
-  $handler->display->display_options['filters']['field_opt_in_value']['group_info']['label'] = 'Opt In status';
+  $handler->display->display_options['filters']['field_opt_in_value']['group_info']['label'] = 'Opted-in status';
   $handler->display->display_options['filters']['field_opt_in_value']['group_info']['identifier'] = 'field_opt_in_value';
   $handler->display->display_options['filters']['field_opt_in_value']['group_info']['widget'] = 'radios';
   $handler->display->display_options['filters']['field_opt_in_value']['group_info']['group_items'] = array(
@@ -1341,7 +1341,7 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
     t('Combine fields filter'),
     t('Filter by group'),
     t('Opt in (field_opt_in)'),
-    t('Opt In status'),
+    t('Opted-in status'),
     t('Number'),
     t('Page'),
     t('Data export'),

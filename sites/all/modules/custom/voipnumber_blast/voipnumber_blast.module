@@ -137,13 +137,20 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
       if($blast_type == 'voice_text') {
         //VoIP script that reads the voice announcement
         $script = new VoipScript('voipnumber_read_announcement');
+        if($form_state['values']['field_blast_voice']['und'][0]['value']) {
+          $script->setVoice($form_state['values']['field_blast_voice']['und'][0]['value']);
+        }
         $script->addSay($form_state['values']['field_voice_announcement']['und'][0]['value']);
         $script->addHangup();
       }
     else if($blast_type == 'voice_audio') {
       //VoIP script that reads the voice announcement
       $script = new VoipScript('voipnumber_play_announcement');
-      //$script->addSay(file_create_url($form_state['values']['field_voice_audio']['und'][0]['uri']));
+      if($form_state['values']['field_blast_voice']['und'][0]['value']) {
+        $script->setVoice($form_state['values']['field_blast_voice']['und'][0]['value']);
+      }
+      $file = file_load($form_state['values']['field_voice_audio']['und'][0]['fid']);
+      $script->addSay(file_create_url($file->uri));
       $script->addHangup();
     }
       else {
@@ -164,14 +171,6 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
         //Set destination number
         $call->setDestNumber($voipnumber->getNumber());
         $call = $call->save();
-
-        //Store blast entity
-        /*$voipnumber_blast = array(
-          'nid' => $blast_id,
-          'vnid' => $voipnumber->getVnid(),
-          'cid' => $call->getCid(),
-        );
-        drupal_write_record('voipnumber_blast', $voipnumber_blast);*/
 
         //Store VoIP Call reference in the Announcement content type
         $blast->field_voip_call['und'][]['value'] = $call->getCid();

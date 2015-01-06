@@ -43,7 +43,7 @@ function audiofield_admin_settings_form() {
   $players = array();
   $download_players = '';
   foreach ($audio_players as $id => $player) {
-    if (file_exists($player['path']) || (isset($player['external']) && $player['external'])) {
+    if (file_exists($player['path']) || (isset($player['external']) && $player['external']) || (isset($player['module']) && module_exists($player['module']))) {
       foreach ($player['filetypes'] as $filetype) {
         $players[$filetype][$id] = $player['name'] . '<br/>'; /* . call_user_func($player['callback'], $base_path . $player['path'], "");*/
       }
@@ -99,25 +99,14 @@ function audiofield_admin_settings_form() {
  * Implementation of hook_theme().
  */
 function audiofield_theme() {
-  $theme = array(
-    // Themes for the formatters.
-    'audiofield_formatter_audiofield_embedded' => array(
-      'variables' => array('file' => NULL),
-      'file' => 'audiofield_formatter.inc',
-    ),
-    'audiofield_formatter_audiofield_nodownload' => array(
-      'variables' => array('file' => NULL),
-      'file' => 'audiofield_formatter.inc',
-    ),
-  );
-  $theme = array_merge($theme, _audiofield_theme());
+  $theme = _audiofield_theme();
   return $theme;
 }
 
 /**
  * Get the object for the suitable player for the parameter resource
  */
-function audiofield_get_player($audio_url, $op) {
+function audiofield_get_player($audio_url, $op, $options = array()) {
   global $base_path;
   //Lets convert $op to lowercase
   $op = strtolower($op);
@@ -128,7 +117,7 @@ function audiofield_get_player($audio_url, $op) {
   if (empty($player)) {
     return audiofield_embeddedplayer($audio_url);
   }
-  return call_user_func($player['callback'], $base_path . $player['path'], $audio_url);
+  return call_user_func($player['callback'], $base_path . $player['path'], $audio_url, $options);
 }
 
 /**
@@ -168,6 +157,30 @@ function audiofield_form_content_field_overview_submit(&$form, &$form_state) {
     }
     field_update_instance($instance);
   }
+}
+
+/**
+ * Implements hook_field_conditional_state_settings_alter().
+ *
+ * Add support for Field Conditional States
+ */
+function audiofield_field_conditional_state_settings_alter(&$settings) {
+  $settings['audiofield_widget'] = array(
+    'form_elements' => array(0=>array(0, 'upload')),
+    'field_data' => array(0),
+    'reprocess_from_root' => TRUE,
+    'field_states' => array(
+      'enabled',
+      'disabled',
+      'required',
+      'optional',
+      'visible',
+      'invisible',
+    ),
+    'trigger_states' => array('empty', 'filled'),
+    'trigger_value_widget' => '_field_conditional_state_default_trigger_value_widget',
+    'trigger_value_submit' => '_field_conditional_state_default_trigger_value_submit',
+  );
 }
 
 /**

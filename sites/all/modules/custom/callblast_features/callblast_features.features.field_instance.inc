@@ -37,7 +37,7 @@ function callblast_features_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'body',
     'label' => 'Text contents',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'display_summary' => 0,
       'text_processing' => 0,
@@ -64,11 +64,7 @@ function callblast_features_field_default_field_instances() {
   // Exported field_instance: 'node-broadcast-field_blast_type'
   $field_instances['node-broadcast-field_blast_type'] = array(
     'bundle' => 'broadcast',
-    'default_value' => array(
-      0 => array(
-        'value' => 'text',
-      ),
-    ),
+    'default_value' => NULL,
     'default_value_function' => '',
     'default_value_php' => '',
     'deleted' => 0,
@@ -103,6 +99,47 @@ function callblast_features_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-broadcast-field_blast_voice'
+  $field_instances['node-broadcast-field_blast_voice'] = array(
+    'bundle' => 'broadcast',
+    'default_value' => NULL,
+    'default_value_function' => '',
+    'default_value_php' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 13,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_blast_voice',
+    'label' => 'Voice',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 2,
     ),
   );
 
@@ -187,7 +224,7 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -215,7 +252,7 @@ function callblast_features_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_voice_announcement',
     'label' => 'Voice announcement',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -232,6 +269,49 @@ function callblast_features_field_default_field_instances() {
       ),
       'type' => 'text_textarea',
       'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-broadcast-field_voice_audio'
+  $field_instances['node-broadcast-field_voice_audio'] = array(
+    'bundle' => 'broadcast',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'audiofield',
+        'settings' => array(),
+        'type' => 'audiofield_embedded',
+        'weight' => 14,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_voice_audio',
+    'label' => 'Audio',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'mp3 wav',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'audiofield',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'audiofield_widget',
+      'weight' => 7,
     ),
   );
 
@@ -303,7 +383,7 @@ function callblast_features_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_voip_script',
     'label' => 'VoIP Script',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -314,18 +394,20 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Audio');
   t('Blast Description');
   t('Blast Type');
   t('Select Destination Groups');
   t('Text contents');
   t('VoIP Call');
   t('VoIP Script');
+  t('Voice');
   t('Voice announcement');
 
   return $field_instances;

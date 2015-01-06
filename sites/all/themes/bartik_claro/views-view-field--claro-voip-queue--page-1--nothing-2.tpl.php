@@ -22,13 +22,13 @@
  * the view is modified.
  */
 ?>
-<?php 
+<?php
 $nid = $row->advancedqueue_tags_tag;
 $node = node_load($nid);
 //dpm($node);
 $blast_type = $node->field_blast_type['und'][0]['value'];
 
-switch($blast_type) {
+switch ($blast_type) {
   case 'sms':
     //SMS announcement
     //fix: for some reason body changed to eng
@@ -36,15 +36,16 @@ switch($blast_type) {
     print "SMS announcement: '$message'";
     break;
   case 'voice_text':
+    $voice_say = $node->field_voice_announcement['und'][0]['value'];
+    print "Voice announcement using text: '$voice_say'";
+    break;
+  case 'voice_audio':
+    $voice_audio = $node->field_voice_audio['und'][0]['filename'];
+    print "Voice announcement using audio: '$voice_audio'";
+    break;
   case 'voice_script':
-    if($blast_type == 'voice') {
-      $voice_say = $node->field_voice_announcement['und'][0]['value'];
-      print "Voice announcement: '$voice_say'";
-    }
-    else {
-      $voip_script = $node->field_voip_script['und'][0]['value'];
-      print "Voice announcement using: '$voip_script'";
-    }
+    $voip_script = $node->field_voip_script['und'][0]['value'];
+    print "Voice announcement using script: '$voip_script'";
     break;
 }
 ?>

@@ -160,13 +160,33 @@ function audiofield_field_formatter_view($entity_type, $entity, $field, $instanc
 
   switch ($display['type']) {
     case 'audiofield_embedded' :
-      foreach ($items as $delta => $item) {
-        $elements[] = array('#markup' => theme('audiofield_formatter_audiofield_embedded', array('file' => (object) $item)));
-      }
-      break;
     case 'audiofield_nodownload':
+      global $user;
       foreach ($items as $delta => $item) {
-        $elements[] = array('#markup' => theme('audiofield_formatter_audiofield_nodownload', array('file' => (object) $item)));
+        $audiofile = file_create_url($item['uri']);
+        $info = pathinfo($audiofile);
+        $op = $info['extension'];
+        $options = array(
+          'entity_type' => $entity_type,
+          'entity' => $entity,
+          'field' => $field,
+          'instance' => $instance,
+          'langcode' => $langcode,
+          'items' => $items,
+          'display' => $display,
+        );
+
+        $download_link = '';
+        if($display['type'] == 'audiofield_embedded') {
+          if ($user->uid == $item['uid'] && user_access('download own audio files')) {
+            $download_link .= '<div class="audio-download"><b>Download:</b>' . theme('file_link', array('file' => (object) $item)) . '</div>';
+          }
+          elseif (user_access('download all audio files')) {
+            //If user has permission to download all audio files, then display download link
+            $download_link .= '<div class="audio-download"><b>Download:</b>' . theme('file_link', array('file' => (object) $item)) . '</div>';
+          }
+        }
+        $elements[] = array('#markup' => audiofield_get_player($audiofile, $op, $options).$download_link);
       }
       break;
   }
