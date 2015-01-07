@@ -176,18 +176,18 @@ function voipnumber_blast_status($call, $blast) {
     $status = $call->getTextStatus();
     switch ($status) {
       default:
-        $description = t('Processing error.');
+        $description = '<span class="red">'.t('Processing error.').'</span>';
         break;
       case VoipCall::TEXT_FAILED:
       case VoipCall::TEXT_INVALID:
-        $description = t('Processing error.');
+        $description = '<span class="red">'.t('Processing error.').'</span>';
         break;
       case VoipCall::TEXT_NOT_SENT:
       case VoipCall::TEXT_SENDING:
         $description = t('Not processed.');
         break;
       case VoipCall::TEXT_SENT:
-        $description = t('Processed.');
+        $description = '<span class="green">'.t('Processed.').'</span>';
         break;
     }
   }

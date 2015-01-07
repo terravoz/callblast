@@ -5,3 +5,11 @@
 .not-logged-in #field-phone-number-add-more-wrapper fieldset{
    display:none;
 }
+
+.view-callblasts-phone-numbers- .red{
+    color:red;
+}
+
+.view-callblasts-phone-numbers- .green{
+    color:green;
+}
