@@ -97,7 +97,7 @@ function sms_actions_admin_settings_form() {
     '#type' => 'textarea',
     '#title' => t('Opt-in message'),
     '#default_value' => variable_get('sms_actions_opt_message',
-      'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.')
+      'Callblast App would like to send you SMS reminders at this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.')
   );
 
   $form['#submit'][] = 'sms_actions_admin_settings_form_submit';

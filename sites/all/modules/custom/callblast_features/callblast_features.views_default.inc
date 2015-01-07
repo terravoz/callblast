@@ -15,7 +15,7 @@ function callblast_features_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Callblasts Phone Numbers ';
+  $view->human_name = 'Announcement details';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -184,7 +184,7 @@ $blast = node_load(arg(4));
 print voipnumber_blast_status($voipcall, $blast);
 }
 else {
-print \'Processing error.\';
+print \'<span class="red">Processing error.</span>\';
 }
 
 ?>';
@@ -986,6 +986,9 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $handler->display->display_options['fields']['field_groups']['id'] = 'field_groups';
   $handler->display->display_options['fields']['field_groups']['table'] = 'field_data_field_groups';
   $handler->display->display_options['fields']['field_groups']['field'] = 'field_groups';
+  $handler->display->display_options['fields']['field_groups']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_groups']['alter']['path'] = 'contacts?field_groups_tid=[field_groups-tid]';
+  $handler->display->display_options['fields']['field_groups']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_groups']['delta_offset'] = '0';
   /* Field: Content: Opt in */
   $handler->display->display_options['fields']['field_opt_in']['id'] = 'field_opt_in';
