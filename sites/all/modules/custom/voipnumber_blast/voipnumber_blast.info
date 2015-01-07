@@ -4,5 +4,6 @@ core = 7.x
 dependencies[] = voipqueue
 dependencies[] = voipnumberfield
 dependencies[] = voipblast
+dependencies[] = sms_actions
 package = "Callblast"
 

@@ -25,7 +25,6 @@
 <?php
 $nid = $row->advancedqueue_tags_tag;
 $node = node_load($nid);
-//dpm($node);
 $blast_type = $node->field_blast_type['und'][0]['value'];
 
 switch ($blast_type) {
@@ -34,6 +33,10 @@ switch ($blast_type) {
     //fix: for some reason body changed to eng
     $message = $node->body[$node->language][0]['value'];
     print "SMS announcement: '$message'";
+    break;
+  case 'sms_optin':
+    $message = $node->body[$node->language][0]['value'];
+    print "Opt-in invitation: '$message'";
     break;
   case 'voice_text':
     $voice_say = $node->field_voice_announcement['und'][0]['value'];
