@@ -41,8 +41,8 @@
       <file leaf-file-name="voipcall.inc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.22" vertical-offset="5414" max-vertical-offset="15660">
-              <caret line="385" column="5" selection-start-line="341" selection-start-column="4" selection-end-line="385" selection-end-column="5" />
+            <state vertical-scroll-proportion="-3.46" vertical-offset="7207" max-vertical-offset="15660">
+              <caret line="492" column="33" selection-start-line="492" selection-start-column="18" selection-end-line="492" selection-end-column="33" />
               <folding>
                 <marker date="1408098760000" expanded="true" signature="2606:2647" placeholder="SELECT * FRO..." />
                 <marker date="1408098760000" expanded="true" signature="3283:3334" placeholder="SELECT cid F..." />
@@ -105,8 +105,8 @@
       <file leaf-file-name="voipnumber_blast.module" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.87903225" vertical-offset="2804" max-vertical-offset="3945">
-              <caret line="219" column="74" selection-start-line="219" selection-start-column="74" selection-end-line="219" selection-end-column="74" />
+            <state vertical-scroll-proportion="0.84007704" vertical-offset="3374" max-vertical-offset="3990">
+              <caret line="257" column="21" selection-start-line="257" selection-start-column="21" selection-end-line="257" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -934,7 +934,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40546876" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28984374" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1362,18 +1362,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.22" vertical-offset="5414" max-vertical-offset="15660">
-          <caret line="385" column="5" selection-start-line="341" selection-start-column="4" selection-end-line="385" selection-end-column="5" />
-          <folding>
-            <marker date="1408098760000" expanded="true" signature="2606:2647" placeholder="SELECT * FRO..." />
-            <marker date="1408098760000" expanded="true" signature="3283:3334" placeholder="SELECT cid F..." />
-            <marker date="1408098760000" expanded="true" signature="20026:20067" placeholder="SELECT * FRO..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-39.9" vertical-offset="2865" max-vertical-offset="5775">
@@ -1382,10 +1370,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.46" vertical-offset="7207" max-vertical-offset="15660">
+          <caret line="492" column="33" selection-start-line="492" selection-start-column="18" selection-end-line="492" selection-end-column="33" />
+          <folding>
+            <marker date="1408098760000" expanded="true" signature="2606:2647" placeholder="SELECT * FRO..." />
+            <marker date="1408098760000" expanded="true" signature="3283:3334" placeholder="SELECT cid F..." />
+            <marker date="1408098760000" expanded="true" signature="20026:20067" placeholder="SELECT * FRO..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.87903225" vertical-offset="2804" max-vertical-offset="3945">
-          <caret line="219" column="74" selection-start-line="219" selection-start-column="74" selection-end-line="219" selection-end-column="74" />
+        <state vertical-scroll-proportion="0.84007704" vertical-offset="3374" max-vertical-offset="3990">
+          <caret line="257" column="21" selection-start-line="257" selection-start-column="21" selection-end-line="257" selection-end-column="21" />
           <folding />
         </state>
       </provider>

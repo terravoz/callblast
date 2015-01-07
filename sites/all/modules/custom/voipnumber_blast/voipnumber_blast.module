@@ -254,6 +254,9 @@ function voipnumber_blast_additional_info($call, $blast) {
   }
   else {
     $description = $call->getCallStatusDescription();
+    if($description == 'System error.') {
+      $description = $call->getErrorMessage();
+    }
   }
 
   return $description;
