@@ -566,11 +566,6 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
   $handler->display->display_options['fields']['status_1']['group_type'] = 'count';
   $handler->display->display_options['fields']['status_1']['label'] = 'Call list';
   $handler->display->display_options['fields']['status_1']['exclude'] = TRUE;
-  /* Field: Queue: Queue name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'advancedqueue';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   /* Field: Queue: Processed date */
   $handler->display->display_options['fields']['processed']['id'] = 'processed';
   $handler->display->display_options['fields']['processed']['table'] = 'advancedqueue';
@@ -600,12 +595,6 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Phone numbers';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a href="details/[tag]">[status_1]</a>';
-  /* Field: Queue: Queue name */
-  $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
-  $handler->display->display_options['fields']['name_1']['table'] = 'advancedqueue';
-  $handler->display->display_options['fields']['name_1']['field'] = 'name';
-  $handler->display->display_options['fields']['name_1']['label'] = 'Type';
-  $handler->display->display_options['fields']['name_1']['exclude'] = TRUE;
   /* Field: Global: PHP */
   $handler->display->display_options['fields']['php']['id'] = 'php';
   $handler->display->display_options['fields']['php']['table'] = 'views';

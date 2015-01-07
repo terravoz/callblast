@@ -63,6 +63,7 @@ function callblast_features_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         'sms' => 'SMS announcement',
+        'sms_optin' => 'Opt In invitation',
         'voice_text' => 'Voice announcement from text',
         'voice_audio' => 'Voice announcement from audio',
         'voice_script' => 'Voice announcement using VoIP Script',
