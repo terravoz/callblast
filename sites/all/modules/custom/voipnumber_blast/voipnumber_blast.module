@@ -16,6 +16,10 @@ function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
      )
    ), 'setting');
    drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
+
+   //Set default VoIP Voice
+   $server = VoipServer::getDefaultServer();
+   $form['field_blast_voice']['und']['#default_value'] = $server->getDefaultVoice()->getVoiceId();
    //$form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
     $form['actions']['submit']['#submit'][]  = 'voipnumber_blast_broadcast_node_form_submit';
    $form['actions']['submit']['#prefix'] =  l('Preview selected contacts', 'contacts-preview',
