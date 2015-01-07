@@ -192,7 +192,35 @@ function voipnumber_blast_status($call, $blast) {
     }
   }
   else {
-    $description = $call->getCallStatusDescription();
+    //$description = $call->getCallStatusDescription();
+    $description = NULL;
+    $status = $call->getCallStatus();
+    if (!$status) {
+      $description = t('Not set.');
+    }
+    else {
+      switch ($status) {
+        default:
+          $description = '<span class="red">'.t('Processing error.').'</span>';
+          break;
+        case VoipCall::ERROR:
+        case VoipCall::NO_ANSWER:
+        case VoipCall::BUSY:
+        case VoipCall::INVALID:
+        case VoipCall::CANCELED:
+          $description = '<span class="red">'.t('Processing error.').'</span>';
+          break;
+        case VoipCall::NOT_CALLED:
+        case VoipCall::QUEUED:
+        case VoipCall::RINGING:
+        case VoipCall::IN_PROGRESS:
+          $description = t('Not processed.');
+          break;
+        case VoipCall::COMPLETED:
+          $description = '<span class="green">'.t('Processed.').'</span>';
+          break;
+      }
+    }
   }
 
   return $description;
