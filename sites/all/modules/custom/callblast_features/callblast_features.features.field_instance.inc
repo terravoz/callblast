@@ -57,7 +57,7 @@ function callblast_features_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -98,7 +98,7 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -139,7 +139,7 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 2,
+      'weight' => 8,
     ),
   );
 
@@ -268,7 +268,7 @@ function callblast_features_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -311,7 +311,7 @@ function callblast_features_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'audiofield_widget',
-      'weight' => 7,
+      'weight' => 6,
     ),
   );
 
@@ -353,7 +353,7 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -371,7 +371,7 @@ function callblast_features_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 10,
+        'weight' => 15,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -394,7 +394,7 @@ function callblast_features_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 7,
     ),
   );
 

@@ -1,8 +1,17 @@
 <?php
 /**
  * @file
- * nannyvan_news.features.inc
+ * audio_announcements.features.inc
  */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function audio_announcements_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
+}
 
 /**
  * Implements hook_node_info().
