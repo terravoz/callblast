@@ -1179,7 +1179,7 @@ function _voiptwilio_generate_audio_response($script, $prompt, $loop = 1) {
               //Convert numbers into digits
               $element = _voiptwilio_parse_numbers($element);
             }
-            $response .= "<Say voice='$gender' language='$language'>$element</Say>";
+            $response .= "<Say voice='$gender' language='$language'>".htmlspecialchars($element)."</Say>";
           }
         }
       }
