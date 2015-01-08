@@ -28,64 +28,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="callblast_alters.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-39.9" vertical-offset="2865" max-vertical-offset="5775">
-              <caret line="338" column="38" selection-start-line="338" selection-start-column="38" selection-end-line="338" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="voipcall.inc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.inc">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.46" vertical-offset="7207" max-vertical-offset="15660">
-              <caret line="492" column="33" selection-start-line="492" selection-start-column="18" selection-end-line="492" selection-end-column="33" />
-              <folding>
-                <marker date="1408098760000" expanded="true" signature="2606:2647" placeholder="SELECT * FRO..." />
-                <marker date="1408098760000" expanded="true" signature="3283:3334" placeholder="SELECT cid F..." />
-                <marker date="1408098760000" expanded="true" signature="20026:20067" placeholder="SELECT * FRO..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-2.tpl.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.125" vertical-offset="0" max-vertical-offset="585">
-              <caret line="41" column="26" selection-start-line="41" selection-start-column="26" selection-end-line="41" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views-view-field--claro-voip-queue--page-1--nothing-3.tpl.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/views-view-field--claro-voip-queue--page-1--nothing-3.tpl.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="210">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sms_actions.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.module">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.75" vertical-offset="1125" max-vertical-offset="2445">
-              <caret line="99" column="60" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="voipnumber_blast.module" pinned="false" current-in-tab="true">
+      <file leaf-file-name="voipnumber_blast.module" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48387095" vertical-offset="0" max-vertical-offset="4050">
+            <state vertical-scroll-proportion="-4.8" vertical-offset="0" max-vertical-offset="4050">
               <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
               <folding />
             </state>
@@ -104,31 +50,81 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bartik_claro.info" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/bartik_claro.info">
+      <file leaf-file-name="pbb.module" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="540">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="-14.291667" vertical-offset="932" max-vertical-offset="1500">
+              <caret line="85" column="26" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="voiptwilio.module" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voiptwilio/voiptwilio.module">
+      <file leaf-file-name="sms_actions.module" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.module">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-30.0" vertical-offset="0" max-vertical-offset="2520">
-              <caret line="48" column="64" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="64" />
+            <state vertical-scroll-proportion="-1.875" vertical-offset="1410" max-vertical-offset="2445">
+              <caret line="99" column="60" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bartik_claro.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sites/all/themes/bartik_claro/bartik_claro.css">
+      <file leaf-file-name="voipnumber.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipnumber/voipnumber.inc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
-              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            <state vertical-scroll-proportion="-3.6" vertical-offset="8190" max-vertical-offset="10305">
+              <caret line="561" column="17" selection-start-line="561" selection-start-column="11" selection-end-line="561" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sms_actions.scripts.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.scripts.inc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.54" vertical-offset="1243" max-vertical-offset="1785">
+              <caret line="98" column="0" selection-start-line="96" selection-start-column="8" selection-end-line="98" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="voipvoice.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipvoice.inc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.4583335" vertical-offset="2893" max-vertical-offset="3855">
+              <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pbb.scripts.inc" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.2112676" vertical-offset="1755" max-vertical-offset="5040">
+              <caret line="125" column="103" selection-start-line="125" selection-start-column="103" selection-end-line="125" selection-end-column="103" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="voipscript.inc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipscript.inc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.3" vertical-offset="8130" max-vertical-offset="20205">
+              <caret line="603" column="19" selection-start-line="603" selection-start-column="14" selection-end-line="603" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="voipscriptsamples.module" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipscriptsamples/voipscriptsamples.module">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.2" vertical-offset="3525" max-vertical-offset="8370">
+              <caret line="251" column="36" selection-start-line="251" selection-start-column="36" selection-end-line="251" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -165,7 +161,6 @@
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.js" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.install" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.info" />
-        <option value="$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.scripts.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/field_conditional_state/field_conditional_state.admin.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/jplayer/jplayer.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/audiofield/audiofield.module" />
@@ -175,13 +170,11 @@
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb_settings/pbb_settings.strongarm.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/field_conditional_state/field_conditional_state.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/field_conditional_state/field_conditional_state.info" />
-        <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/audiofield/audio.field.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.install" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb_settings/pbb_settings.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb_settings/pbb_settings.views_default.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/audio_announcements/audio_announcements.info" />
-        <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.info" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.js" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module" />
@@ -189,6 +182,9 @@
         <option value="$PROJECT_DIR$/sites/all/themes/bartik_claro/bartik_claro.css" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.module" />
         <option value="$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.scripts.inc" />
+        <option value="$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc" />
       </list>
     </option>
   </component>
@@ -360,6 +356,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="callblast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sites" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="all" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="voipnumber" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -971,20 +993,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipqueue/voipqueue.install">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55457747" vertical-offset="0" max-vertical-offset="568">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="27" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_features/callblast_features.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="592">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_features/callblast_features.views_default.inc">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="20385">
@@ -1042,14 +1050,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.scripts.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.625" vertical-offset="459" max-vertical-offset="1785">
-          <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/field_conditional_state/README.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
@@ -1093,14 +1093,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipscriptsamples/voipscriptsamples.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.6" vertical-offset="3000" max-vertical-offset="8370">
-          <caret line="214" column="39" selection-start-line="214" selection-start-column="34" selection-end-line="214" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.2" vertical-offset="0" max-vertical-offset="195">
@@ -1137,14 +1129,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.4" vertical-offset="17145" max-vertical-offset="18555">
           <caret line="1151" column="38" selection-start-line="1149" selection-start-column="3" selection-end-line="1151" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipscript.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.3" vertical-offset="3510" max-vertical-offset="20205">
-          <caret line="245" column="11" selection-start-line="245" selection-start-column="11" selection-end-line="245" selection-end-column="11" />
           <folding />
         </state>
       </provider>
@@ -1198,14 +1182,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.14" vertical-offset="2368" max-vertical-offset="2970">
           <caret line="188" column="89" selection-start-line="188" selection-start-column="41" selection-end-line="188" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.666667" vertical-offset="38" max-vertical-offset="1350">
-          <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -1274,14 +1250,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-29.291666" vertical-offset="2222" max-vertical-offset="3735">
-          <caret line="195" column="2" selection-start-line="195" selection-start-column="2" selection-end-line="195" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.info">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10135135" vertical-offset="0" max-vertical-offset="592">
@@ -1338,14 +1306,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.75" vertical-offset="1125" max-vertical-offset="2445">
-          <caret line="99" column="60" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/callblast_alters/callblast_alters.module">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-39.9" vertical-offset="2865" max-vertical-offset="5775">
@@ -1359,19 +1319,9 @@
         <state vertical-scroll-proportion="-3.46" vertical-offset="7207" max-vertical-offset="15660">
           <caret line="492" column="33" selection-start-line="492" selection-start-column="18" selection-end-line="492" selection-end-column="33" />
           <folding>
-            <marker date="1408098760000" expanded="true" signature="2606:2647" placeholder="SELECT * FRO..." />
-            <marker date="1408098760000" expanded="true" signature="3283:3334" placeholder="SELECT cid F..." />
-            <marker date="1408098760000" expanded="true" signature="20026:20067" placeholder="SELECT * FRO..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.module">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="23.75" vertical-offset="570" max-vertical-offset="18105">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1408098760000" expanded="true" signature="6918:7108" placeholder="..." />
+            <marker date="1408098760000" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..." />
+            <marker date="1408098760000" expanded="true" signature="-1:-1" placeholder="SELECT cid F..." />
+            <marker date="1408098760000" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..." />
           </folding>
         </state>
       </provider>
@@ -1386,8 +1336,82 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/voipnumber_blast/voipnumber_blast.module">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48387095" vertical-offset="0" max-vertical-offset="4050">
+        <state vertical-scroll-proportion="-4.8" vertical-offset="0" max-vertical-offset="4050">
           <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipvoice.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.4583335" vertical-offset="2893" max-vertical-offset="3855">
+          <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipcall.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="23.75" vertical-offset="570" max-vertical-offset="18105">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1408098760000" expanded="true" signature="6918:7108" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipscriptsamples/voipscriptsamples.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.2" vertical-offset="3525" max-vertical-offset="8370">
+          <caret line="251" column="36" selection-start-line="251" selection-start-column="36" selection-end-line="251" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipdrupal/modules/voipcall/voipscript.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.3" vertical-offset="8130" max-vertical-offset="20205">
+          <caret line="603" column="19" selection-start-line="603" selection-start-column="14" selection-end-line="603" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.875" vertical-offset="1410" max-vertical-offset="2445">
+          <caret line="99" column="60" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/sms_actions/sms_actions.scripts.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.54" vertical-offset="1243" max-vertical-offset="1785">
+          <caret line="98" column="0" selection-start-line="96" selection-start-column="8" selection-end-line="98" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.291667" vertical-offset="932" max-vertical-offset="1500">
+          <caret line="85" column="26" selection-start-line="85" selection-start-column="9" selection-end-line="85" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/voipnumber/voipnumber.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.6" vertical-offset="8190" max-vertical-offset="10305">
+          <caret line="561" column="17" selection-start-line="561" selection-start-column="11" selection-end-line="561" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sites/all/modules/custom/pbb/pbb.scripts.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2112676" vertical-offset="1755" max-vertical-offset="5040">
+          <caret line="125" column="103" selection-start-line="125" selection-start-column="103" selection-end-line="125" selection-end-column="103" />
           <folding />
         </state>
       </provider>

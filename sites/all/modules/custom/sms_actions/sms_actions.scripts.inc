@@ -46,7 +46,7 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
         $request = explode(" ", $options['text']);
         $cmd = strtoupper($request[0]);
         $sms_action = sms_actions_get_action($cmd);
-        watchdog('debug', 'keyword='.$cmd.' using '.$sms_action);
+
         if (!$sms_action) {
           $text = variable_get('sms_actions_sms_unknown', 'Unknown command.');
           $script->addSendText($text);
