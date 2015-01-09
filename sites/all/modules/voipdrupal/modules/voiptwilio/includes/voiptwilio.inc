@@ -1067,7 +1067,7 @@ function _voiptwilio_process_dial_response($call, $request) {
  */
 function  _voiptwilio_process_sms_response($call, $request) {
   $cid = $call->getCid();
-  watchdog('debug', $request);
+  watchdog('debug', print_r($request,true));
   $sms_status_tmp = $request['SmsStatus'];
   switch ($sms_status_tmp) {
     default:
