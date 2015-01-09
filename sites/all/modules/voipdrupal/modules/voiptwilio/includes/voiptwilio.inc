@@ -855,7 +855,7 @@ function _voiptwilio_script_handler($call) {
                 break;
 
               case 'sms':
-                $response .= '<Sms statusCallback="' . $callback
+                $response .= '<Message statusCallback="' . $callback
                   . '" method="' . $method;
                 if($to){
                   $response .= '" to="' . $to;

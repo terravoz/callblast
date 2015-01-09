@@ -64,7 +64,7 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
       $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
       if ($phone_number) {
         //Number already exists
-        $text = variable_get('sms_actions_sms_unknown', 'Number already registered.');
+        $text = variable_get('sms_actions_sms_duplicate', 'Number already registered.');
       }
       else {
         $node->type = 'phone_number';

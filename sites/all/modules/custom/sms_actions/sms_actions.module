@@ -76,7 +76,7 @@ function sms_actions_admin_settings_form() {
     '#type' => 'textarea',
     '#title' => t('SMS Duplicate number'),
     '#description' => t('Text for SMS to be sent when number tries to register again. '),
-    '#default_value' => variable_get('sms_actions_sms_unknown', 'Number already registered.'),
+    '#default_value' => variable_get('sms_actions_sms_duplicate', 'Number already registered.'),
   );
 
   $form['sms_responses_fieldset']['sms_actions_sms_not_in_list'] = array(
