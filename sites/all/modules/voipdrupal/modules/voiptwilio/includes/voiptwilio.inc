@@ -1067,8 +1067,8 @@ function _voiptwilio_process_dial_response($call, $request) {
  */
 function  _voiptwilio_process_sms_response($call, $request) {
   $cid = $call->getCid();
-  watchdog('debug', print_r($request,true));
-  $sms_status_tmp = $request['SmsStatus'];
+  //SMSStatus is when sending SMS through Voice channel using <Sms> Twiml, while MessageStatus is for send_text()
+  $sms_status_tmp = isset($request['SmsStatus']) ? $request['SmsStatus'] : $request['MessageStatus'];
   switch ($sms_status_tmp) {
     default:
       $msg = 'Invalid SmsStatus: @status for call cid: @cid';
