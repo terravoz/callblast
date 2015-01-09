@@ -881,6 +881,7 @@ function _voiptwilio_script_handler($call) {
 				        // replace special chars for their html equivalent (http://www.twilio.com/docs/errors/12100)
                 $response .= htmlspecialchars($text, ENT_NOQUOTES | ENT_HTML401);
                 $response .= '</Message>';
+                
                 break;
             }
           }
