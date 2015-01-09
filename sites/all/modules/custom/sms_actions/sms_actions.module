@@ -53,7 +53,7 @@ function sms_actions_admin_settings_form() {
   $form['sms_responses_fieldset']['sms_actions_sms_help'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS help'),
-    '#description' => t('Text for help message.'),
+    '#description' => t('Text for the SMS help message.'),
     '#default_value' => variable_get('sms_actions_sms_help',
       'Welcome to Callblast! To JOIN text any letter. To STOP receiving text messages, text "S". For HELP, text "H". Msg & data rates may apply.'),
 );
@@ -61,28 +61,28 @@ function sms_actions_admin_settings_form() {
   $form['sms_responses_fieldset']['sms_actions_sms_welcome'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS Subscribe welcome'),
-    '#description' => t('Welcome SMS for text to be sent the first time a user subscribes to the service.'),
+    '#description' => t('Welcome message sent whenever a user subscribes to the service.'),
     '#default_value' => variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.'),
   );
 
   $form['sms_responses_fieldset']['sms_actions_sms_unsubscribe'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS Unsubscribe'),
-    '#description' => t('Unsubscribe text for SMS to be sent when S command is received.'),
+    '#description' => t('Goodbye text sent whenever a user unsubscribes from the service.'),
     '#default_value' => variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.'),
   );
 
   $form['sms_responses_fieldset']['sms_actions_sms_duplicate'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS Duplicate number'),
-    '#description' => t('Text for SMS to be sent when number tries to register again. '),
+    '#description' => t('Text sent whenever an already-registered user tries to subscribe once again.'),
     '#default_value' => variable_get('sms_actions_sms_duplicate', 'Number already registered.'),
   );
 
   $form['sms_responses_fieldset']['sms_actions_sms_not_in_list'] = array(
     '#type' => 'textarea',
     '#title' => t('SMS Not in list'),
-    '#description' => t('Text for SMS to be sent when number tries to unsubscribe but he is not registered. '),
+    '#description' => t('Text sent whenever an unregistered user tries to unsubscribe from the service.'),
     '#default_value' => variable_get('sms_actions_sms_not_in_list', 'Number not in the list.'),
   );
 
@@ -96,6 +96,7 @@ function sms_actions_admin_settings_form() {
   $form['sms_responses_fieldset']['sms_actions_opt_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Opt-in message'),
+    '#description' => t('Text sent for invitations to join the service.'),
     '#default_value' => variable_get('sms_actions_opt_message',
       'Callblast App would like to send you SMS reminders at this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.')
   );
