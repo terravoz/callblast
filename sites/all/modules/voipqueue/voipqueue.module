@@ -337,6 +337,7 @@ function voipqueue_call_dial($item) {
   $call = $item->getCall();
   $voip_server = voip_default_server();
   $response = $voip_server->dial($call);
+  watchdog('debug', 'response in voipqueue_call_dial'.print_r($response,true));
 
   if ($response) {
     $result = array(
