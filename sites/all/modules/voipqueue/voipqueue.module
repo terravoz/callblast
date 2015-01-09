@@ -18,6 +18,7 @@ define('VOIPQUEUE_STATUS_DELAYED', -2);
  * Implements hook_cron().
  */
 function voipqueue_cron() {
+  watchdog('debug', 'in voipqueue_cron');
   // Change status of items that were delayed and now ready.
   $update = db_update('advancedqueue')
     ->fields(array(
@@ -334,6 +335,7 @@ function voipqueue_call($item) {
  * putting it in the queue.
  */
 function voipqueue_call_dial($item) {
+  watchdog('debug', 'in voipqueue_call_dial');
   $call = $item->getCall();
   $voip_server = voip_default_server();
   $response = $voip_server->dial($call);
