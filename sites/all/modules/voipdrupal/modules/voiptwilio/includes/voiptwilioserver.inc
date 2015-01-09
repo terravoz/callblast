@@ -323,9 +323,8 @@ class VoipTwilioServer extends VoipServer {
 
       // get the new id and status associated with the call
       $xml = $response->ResponseXml;
-      watchdog('debug', print_r($xml,true));
-      $call_id = (string) $xml->SMSMessage->Sid;
-      $twilio_call_status = (string) $xml->SMSMessage->Status;
+      $call_id = (string) $xml->Message->Sid;
+      $twilio_call_status = (string) $xml->Message->Status;
       $voipcall->setCallId($call_id);
       $voipcall = voiptwilio_update_call_status($voipcall, $twilio_call_status);
       $voipcall->save();
