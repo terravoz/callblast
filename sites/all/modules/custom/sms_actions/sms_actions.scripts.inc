@@ -92,9 +92,9 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
     case 'sms_actions_action_unsubscribe':
       $script = new VoipScript('sms_actions_action_unsubscribe');
       //Stop getting messages
-      $nids = VoipNumber::getEidsByNumber($options['caller_number'], 'node');
-      if ($nid = reset($nids)) {
-        node_delete($nid);
+      $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
+      if ($phone_number) {
+        node_delete($phone_number[0]->getEid());
         $text = variable_get('sms_actions_sms_unsubscribe', 'You\'ve unsubscribed from the Callblast App and should not receive further messages. Should you choose to subscribe again, text any letter to this number.');
       }
       else {
