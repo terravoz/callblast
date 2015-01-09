@@ -45,6 +45,7 @@ function voipqueue_cron() {
       }
       // @todo Set result on the advancedqueue.
       if ($item->retryPermitted()) {
+        watchdog('debug', 'retrying item'.print_r($item,true));
         $queue->releaseItem($item);
       }
       else {
@@ -345,6 +346,7 @@ function voipqueue_call_dial($item) {
   }
   else {
     if ($item->retryPermitted()) {
+      watchdog('debug', 'retrying item in voipqueue_call_dial'.print_r($item,true));
       // @todo limit this by type of failure. So unrecoverable failed
       // calls are not repeated.
       // ie based on: $call::callStatus.
@@ -354,6 +356,7 @@ function voipqueue_call_dial($item) {
       );
     }
     else {
+      watchdog('debug', 'not retrying item in voipqueue_call_dial'.print_r($item,true));
       $result = array(
         'status' => ADVANCEDQUEUE_STATUS_FAILURE,
         'result' => voip_error_message(),
