@@ -855,7 +855,7 @@ function _voiptwilio_script_handler($call) {
                 break;
 
               case 'sms':
-                $response .= '<Message statusCallback="' . $callback
+                $response .= '<Sms statusCallback="' . $callback
                   . '" method="' . $method;
                 if($to){
                   $response .= '" to="' . $to;
@@ -880,8 +880,8 @@ function _voiptwilio_script_handler($call) {
                 $response .= '" >';
 				        // replace special chars for their html equivalent (http://www.twilio.com/docs/errors/12100)
                 $response .= htmlspecialchars($text, ENT_NOQUOTES | ENT_HTML401);
-                $response .= '</Message>';
-                
+                $response .= '</Sms>';
+
                 break;
             }
           }
