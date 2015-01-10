@@ -183,12 +183,16 @@ function voipnumber_blast_status($call, $blast) {
         $description = '<span class="red">'.t('Processing error.').'</span>';
         break;
       case VoipCall::TEXT_FAILED:
-      case VoipCall::TEXT_INVALID:
         $description = '<span class="red">'.t('Processing error.').'</span>';
         break;
+      case VoipCall::TEXT_INVALID:
+        $description = '<span class="red">'.t('Invalid.').'</span>';
+        break;
       case VoipCall::TEXT_NOT_SENT:
-      case VoipCall::TEXT_SENDING:
         $description = t('Not processed.');
+        break;
+      case VoipCall::TEXT_SENDING:
+        $description = t('Processing.');
         break;
       case VoipCall::TEXT_SENT:
         $description = '<span class="green">'.t('Processed.').'</span>';
@@ -208,19 +212,25 @@ function voipnumber_blast_status($call, $blast) {
           $description = '<span class="red">'.t('Processing error.').'</span>';
           break;
         case VoipCall::ERROR:
-        case VoipCall::NO_ANSWER:
-        case VoipCall::BUSY:
-        case VoipCall::INVALID:
-        case VoipCall::CANCELED:
           $description = '<span class="red">'.t('Processing error.').'</span>';
           break;
+        case VoipCall::NO_ANSWER:
+        case VoipCall::BUSY:
+        $description = t('Retrying.');
+          break;
+        case VoipCall::INVALID:
+          $description = '<span class="red">'.t('Invalid.').'</span>';
+          break;
         case VoipCall::NOT_CALLED:
+          $description = t('Not processed.');
+          break;
         case VoipCall::QUEUED:
         case VoipCall::RINGING:
         case VoipCall::IN_PROGRESS:
-          $description = t('Not processed.');
+        $description = t('Processing.');
           break;
         case VoipCall::COMPLETED:
+        case VoipCall::CANCELED:
           $description = '<span class="green">'.t('Processed.').'</span>';
           break;
       }
