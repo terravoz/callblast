@@ -4,6 +4,7 @@
 * Relates VoIP Number with the Blast
 */
 
+//@todo: check call status in hangup handler, see voipcall_process_hangup()
 /**
  * Implementation of hook_form_alter()
  */
