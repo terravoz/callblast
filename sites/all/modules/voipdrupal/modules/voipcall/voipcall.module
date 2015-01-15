@@ -6,7 +6,7 @@ define('VOIP_MAX_SMS_INTERVAL' , 10);
  * @file
  * Implementation of core functionality associated with voip calls
  */
-foreach (array('voipscript.inc', 'voipcall.inc', 'voipsession.inc', 'voipvoice.inc') as $file) {
+foreach (array('voipscript.inc', 'voipcall.inc', 'voipsession.inc', 'voipvoice.inc', 'voipevent.inc') as $file) {
   require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . $file);
 }
 /**

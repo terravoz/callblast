@@ -247,8 +247,7 @@ class VoipTwilioServer extends VoipServer {
     // Instantiate a new Twilio Rest Client
     $client = new TwilioRestClient($account_sid, $auth_token);
 
-    // Initiate a new outbound text by POST'ing to the SMS/Messages resource
-    //$twilio_path = "/$api_version/Accounts/$account_sid/SMS/Messages";
+    // Initiate a new outbound text by POST'ing to the Messages resource
     $twilio_path = "/$api_version/Accounts/$account_sid/Messages";
     $menu_path = 'voip/twilio/callhandler';
     //$cid = $voipcall->getCid();
@@ -318,7 +317,6 @@ class VoipTwilioServer extends VoipServer {
     }
     else {
       $rc = TRUE;
-
       // get the new id and status associated with the call
       $xml = $response->ResponseXml;
       $call_id = (string) $xml->Message->Sid;

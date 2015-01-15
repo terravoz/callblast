@@ -7,10 +7,3 @@ dependencies[] = voipcall
 core = 7.x
 
 files[] = plivo.php
-
-; Information added by Drupal.org packaging script on 2014-12-07
-version = "7.x-1.0-beta6"
-core = "7.x"
-project = "voipdrupal"
-datestamp = "1417982582"
-

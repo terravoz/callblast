@@ -10,10 +10,3 @@ files[] = includes/voip_error.inc
 files[] = includes/voiplogserver.inc
 files[] = includes/voipserver.inc
 
-
-; Information added by Drupal.org packaging script on 2014-12-07
-version = "7.x-1.0-beta6"
-core = "7.x"
-project = "voipdrupal"
-datestamp = "1417982582"
-
