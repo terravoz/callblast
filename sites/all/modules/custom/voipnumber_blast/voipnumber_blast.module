@@ -276,3 +276,18 @@ function voipnumber_blast_additional_info($call, $blast) {
 
   return $description;
 }
+
+/**
+ * Implementation of hook_voip_event().
+ */
+function voipnumber_blast_voip_event($call, $status) {
+  switch($status) {
+    case VoipEvent::BUSY:
+    case VoipEvent::NO_ANSWER:
+      watchdog('debug', 'requing call '.$call->getCid());
+      $title = $call->getDestNumber() . ':' . $call->getCid();
+      //@todo: check number of retries allowed?
+      db_query('UPDATE {advancedqueue} SET status = ' . ADVANCEDQUEUE_STATUS_QUEUED . ' WHERE name = :name AND title = :title',array(':name' => 'voipblast_voice', 'title' => $title));
+      break;
+  }
+}
