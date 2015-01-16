@@ -324,7 +324,7 @@ function voipnumber_blast_voip_event($call, $status) {
       if (is_a($item->data, 'VoipQueueJob')) {
         $item->data->item_id = $item->item_id;
         $item = $item->data;
-        watchdog('debug', 'item loaded ' . $item);
+        watchdog('debug', 'item loaded ' . print_r($item,true));
         if ($item->retryPermitted()) {
           watchdog('debug', 'requing call ' . $call->getCid());
           db_update('advancedqueue')
