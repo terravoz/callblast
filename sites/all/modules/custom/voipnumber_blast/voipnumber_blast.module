@@ -1,31 +1,38 @@
 <?php
 /**
-* @file
-* Relates VoIP Number with the Blast
-*/
+ * @file
+ * Relates VoIP Number with the Blast
+ */
 
 //@todo: check call status in hangup handler, see voipcall_process_hangup()
 /**
  * Implementation of hook_form_alter()
  */
 function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
- if($form_id == 'broadcast_node_form') {
-   drupal_add_js(array(
-     'voipnumber_blast' => array(
-       'opt_in_message' => variable_get('sms_actions_opt_message',
-         'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.'),
-     )
-   ), 'setting');
-   drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
+  if ($form_id == 'broadcast_node_form') {
+    drupal_add_js(array(
+      'voipnumber_blast' => array(
+        'opt_in_message' => variable_get('sms_actions_opt_message',
+          'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.'),
+      )
+    ), 'setting');
+    drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
 
-   //Set default VoIP Voice
-   $server = VoipServer::getDefaultServer();
-   $form['field_blast_voice']['und']['#default_value'] = $server->getDefaultVoice()->getVoiceId();
-   //$form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
-    $form['actions']['submit']['#submit'][]  = 'voipnumber_blast_broadcast_node_form_submit';
-   $form['actions']['submit']['#prefix'] =  l('Preview selected contacts', 'contacts-preview',
-     array('attributes' => array('class' => array('button'), 'target'=>'_blank', 'id' => 'contacts-preview')));
-   unset($form['field_voip_call']);
+    //Set default VoIP Voice
+    $server = VoipServer::getDefaultServer();
+    $form['field_blast_voice']['und']['#default_value'] = $server->getDefaultVoice()
+      ->getVoiceId();
+    //$form['#validate'][] = 'voipnumber_blast_broadcast_node_form_validate';
+    $form['actions']['submit']['#submit'][] = 'voipnumber_blast_broadcast_node_form_submit';
+    $form['actions']['submit']['#prefix'] = l('Preview selected contacts', 'contacts-preview',
+      array(
+        'attributes' => array(
+          'class' => array('button'),
+          'target' => '_blank',
+          'id' => 'contacts-preview'
+        )
+      ));
+    unset($form['field_voip_call']);
   }
 
   return $form;
@@ -39,18 +46,18 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
 
   $blast_type = $form_state['values']['field_blast_type']['und'][0]['value'];
   $phone_numbers = voipnumber_blast_get_numbers_from_groups($form_state['values']['field_select_destination']['und']);
-  drupal_set_message('Announcement queued for '.count($phone_numbers).' phone numbers.');
+  drupal_set_message('Announcement queued for ' . count($phone_numbers) . ' phone numbers.');
 
   $options = array(
     'tags' => array($blast_id),
   );
-  switch($blast_type) {
+  switch ($blast_type) {
     case 'sms':
     case 'sms_optin':
       //SMS announcement
       //fix: for some reason body changed to eng
-    $message = $form_state['values']['body'][$lang][0]['value'];
-      foreach($phone_numbers as $voipnumber) {
+      $message = $form_state['values']['body'][$lang][0]['value'];
+      foreach ($phone_numbers as $voipnumber) {
         // This is the same as voipqueue_add_dial().
         $queue = DrupalQueue::get('voipblast_texts');
         $queue->createQueue();
@@ -80,35 +87,37 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
     case 'voice_text':
     case 'voice_audio':
     case 'voice_script':
-      if($blast_type == 'voice_text') {
+      if ($blast_type == 'voice_text') {
         //VoIP script that reads the voice announcement
         $script = new VoipScript('voipnumber_read_announcement');
-        if($form_state['values']['field_blast_voice']['und'][0]['value']) {
+        if ($form_state['values']['field_blast_voice']['und'][0]['value']) {
           $script->setVoice($form_state['values']['field_blast_voice']['und'][0]['value']);
         }
         $script->addSay($form_state['values']['field_voice_announcement']['und'][0]['value']);
         $script->addHangup();
       }
-    else if($blast_type == 'voice_audio') {
-      //VoIP script that reads the voice announcement
-      $script = new VoipScript('voipnumber_play_announcement');
-      if($form_state['values']['field_blast_voice']['und'][0]['value']) {
-        $script->setVoice($form_state['values']['field_blast_voice']['und'][0]['value']);
-      }
-      $file = file_load($form_state['values']['field_voice_audio']['und'][0]['fid']);
-      $script->addSay(file_create_url($file->uri));
-      $script->addHangup();
-    }
       else {
-        //Get selected script
-        $script = VoipScript::loadScript($form_state['values']['field_voip_script']['und'][0]['value']);
+        if ($blast_type == 'voice_audio') {
+          //VoIP script that reads the voice announcement
+          $script = new VoipScript('voipnumber_play_announcement');
+          if ($form_state['values']['field_blast_voice']['und'][0]['value']) {
+            $script->setVoice($form_state['values']['field_blast_voice']['und'][0]['value']);
+          }
+          $file = file_load($form_state['values']['field_voice_audio']['und'][0]['fid']);
+          $script->addSay(file_create_url($file->uri));
+          $script->addHangup();
+        }
+        else {
+          //Get selected script
+          $script = VoipScript::loadScript($form_state['values']['field_voip_script']['und'][0]['value']);
+        }
       }
-    //Options
-    $options['retries'] = voipblast_defaults('voipblast_retries');
-    $options['retry_delay'] = voipblast_defaults('voipblast_retry_delay');
-    $options['queue_name'] = 'voipblast_voice';
+      //Options
+      $options['retries'] = voipblast_defaults('voipblast_retries');
+      $options['retry_delay'] = voipblast_defaults('voipblast_retry_delay');
+      $options['queue_name'] = 'voipblast_voice';
 
-      foreach($phone_numbers as $voipnumber) {
+      foreach ($phone_numbers as $voipnumber) {
         // First create a VoipCall object to queue.
         $call = new VoipCall(array());
 
@@ -134,17 +143,17 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
 function voipnumber_blast_get_numbers_from_groups($groups) {
   $all_nids = array();
   $phone_numbers = array();
-  foreach($groups as $group) {
-    if($group['value'] == 'all') {
+  foreach ($groups as $group) {
+    if ($group['value'] == 'all') {
       return voipnumber_blast_get_all_numbers();
     }
     $nids = taxonomy_select_nodes($group['value'], FALSE);
-    $all_nids = array_merge((array)$all_nids, (array)$nids);
+    $all_nids = array_merge((array) $all_nids, (array) $nids);
   }
 
-  foreach($all_nids as $nid) {
+  foreach ($all_nids as $nid) {
     $node = node_load($nid);
-    if(isset($node->field_phone_number['und'][0]['vnid'])) {
+    if (isset($node->field_phone_number['und'][0]['vnid'])) {
       $vn = VoipNumber::load($node->field_phone_number['und'][0]['real_vnid']);
       $phone_numbers[$vn->getNumber()] = $vn;
     }
@@ -162,13 +171,13 @@ function voipnumber_blast_get_all_numbers() {
     ->execute();
 
   if (!empty($entities['node'])) {
-    foreach($entities['node'] as $ent_node) {
+    foreach ($entities['node'] as $ent_node) {
       $node = node_load($ent_node->nid);
       //if($node->status) {
-        if(isset($node->field_phone_number['und'][0]['vnid'])) {
-          $vn = VoipNumber::load($node->field_phone_number['und'][0]['real_vnid']);
-          $phone_numbers[$vn->getNumber()] = $vn;
-        }
+      if (isset($node->field_phone_number['und'][0]['vnid'])) {
+        $vn = VoipNumber::load($node->field_phone_number['und'][0]['real_vnid']);
+        $phone_numbers[$vn->getNumber()] = $vn;
+      }
       //}
     }
   }
@@ -177,17 +186,17 @@ function voipnumber_blast_get_all_numbers() {
 
 function voipnumber_blast_status($call, $blast) {
   $blast_type = $blast->field_blast_type['und'][0]['value'];
-  if($blast_type == 'sms' || $blast_type == 'sms_optin') {
+  if ($blast_type == 'sms' || $blast_type == 'sms_optin') {
     $status = $call->getTextStatus();
     switch ($status) {
       default:
-        $description = '<span class="red">'.t('Processing error.').'</span>';
+        $description = '<span class="red">' . t('Processing error.') . '</span>';
         break;
       case VoipCall::TEXT_FAILED:
-        $description = '<span class="red">'.t('Processing error.').'</span>';
+        $description = '<span class="red">' . t('Processing error.') . '</span>';
         break;
       case VoipCall::TEXT_INVALID:
-        $description = '<span class="red">'.t('Invalid.').'</span>';
+        $description = '<span class="red">' . t('Invalid.') . '</span>';
         break;
       case VoipCall::TEXT_NOT_SENT:
         $description = t('Not processed.');
@@ -196,7 +205,7 @@ function voipnumber_blast_status($call, $blast) {
         $description = t('Processing.');
         break;
       case VoipCall::TEXT_SENT:
-        $description = '<span class="green">'.t('Processed.').'</span>';
+        $description = '<span class="green">' . t('Processed.') . '</span>';
         break;
     }
   }
@@ -210,17 +219,24 @@ function voipnumber_blast_status($call, $blast) {
     else {
       switch ($status) {
         default:
-          $description = '<span class="red">'.t('Processing error.').'</span>';
+          $description = '<span class="red">' . t('Processing error.') . '</span>';
           break;
         case VoipCall::ERROR:
-          $description = '<span class="red">'.t('Processing error.').'</span>';
+          $description = '<span class="red">' . t('Processing error.') . '</span>';
           break;
         case VoipCall::NO_ANSWER:
         case VoipCall::BUSY:
-        $description = t('Retrying.');
+          $item = voipnumber_blast_get_queue_item($call, 'voipblast_voice');
+          if ($item->retryPermitted(FALSE)) {
+            $description = t('Retrying.');
+          }
+          else {
+            $description = '<span class="red">Processing error retried '.$item->numberRetry.' times</span>';
+          }
+
           break;
         case VoipCall::INVALID:
-          $description = '<span class="red">'.t('Invalid.').'</span>';
+          $description = '<span class="red">' . t('Invalid.') . '</span>';
           break;
         case VoipCall::NOT_CALLED:
           $description = t('Not processed.');
@@ -228,11 +244,11 @@ function voipnumber_blast_status($call, $blast) {
         case VoipCall::QUEUED:
         case VoipCall::RINGING:
         case VoipCall::IN_PROGRESS:
-        $description = t('Processing.');
+          $description = t('Processing.');
           break;
         case VoipCall::COMPLETED:
         case VoipCall::CANCELED:
-          $description = '<span class="green">'.t('Processed.').'</span>';
+          $description = '<span class="green">' . t('Processed.') . '</span>';
           break;
       }
     }
@@ -243,7 +259,7 @@ function voipnumber_blast_status($call, $blast) {
 
 function voipnumber_blast_additional_info($call, $blast) {
   $blast_type = $blast->field_blast_type['und'][0]['value'];
-  if($blast_type == 'sms' || $blast_type == 'sms_optin') {
+  if ($blast_type == 'sms' || $blast_type == 'sms_optin') {
     $status = $call->getTextStatus();
     if (!$status) {
       $description = $call->getErrorMessage();
@@ -269,7 +285,7 @@ function voipnumber_blast_additional_info($call, $blast) {
   }
   else {
     $description = $call->getCallStatusDescription();
-    if($description == 'System error.') {
+    if ($description == 'System error.') {
       $description = $call->getErrorMessage();
     }
   }
@@ -277,17 +293,51 @@ function voipnumber_blast_additional_info($call, $blast) {
   return $description;
 }
 
+function voipnumber_blast_get_queue_item($call, $queue_name) {
+  $title = $call->getDestNumber() . ':' . $call->getCid();
+  $result = db_query('SELECT data, item_id FROM {advancedqueue} WHERE name = :name AND title = :title',
+    array(':name' => $queue_name, ':title' => $title));
+
+  $item = $result->fetchObject();
+  $item->data = unserialize($item->data);
+  if (is_a($item->data, 'VoipQueueJob')) {
+    $item->data->item_id = $item->item_id;
+    $item = $item->data;
+    return $item;
+  }
+  return NULL;
+}
+
 /**
  * Implementation of hook_voip_event().
  */
+//@todo: update status of callblast history if call was requeued
 function voipnumber_blast_voip_event($call, $status) {
-  switch($status) {
+  switch ($status) {
     case VoipEvent::BUSY:
     case VoipEvent::NO_ANSWER:
-      watchdog('debug', 'requing call '.$call->getCid());
       $title = $call->getDestNumber() . ':' . $call->getCid();
-      //@todo: check number of retries allowed?
-      db_query('UPDATE {advancedqueue} SET status = ' . ADVANCEDQUEUE_STATUS_QUEUED . ' WHERE name = :name AND title = :title',array(':name' => 'voipblast_voice', 'title' => $title));
+      $result = db_query('SELECT data, item_id FROM {advancedqueue} WHERE name = :name AND title = :title',
+        array(':name' => 'voipblast_voice', ':title' => $title));
+      $item = $result->fetchObject();
+      $item->data = unserialize($item->data);
+      if (is_a($item->data, 'VoipQueueJob')) {
+        $item->data->item_id = $item->item_id;
+        $item = $item->data;
+        watchdog('debug', 'item loaded ' . $item);
+        if ($item->retryPermitted()) {
+          watchdog('debug', 'requing call ' . $call->getCid());
+          db_update('advancedqueue')
+            ->fields(array(
+              'status' => ADVANCEDQUEUE_STATUS_QUEUED,
+              'data' => serialize($item),
+            ))
+            ->condition('title', $title)
+            ->condition('name', 'voipblast_voice')
+            ->execute();
+        }
+      }
+
       break;
   }
 }
