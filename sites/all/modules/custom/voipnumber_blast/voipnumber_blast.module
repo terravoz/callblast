@@ -231,7 +231,7 @@ function voipnumber_blast_status($call, $blast) {
             $description = t('Retrying.');
           }
           else {
-            $description = '<span class="red">Processing error retried '.$item->numberRetry.' times</span>';
+            $description = '<span class="red">Unreachable (retried '.$item->numberRetry.' times)</span>';
           }
 
           break;
