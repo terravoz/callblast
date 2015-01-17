@@ -115,6 +115,7 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
       //Options
       $options['retries'] = voipblast_defaults('voipblast_retries');
       $options['retry_delay'] = voipblast_defaults('voipblast_retry_delay');
+      $options['max_length'] = voipblast_defaults('voipblast_max_length');
       $options['queue_name'] = 'voipblast_voice';
 
       foreach ($phone_numbers as $voipnumber) {
