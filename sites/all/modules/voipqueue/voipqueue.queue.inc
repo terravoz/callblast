@@ -108,6 +108,7 @@ class VoipQueue extends AdvancedQueue {
         if (is_a($item->data, 'VoipQueueJob')) {
           $lease_time = $item->data->leaseTime;
         }
+        watchdog('debug', 'set expire to '.time() + $lease_time);
         $update = db_update('advancedqueue')
           ->fields(array(
             'status' => ADVANCEDQUEUE_STATUS_PROCESSING,
