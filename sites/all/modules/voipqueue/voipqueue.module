@@ -100,7 +100,26 @@ function voipqueue_action_info() {
       'configurable' => TRUE,
       'triggers' => array('any'),
     ),
+    'voipqueue_hangup_call' => array( // declare the function name to be used. Replace the name with your function name
+      'type' => 'system', // can be node,comment etc
+      'label' => t('Hangup a call'), // the name of the operation which is displayed to the user.
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'pass rows' => TRUE, // this will ensure that the entire views row is passed as part of the context in your action callback.
+    ),
   );
+}
+
+function voipqueue_hangup_call($entity, $context) {
+  $item = unserialize($entity->data);
+  if ($item->type == VOIPQUEUE_DIAL) {
+    $call = $item->getCall();
+    watchdog('debug', print_r($call,true));
+
+    watchdog('debug', 'hanging up '.print_r($item,true));
+    voipqueue_call_hangup($item);
+  }
+
 }
 
 /**
