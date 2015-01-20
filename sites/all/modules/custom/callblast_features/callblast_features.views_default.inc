@@ -30,6 +30,9 @@ function callblast_features_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'title' => 'title',
@@ -320,7 +323,7 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'advancedqueue';
-  $view->human_name = 'CallBlast History';
+  $view->human_name = 'Announcement History';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -407,6 +410,13 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
       'empty_column' => 0,
     ),
   );
+  /* Header: Global: PHP */
+  $handler->display->display_options['header']['php']['id'] = 'php';
+  $handler->display->display_options['header']['php']['table'] = 'views';
+  $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['php_output'] = '<?php print l(\'View all currently running calls\', \'current-calls\'); ?>
+
+';
   /* Field: Queue: Item ID */
   $handler->display->display_options['fields']['item_id']['id'] = 'item_id';
   $handler->display->display_options['fields']['item_id']['table'] = 'advancedqueue';
@@ -1343,6 +1353,136 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
     t('All'),
   );
   $export['contacts'] = $view;
+
+  $view = new view();
+  $view->name = 'current_calls';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'voipqueue_calls';
+  $view->human_name = 'Current Calls';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Current Calls';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'cid' => 'cid',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'cid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  /* Relationship: VoIP Queue: AdvancedQueue Item ID */
+  $handler->display->display_options['relationships']['item_id']['id'] = 'item_id';
+  $handler->display->display_options['relationships']['item_id']['table'] = 'voipqueue_calls';
+  $handler->display->display_options['relationships']['item_id']['field'] = 'item_id';
+  /* Relationship: VoIP Queue: VoIP call ID */
+  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
+  $handler->display->display_options['relationships']['cid']['table'] = 'voipqueue_calls';
+  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
+  /* Field: VoIP queue operations: Queue */
+  $handler->display->display_options['fields']['voipblast']['id'] = 'voipblast';
+  $handler->display->display_options['fields']['voipblast']['table'] = 'advancedqueue';
+  $handler->display->display_options['fields']['voipblast']['field'] = 'voipblast';
+  $handler->display->display_options['fields']['voipblast']['relationship'] = 'item_id';
+  /* Field: Queue: Tag */
+  $handler->display->display_options['fields']['tag']['id'] = 'tag';
+  $handler->display->display_options['fields']['tag']['table'] = 'advancedqueue_tags';
+  $handler->display->display_options['fields']['tag']['field'] = 'tag';
+  $handler->display->display_options['fields']['tag']['relationship'] = 'item_id';
+  $handler->display->display_options['fields']['tag']['label'] = 'Blast ID';
+  $handler->display->display_options['fields']['tag']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['tag']['alter']['path'] = 'node/[tag]';
+  /* Field: VoIP call: Destination number */
+  $handler->display->display_options['fields']['dest_number']['id'] = 'dest_number';
+  $handler->display->display_options['fields']['dest_number']['table'] = 'voipcall';
+  $handler->display->display_options['fields']['dest_number']['field'] = 'dest_number';
+  $handler->display->display_options['fields']['dest_number']['relationship'] = 'cid';
+  /* Field: VoIP call: Duration */
+  $handler->display->display_options['fields']['duration']['id'] = 'duration';
+  $handler->display->display_options['fields']['duration']['table'] = 'voipcall';
+  $handler->display->display_options['fields']['duration']['field'] = 'duration';
+  $handler->display->display_options['fields']['duration']['relationship'] = 'cid';
+  /* Field: VoIP call: Start time */
+  $handler->display->display_options['fields']['start_time']['id'] = 'start_time';
+  $handler->display->display_options['fields']['start_time']['table'] = 'voipcall';
+  $handler->display->display_options['fields']['start_time']['field'] = 'start_time';
+  $handler->display->display_options['fields']['start_time']['relationship'] = 'cid';
+  $handler->display->display_options['fields']['start_time']['date_format'] = 'long';
+  $handler->display->display_options['fields']['start_time']['second_date_format'] = 'long';
+  /* Field: VoIP call: Status */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'voipcall';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['relationship'] = 'cid';
+  /* Field: VoIP Queue: VoIP call ID */
+  $handler->display->display_options['fields']['cid']['id'] = 'cid';
+  $handler->display->display_options['fields']['cid']['table'] = 'voipqueue_calls';
+  $handler->display->display_options['fields']['cid']['field'] = 'cid';
+  $handler->display->display_options['fields']['cid']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['cid']['alter']['path'] = 'voipcall/[cid]';
+  /* Sort criterion: VoIP Queue: VoIP call ID */
+  $handler->display->display_options['sorts']['cid']['id'] = 'cid';
+  $handler->display->display_options['sorts']['cid']['table'] = 'voipqueue_calls';
+  $handler->display->display_options['sorts']['cid']['field'] = 'cid';
+  $handler->display->display_options['sorts']['cid']['order'] = 'DESC';
+  /* Filter criterion: VoIP call: Status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'voipcall';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['relationship'] = 'cid';
+  $handler->display->display_options['filters']['status']['operator'] = 'word';
+  $handler->display->display_options['filters']['status']['value'] = 'in_progress, ringing';
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'current-calls';
+  $translatables['current_calls'] = array(
+    t('Master'),
+    t('Current Calls'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('advancedqueue'),
+    t('voipcall'),
+    t('Queue'),
+    t('Blast ID'),
+    t('Destination number'),
+    t('Duration'),
+    t('Start time'),
+    t('Status'),
+    t('VoIP call ID'),
+    t('.'),
+    t(','),
+    t('Page'),
+  );
+  $export['current_calls'] = $view;
 
   return $export;
 }
