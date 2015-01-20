@@ -1540,11 +1540,15 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $handler->display->display_options['fields']['dest_number']['table'] = 'voipcall';
   $handler->display->display_options['fields']['dest_number']['field'] = 'dest_number';
   $handler->display->display_options['fields']['dest_number']['relationship'] = 'cid';
-  /* Field: VoIP call: Duration */
-  $handler->display->display_options['fields']['duration']['id'] = 'duration';
-  $handler->display->display_options['fields']['duration']['table'] = 'voipcall';
-  $handler->display->display_options['fields']['duration']['field'] = 'duration';
-  $handler->display->display_options['fields']['duration']['relationship'] = 'cid';
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = 'Duration';
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php print $row->start_time -  time();?> sec.';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: VoIP call: Start time */
   $handler->display->display_options['fields']['start_time']['id'] = 'start_time';
   $handler->display->display_options['fields']['start_time']['table'] = 'voipcall';
