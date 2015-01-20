@@ -1546,7 +1546,7 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $handler->display->display_options['fields']['php']['field'] = 'php';
   $handler->display->display_options['fields']['php']['label'] = 'Duration';
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print $row->start_time -  time();?> sec.';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php print time() - $row->start_time;?> sec.';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: VoIP call: Start time */
@@ -1578,7 +1578,7 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['relationship'] = 'cid';
   $handler->display->display_options['filters']['status']['operator'] = 'word';
-  $handler->display->display_options['filters']['status']['value'] = 'in_progress, ringing, not_called';
+  $handler->display->display_options['filters']['status']['value'] = 'in_progress, ringing';
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator_id'] = 'status_op';
   $handler->display->display_options['filters']['status']['expose']['label'] = 'Status';
