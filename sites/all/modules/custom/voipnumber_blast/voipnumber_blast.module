@@ -34,6 +34,11 @@ function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
       ));
     unset($form['field_voip_call']);
   }
+  else if($form_id == 'voipblast_admin_settings') {
+    //Remove unneeded settings from voipblast form
+    unset($form['voipblast_recipient']);
+    unset($form['voipblast_outgoing_script']);
+  }
 
   return $form;
 }
