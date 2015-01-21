@@ -554,3 +554,38 @@ function voipqueue_add_text($number, $text, $options = array()) {
   // Add the item to the queue.
   $queue->createItem($item);
 }
+
+/**
+ * Implementation of hook_voip_event().
+ */
+//@todo: update status of callblast history if call was requeued
+function voipqueue_voip_event($call, $status) {
+  watchdog('debug', 'voipevent: '.$status);
+  switch ($status) {
+    case VoipEvent::BUSY:
+    case VoipEvent::NO_ANSWER:
+      $title = $call->getDestNumber() . ':' . $call->getCid();
+      $result = db_query('SELECT data, item_id FROM {advancedqueue} WHERE name = :name AND title = :title',
+        array(':name' => 'voipblast_voice', ':title' => $title));
+      $item = $result->fetchObject();
+      $item->data = unserialize($item->data);
+      if (is_a($item->data, 'VoipQueueJob')) {
+        $item->data->item_id = $item->item_id;
+        $item = $item->data;
+        watchdog('debug', 'item loaded ' . print_r($item,true));
+        if ($item->retryPermitted()) {
+          watchdog('debug', 'requing call ' . $call->getCid());
+          db_update('advancedqueue')
+            ->fields(array(
+              'status' => ADVANCEDQUEUE_STATUS_QUEUED,
+              'data' => serialize($item),
+            ))
+            ->condition('title', $title)
+            ->condition('name', 'voipblast_voice')
+            ->execute();
+        }
+      }
+
+      break;
+  }
+}
