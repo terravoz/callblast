@@ -173,7 +173,7 @@ function voipnumber_blast_get_all_numbers() {
   $query = new EntityFieldQuery();
   $entities = $query->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'phone_number')
-    ->fieldCondition('field_opt_in', 'value', 1)
+    //->fieldCondition('field_opt_in', 'value', 1)
     ->execute();
 
   if (!empty($entities['node'])) {

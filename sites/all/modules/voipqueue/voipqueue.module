@@ -393,11 +393,11 @@ function voipqueue_call_dial($item) {
  */
 function voipqueue_call_text($item) {
   $call = $item->getCall();
-  $text = voipcall_special_chars($item->text);
+  //$text = voipcall_special_chars($item->text);
 
   //$voip_server = voip_default_server();
   //$response = $voip_server->send_text($text, $call);
-  $response = voip_text($text, $call);
+  $response = voip_text($item->text, $call);
 
   if ($response) {
     $result = array(
@@ -575,11 +575,13 @@ function voipqueue_voip_event($call, $status) {
         $item = $item->data;
         watchdog('debug', 'item loaded ' . print_r($item,true));
         if ($item->retryPermitted()) {
-          watchdog('debug', 'requing call ' . $call->getCid());
+          $delay = $item->calculateDelay();
+          watchdog('debug', 'delay is  ' . $delay);
           db_update('advancedqueue')
             ->fields(array(
-              'status' => ADVANCEDQUEUE_STATUS_QUEUED,
+              'status' => $delay ? VOIPQUEUE_STATUS_DELAYED :   ADVANCEDQUEUE_STATUS_QUEUED,
               'data' => serialize($item),
+              'expire' => $delay,
             ))
             ->condition('title', $title)
             ->condition('name', 'voipblast_voice')
