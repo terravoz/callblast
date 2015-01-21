@@ -28,6 +28,7 @@ function voip_dial($voipcall) {
 
   $voip_server = voip_default_server();
   $response = $voip_server->dial($voipcall);
+  VoipEvent::event($call, VoipEvent::OUTBOUND_CALL);
 
   if (voip_error()) {
     $error_message = 'Failure executing voip_dial() with %options.';
@@ -67,6 +68,7 @@ function voip_text($text, $voipcall, $reply = FALSE) {
 
   $voip_server = voip_default_server();
   $response = $voip_server->send_text($text, $voipcall, $reply);
+  VoipEvent::event($call, VoipEvent::OUTBOUND_SMS);
 
   if (voip_error()) {
     $error_message = 'Failure executing voip_text() with %options.';

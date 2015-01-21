@@ -81,6 +81,8 @@ class VoipSession {
     $res = db_query("SELECT * FROM {voipsession} WHERE expiring_at < :expiring_at", array(':expiring_at' => $time));
     foreach ($res as $session) {
       $deleted_call_ids[] = $session->call_id;
+      $call = VoipCall::load($session->call_id);
+      VoipEvent::event($call, VoipEvent::SESSION_EXPIRED);
     }
     //Delete the sessions
     db_delete('voipsession')

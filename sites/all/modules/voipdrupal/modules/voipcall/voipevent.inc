@@ -19,4 +19,8 @@ class VoipEvent {
   const OUTBOUND_SMS = 8;
   const CANCELED = 9;
   const SESSION_EXPIRED = 10;
+
+  public static function event(&$call, $event_type) {
+    module_invoke_all('voip_event', $call, $event_type);
+  }
 }

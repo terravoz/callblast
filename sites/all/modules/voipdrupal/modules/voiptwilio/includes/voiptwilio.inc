@@ -128,10 +128,11 @@ function _voiptwilio_call_handler($twilio_action, $cid = NULL) {
     $call->setAnsweredBy(VoipCall::ANSWERED_DRUPAL);
     $call->setCallStatus(VoipCall::RINGING);
     $call->setStartTime(REQUEST_TIME);
-	$call->setCallerNumber($from);
+	  $call->setCallerNumber($from);
     $call->setDestNumber($to);
     $call->setCallChannel($channel);
     $call->setCallNetwork($network);
+    VoipEvent::event($call, VoipEvent::INBOUND_CALL);
   }
   else if ($twilio_action == 'process_inbound_text'
     || $twilio_action == 'process_sms_framework') {
@@ -151,6 +152,7 @@ function _voiptwilio_call_handler($twilio_action, $cid = NULL) {
     if($twilio_action == 'process_sms_framework') {
       $call->setCallOrigin('smsframework');
     }
+    VoipEvent::event($call, VoipEvent::INBOUND_SMS_RECEIVED);
   }
   else {
     // handle ongoing calls
@@ -974,12 +976,12 @@ function voiptwilio_update_call_status($call, $twilio_call_status = 'in-progress
         '@cid' => $cid,
       );
       $call->report_error('voiptwilio', $msg, $params);
-      module_invoke_all('voip_event', $call, VoipEvent::INVALID);
+      VoipEvent::event($call, VoipEvent::INVALID);
       break;
     case 'failed': // call failed, most likely due to invalid number
       $call->setCallStatus(VoipCall::INVALID);
       $call->setHangupReason(VoipCall::HANGUP_INVALID_NUMBER);
-      module_invoke_all('voip_event', $call, VoipEvent::INVALID);
+      VoipEvent::event($call, VoipEvent::INVALID);
       break;
     case 'queued':
       $call->setCallStatus(VoipCall::QUEUED);
@@ -995,21 +997,23 @@ function voiptwilio_update_call_status($call, $twilio_call_status = 'in-progress
       $hangup_reason = $call->getHangupReason();
       if (!$hangup_reason) {
         $call->setHangupReason(VoipCall::HANGUP_BY_USER);
+        VoipEvent::event($call, VoipEvent::HANGUP_BY_USER);
       }
       break;
     case 'busy':
       $call->setCallStatus(VoipCall::BUSY);
       $call->setHangupReason(VoipCall::HANGUP_BUSY);
-      module_invoke_all('voip_event', $call, VoipEvent::BUSY);
+      VoipEvent::event($call, VoipEvent::BUSY);
       break;
     case 'no-answer':
       $call->setCallStatus(VoipCall::NO_ANSWER);
       $call->setHangupReason(VoipCall::HANGUP_NO_ANSWER);
-      module_invoke_all('voip_event', $call, VoipEvent::NO_ANSWER);
+      VoipEvent::event($call, VoipEvent::NO_ANSWER);
       break;
     case 'canceled':
       $call->setCallStatus(VoipCall::CANCELED);
       $call->setHangupReason(VoipCall::HANGUP_API_REQUEST);
+      VoipEvent::event($call, VoipEvent::CANCELED);
       break;
   }
   return $call;
