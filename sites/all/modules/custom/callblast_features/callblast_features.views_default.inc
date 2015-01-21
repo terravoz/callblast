@@ -410,13 +410,6 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
       'empty_column' => 0,
     ),
   );
-  /* Header: Global: PHP */
-  $handler->display->display_options['header']['php']['id'] = 'php';
-  $handler->display->display_options['header']['php']['table'] = 'views';
-  $handler->display->display_options['header']['php']['field'] = 'php';
-  $handler->display->display_options['header']['php']['php_output'] = '<?php print l(\'View all currently running calls\', \'current-calls\'); ?>
-
-';
   /* Field: Queue: Item ID */
   $handler->display->display_options['fields']['item_id']['id'] = 'item_id';
   $handler->display->display_options['fields']['item_id']['table'] = 'advancedqueue';
@@ -616,10 +609,10 @@ print l(\'More\', \'node/\'.$row->tag);
 ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
-  $handler->display->display_options['path'] = 'admin/voip/callblast/summary';
+  $handler->display->display_options['path'] = 'admin/voip/blast/history';
   $handler->display->display_options['menu']['type'] = 'tab';
-  $handler->display->display_options['menu']['title'] = 'Message History';
-  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['title'] = 'History';
+  $handler->display->display_options['menu']['weight'] = '1';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['claro_voip_queue'] = array(
@@ -1359,14 +1352,14 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'voipqueue_calls';
-  $view->human_name = 'Current Calls';
+  $view->human_name = 'Ongoing Calls';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Current Calls';
+  $handler->display->display_options['title'] = 'Ongoing Calls';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1600,10 +1593,16 @@ print l(\'Add new contact\', \'node/add/phone-number\', array(\'query\' => array
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'current-calls';
+  $handler->display->display_options['path'] = 'admin/voip/blast/ongoing-calls';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Ongoing Calls';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $handler->display->display_options['tab_options']['weight'] = '0';
   $translatables['current_calls'] = array(
     t('Master'),
-    t('Current Calls'),
+    t('Ongoing Calls'),
     t('more'),
     t('Apply'),
     t('Reset'),
