@@ -202,7 +202,7 @@ class VoipQueue extends AdvancedQueue {
     $expired = array();
     //$result = db_query('SELECT data, item_id FROM {advancedqueue} WHERE name = :name AND status = ' . ADVANCEDQUEUE_STATUS_PROCESSING . ' AND expire < :time', array(':name' => $this->name, ':time' => time()));
     $expire = time() - voipblast_defaults('voipblast_max_length');
-    $result = db_query('SELECT a.data, a.item_id FROM {voipqueue_calls} vqc LEFT JOIN {voipcall} vc ON vqc.cid = vc.cid LEFT JOIN {advancedqueue} a ON vqc.item_id = a.item_id WHERE vc.status = :status AND a.time <= :expire', array(':status' => VoipCall::IN_PROGRESS, ':expire' => $expire));
+    $result = db_query('SELECT a.data, a.item_id FROM {voipqueue_calls} vqc LEFT JOIN {voipcall} vc ON vqc.cid = vc.cid LEFT JOIN {advancedqueue} a ON vqc.item_id = a.item_id WHERE vc.status = :status AND a.processed <= :expire', array(':status' => VoipCall::IN_PROGRESS, ':expire' => $expire));
 
     while ($item = $result->fetchObject()) {
       $item->data = unserialize($item->data);
