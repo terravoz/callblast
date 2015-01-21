@@ -275,7 +275,7 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'admin/voip/callblast/details/%';
+  $handler->display->display_options['path'] = 'admin/voip/blast/details/%';
 
   /* Display: Data export */
   $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
