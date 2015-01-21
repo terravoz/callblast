@@ -353,10 +353,10 @@ function voipqueue_call($item) {
  * putting it in the queue.
  */
 function voipqueue_call_dial($item) {
-  watchdog('debug', 'in voipqueue_call_dial');
   $call = $item->getCall();
-  $voip_server = voip_default_server();
-  $response = $voip_server->dial($call);
+  //$voip_server = voip_default_server();
+  //$response = $voip_server->dial($call);
+  $response = voip_dial($call);
   //@todo: dial returns true if call was made successfully, however as success it considers busy and no answer too!
   watchdog('debug', 'response in voipqueue_call_dial'.print_r($response,true));
 
@@ -395,8 +395,9 @@ function voipqueue_call_text($item) {
   $call = $item->getCall();
   $text = voipcall_special_chars($item->text);
 
-  $voip_server = voip_default_server();
-  $response = $voip_server->send_text($text, $call);
+  //$voip_server = voip_default_server();
+  //$response = $voip_server->send_text($text, $call);
+  $response = voip_text($text, $call);
 
   if ($response) {
     $result = array(
