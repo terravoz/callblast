@@ -323,14 +323,14 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'advancedqueue';
-  $view->human_name = 'Announcement History';
+  $view->human_name = 'Blast History';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Announcements History';
+  $handler->display->display_options['title'] = 'Blast History';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -617,7 +617,7 @@ print l(\'More\', \'node/\'.$row->tag);
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['claro_voip_queue'] = array(
     t('Master'),
-    t('Announcements History'),
+    t('Blast History'),
     t('more'),
     t('Apply'),
     t('Reset'),
