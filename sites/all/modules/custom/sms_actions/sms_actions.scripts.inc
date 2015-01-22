@@ -63,8 +63,18 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
       $script = new VoipScript('sms_actions_action_subscribe');
       $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
       if ($phone_number) {
-        //Number already exists
-        $text = variable_get('sms_actions_sms_duplicate', 'Number already registered.');
+        $nid = $phone_number->getEid();
+        $contact = node_load($nid);
+        if($contact->field_opt_in['und'][0]['value']) {
+          //Number already exists
+          $text = variable_get('sms_actions_sms_duplicate', 'Number already registered.');
+        }
+        else {
+          //Opt-in the contact
+          $contact->field_opt_in['und'][0]['value'] = 1;
+          node_save($contact);
+          $text = variable_get('sms_actions_sms_welcome', 'Welcome to Callblast App.');
+        }
       }
       else {
         $node->type = 'phone_number';
