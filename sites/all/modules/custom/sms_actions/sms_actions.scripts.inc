@@ -63,7 +63,7 @@ function sms_actions_voipscript_load_script($script_name, $options = NULL) {
       $script = new VoipScript('sms_actions_action_subscribe');
       $phone_number = VoipNumber::getVoipNumbersByNumber($options['caller_number'], 'node', 'phone_number');
       if ($phone_number) {
-        $nid = $phone_number->getEid();
+        $nid = $phone_number[0]->getEid();
         $contact = node_load($nid);
         if($contact->field_opt_in['und'][0]['value']) {
           //Number already exists
