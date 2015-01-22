@@ -13,3 +13,11 @@
 .view-callblasts-phone-numbers- .green{
     color:green;
 }
+
+.form-autocomplete {
+  position: relative;
+}
+
+.field-widget-taxonomy-autocomplete {
+  position: relative;
+}
