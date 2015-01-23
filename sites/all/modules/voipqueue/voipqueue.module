@@ -44,13 +44,15 @@ function voipqueue_cron() {
       if ($item->type == VOIPQUEUE_DIAL) {
         voipqueue_call_hangup($item);
       }
+      $queue->deleteItem($item);
       // @todo Set result on the advancedqueue.
-      if ($item->retryPermitted()) {
+      //There is no sense of retrying a call that exceeded its time limitation
+      /*if ($item->retryPermitted()) {
         $queue->releaseItem($item);
       }
       else {
         $queue->deleteItem($item);
-      }
+      }*/
     }
   }
 }
