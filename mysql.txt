@@ -1,36 +1,106 @@
-SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT 1 FROM {blocked_ips} WHERE ip = :ipSELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sidSELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uidSELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC LIMIT 0, 1SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT revision.vid AS vid, base.uid AS uid, revision.title AS title, revision.log AS log, revision.status AS status, revision.comment AS comment, revision.promote AS promote, revision.sticky AS sticky, base.nid AS nid, base.type AS type, base.language AS language, base.created AS created, base.changed AS changed, base.tnid AS tnid, base.translate AS translate, revision.timestamp AS revision_timestamp, revision.uid AS revision_uid
-FROM 
-{node} base
-INNER JOIN {node_revision} revision ON revision.vid = base.vid
-WHERE  (base.nid IN  (:db_condition_placeholder_0)) SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT uid, name, picture, data FROM {users} WHERE uid IN (:uids)SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.titleSELECT format, type, language FROM {date_format_locale}SELECT * FROM {languages} ORDER BY weight ASC, name ASCSELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT 1 AS expression
-FROM 
-{history} history
-WHERE ( (uid = :db_condition_placeholder_0) AND (nid = :db_condition_placeholder_1) )UPDATE {history} SET timestamp=:db_update_placeholder_0
-WHERE ( (uid = :db_condition_placeholder_0) AND (nid = :db_condition_placeholder_1) )SELECT b.*
-FROM 
-{block} b
-WHERE  (b.theme = :db_condition_placeholder_0) AND (b.status = :db_condition_placeholder_1) 
-ORDER BY b.region ASC, b.weight ASC, b.module ASCSELECT module, delta, rid FROM {block_role}SELECT module, delta, type FROM {block_node_type}SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nidSELECT r.rid AS rid, r.name AS name
-FROM 
-{role} r
-INNER JOIN {role_permission} p ON r.rid = p.rid
-WHERE  (p.permission = :db_condition_placeholder_0) 
-ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
-FROM 
-{role} r
-INNER JOIN {role_permission} p ON r.rid = p.rid
-WHERE  (p.permission = :db_condition_placeholder_0) 
-ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
-FROM 
-{role} r
-INNER JOIN {role_permission} p ON r.rid = p.rid
-WHERE  (p.permission = :db_condition_placeholder_0) 
-ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
-FROM 
-{role} r
-INNER JOIN {role_permission} p ON r.rid = p.rid
-WHERE  (p.permission = :db_condition_placeholder_0) 
-ORDER BY weight ASC, name ASCSELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_admin_menu} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT n.nid AS nid
-FROM 
-{node} n
-WHERE  (n.status = :db_condition_placeholder_0) AND (n.nid IN  (:db_condition_placeholder_1)) SELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT 1 FROM {blocked_ips} WHERE ip = :ipSELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sidSELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uidSELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC LIMIT 0, 1SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.titleSELECT format, type, language FROM {date_format_locale}SELECT cid, data, created, expire, serialized FROM {cache_page} WHERE cid IN (:cids)
+UPDATE {sessions} SET uid=:db_update_placeholder_0, cache=:db_update_placeholder_1, hostname=:db_update_placeholder_2, session=:db_update_placeholder_3, timestamp=:db_update_placeholder_4
+WHERE ( (sid = :db_condition_placeholder_0) AND (ssid = :db_condition_placeholder_1) )UPDATE {sessions} SET uid=:db_update_placeholder_0, cache=:db_update_placeholder_1, hostname=:db_update_placeholder_2, session=:db_update_placeholder_3, timestamp=:db_update_placeholder_4
+WHERE ( (sid = :db_condition_placeholder_0) AND (ssid = :db_condition_placeholder_1) )UPDATE {users} SET access=:db_update_placeholder_0
+WHERE  (uid = :db_condition_placeholder_0) UPDATE {variable} SET value=:db_update_placeholder_0
+WHERE ( (name = :db_condition_placeholder_0) )UPDATE {variable} SET value=:db_update_placeholder_0
+WHERE ( (name = :db_condition_placeholder_0) )UPDATE {cache_bootstrap} SET serialized=:db_update_placeholder_0, created=:db_update_placeholder_1, expire=:db_update_placeholder_2, data=:db_update_placeholder_3
+WHERE ( (cid = :db_condition_placeholder_0) )UPDATE {cache_bootstrap} SET serialized=:db_update_placeholder_0, created=:db_update_placeholder_1, expire=:db_update_placeholder_2, data=:db_update_placeholder_3
+WHERE ( (cid = :db_condition_placeholder_0) )UPDATE {cache} SET serialized=:db_update_placeholder_0, created=:db_update_placeholder_1, expire=:db_update_placeholder_2, data=:db_update_placeholder_3
+WHERE ( (cid = :db_condition_placeholder_0) )UPDATE {node} SET vid=:db_update_placeholder_0, type=:db_update_placeholder_1, language=:db_update_placeholder_2, title=:db_update_placeholder_3, uid=:db_update_placeholder_4, status=:db_update_placeholder_5, created=:db_update_placeholder_6, changed=:db_update_placeholder_7, comment=:db_update_placeholder_8, promote=:db_update_placeholder_9, sticky=:db_update_placeholder_10, tnid=:db_update_placeholder_11, translate=:db_update_placeholder_12
+WHERE  (nid = :db_condition_placeholder_0) Array
+(
+    [:db_update_placeholder_0] => 2829
+    [:db_update_placeholder_1] => broadcast
+    [:db_update_placeholder_2] => en
+    [:db_update_placeholder_3] => test
+    [:db_update_placeholder_4] => 1
+    [:db_update_placeholder_5] => 1
+    [:db_update_placeholder_6] => 1422013851
+    [:db_update_placeholder_7] => 1422014679
+    [:db_update_placeholder_8] => 0
+    [:db_update_placeholder_9] => 0
+    [:db_update_placeholder_10] => 0
+    [:db_update_placeholder_11] => 0
+    [:db_update_placeholder_12] => 0
+    [:db_condition_placeholder_0] => 2829
+)
+UPDATE {node_revision} SET nid=:db_update_placeholder_0, uid=:db_update_placeholder_1, title=:db_update_placeholder_2, timestamp=:db_update_placeholder_3, status=:db_update_placeholder_4, comment=:db_update_placeholder_5, promote=:db_update_placeholder_6, sticky=:db_update_placeholder_7
+WHERE  (vid = :db_condition_placeholder_0) Array
+(
+    [:db_update_placeholder_0] => 2829
+    [:db_update_placeholder_1] => 1
+    [:db_update_placeholder_2] => test
+    [:db_update_placeholder_3] => 1422014679
+    [:db_update_placeholder_4] => 1
+    [:db_update_placeholder_5] => 0
+    [:db_update_placeholder_6] => 0
+    [:db_update_placeholder_7] => 0
+    [:db_condition_placeholder_0] => 2829
+)
+UPDATE {search_dataset} SET reindex=:db_update_placeholder_0
+WHERE  (type = :db_condition_placeholder_0) AND (sid = :db_condition_placeholder_1) Array
+(
+    [:db_update_placeholder_0] => 1422014679
+    [:db_condition_placeholder_0] => node
+    [:db_condition_placeholder_1] => 2829
+)
+UPDATE {node} SET vid=:db_update_placeholder_0, type=:db_update_placeholder_1, language=:db_update_placeholder_2, title=:db_update_placeholder_3, uid=:db_update_placeholder_4, status=:db_update_placeholder_5, created=:db_update_placeholder_6, changed=:db_update_placeholder_7, comment=:db_update_placeholder_8, promote=:db_update_placeholder_9, sticky=:db_update_placeholder_10, tnid=:db_update_placeholder_11, translate=:db_update_placeholder_12
+WHERE  (nid = :db_condition_placeholder_0) Array
+(
+    [:db_update_placeholder_0] => 2829
+    [:db_update_placeholder_1] => broadcast
+    [:db_update_placeholder_2] => en
+    [:db_update_placeholder_3] => test
+    [:db_update_placeholder_4] => 1
+    [:db_update_placeholder_5] => 1
+    [:db_update_placeholder_6] => 1422013851
+    [:db_update_placeholder_7] => 1422014679
+    [:db_update_placeholder_8] => 0
+    [:db_update_placeholder_9] => 0
+    [:db_update_placeholder_10] => 0
+    [:db_update_placeholder_11] => 0
+    [:db_update_placeholder_12] => 0
+    [:db_condition_placeholder_0] => 2829
+)
+UPDATE {node_revision} SET nid=:db_update_placeholder_0, uid=:db_update_placeholder_1, title=:db_update_placeholder_2, timestamp=:db_update_placeholder_3, status=:db_update_placeholder_4, comment=:db_update_placeholder_5, promote=:db_update_placeholder_6, sticky=:db_update_placeholder_7
+WHERE  (vid = :db_condition_placeholder_0) Array
+(
+    [:db_update_placeholder_0] => 2829
+    [:db_update_placeholder_1] => 1
+    [:db_update_placeholder_2] => test
+    [:db_update_placeholder_3] => 1422014679
+    [:db_update_placeholder_4] => 1
+    [:db_update_placeholder_5] => 0
+    [:db_update_placeholder_6] => 0
+    [:db_update_placeholder_7] => 0
+    [:db_condition_placeholder_0] => 2829
+)
+UPDATE {search_dataset} SET reindex=:db_update_placeholder_0
+WHERE  (type = :db_condition_placeholder_0) AND (sid = :db_condition_placeholder_1) Array
+(
+    [:db_update_placeholder_0] => 1422014679
+    [:db_condition_placeholder_0] => node
+    [:db_condition_placeholder_1] => 2829
+)
+UPDATE {sessions} SET uid=:db_update_placeholder_0, cache=:db_update_placeholder_1, hostname=:db_update_placeholder_2, session=:db_update_placeholder_3, timestamp=:db_update_placeholder_4
+WHERE ( (sid = :db_condition_placeholder_0) AND (ssid = :db_condition_placeholder_1) )Array
+(
+    [:db_update_placeholder_0] => 1
+    [:db_update_placeholder_1] => 0
+    [:db_update_placeholder_2] => ::1
+    [:db_update_placeholder_3] => batches|a:11:{i:359;b:1;i:363;b:1;i:365;b:1;i:367;b:1;i:369;b:1;i:371;b:1;i:373;b:1;i:375;b:1;i:377;b:1;i:379;b:1;i:381;b:1;}messages|a:1:{s:6:"status";a:2:{i:0;s:64:"Announcement <em class="placeholder">test</em> has been updated.";i:1;s:40:"Announcement queued for 1 phone numbers.";}}
+    [:db_update_placeholder_4] => 1422014679
+    [:db_condition_placeholder_0] => ozQkvqbbt4PcmeWo4Og2K1_zACCNNP2IJqymNHV_hI8
+    [:db_condition_placeholder_1] => 
+)
+UPDATE {sessions} SET uid=:db_update_placeholder_0, cache=:db_update_placeholder_1, hostname=:db_update_placeholder_2, session=:db_update_placeholder_3, timestamp=:db_update_placeholder_4
+WHERE ( (sid = :db_condition_placeholder_0) AND (ssid = :db_condition_placeholder_1) )Array
+(
+    [:db_update_placeholder_0] => 1
+    [:db_update_placeholder_1] => 0
+    [:db_update_placeholder_2] => ::1
+    [:db_update_placeholder_3] => batches|a:11:{i:359;b:1;i:363;b:1;i:365;b:1;i:367;b:1;i:369;b:1;i:371;b:1;i:373;b:1;i:375;b:1;i:377;b:1;i:379;b:1;i:381;b:1;}
+    [:db_update_placeholder_4] => 1422014679
+    [:db_condition_placeholder_0] => ozQkvqbbt4PcmeWo4Og2K1_zACCNNP2IJqymNHV_hI8
+    [:db_condition_placeholder_1] => 
+)

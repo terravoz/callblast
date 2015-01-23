@@ -665,7 +665,16 @@ abstract class DatabaseConnection extends PDO {
    * @throws PDOException
    */
   public function query($query, array $args = array(), $options = array()) {
-    file_put_contents('mysql.txt', $query, FILE_APPEND | LOCK_EX);
+    $needle = 'UPDATE';
+    $length = strlen($needle);
+    if((substr($query, 0, $length) === $needle)) {
+      file_put_contents('mysql.txt', $query, FILE_APPEND | LOCK_EX);
+      if($args) {
+        //var_dump($args);
+        file_put_contents('mysql.txt', print_r($args,true), FILE_APPEND | LOCK_EX);
+      }
+    }
+
     // Use default values if not already set.
     $options += $this->defaultOptions();
 
@@ -2167,7 +2176,6 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
     if (!empty($logger)) {
       $query_start = microtime(TRUE);
     }
-
     $return = parent::execute($args);
 
     if (!empty($logger)) {
