@@ -208,11 +208,11 @@ class VoipQueue extends AdvancedQueue {
 
     while ($item = $result->fetchObject()) {
       $item->data = unserialize($item->data);
-      if (is_a($item->data, 'VoipQueueJob')) {
+      if (is_a($item->data, 'VoipQueueDial')) {
         $item->data->item_id = $item->item_id;
         $item = $item->data;
+        $expired[] = $item;
       }
-      $expired[] = $item;
     }
     return $expired;
   }
