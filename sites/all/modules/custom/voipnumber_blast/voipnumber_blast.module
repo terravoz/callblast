@@ -71,6 +71,8 @@ function voipnumber_blast_broadcast_node_form_submit($form, &$form_state) {
         $call = new VoipCall(array());
         // Only the destination number need be set.
         $call->setDestNumber($voipnumber->getNumber());
+        $call->setCallNetwork('sms');
+        $call->setCallChannel('text');
         $call = $call->save();
 
         $blast->field_voip_call['und'][]['value'] = $call->getCid();
