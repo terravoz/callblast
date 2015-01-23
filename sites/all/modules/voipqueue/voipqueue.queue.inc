@@ -159,7 +159,6 @@ class VoipQueue extends AdvancedQueue {
    */
   public function releaseItem($item) {
     if (is_a($item, 'VoipQueueJob')) {
-      watchdog('debug', 'release item name '.$item->queueName);
       $update = db_update('advancedqueue')
         ->fields($item->prepare($item->queueName))
         ->condition('item_id', $item->item_id);

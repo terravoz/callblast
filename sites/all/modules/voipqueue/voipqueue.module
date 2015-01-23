@@ -18,7 +18,6 @@ define('VOIPQUEUE_STATUS_DELAYED', -2);
  * Implements hook_cron().
  */
 function voipqueue_cron() {
-  watchdog('debug', 'in voipqueue_cron');
   // Change status of items that were delayed and now ready.
   $update = db_update('advancedqueue')
     ->fields(array(
@@ -115,10 +114,6 @@ function voipqueue_action_info() {
 function voipqueue_hangup_call($entity, $context) {
   $item = unserialize($entity->data);
   if ($item->type == VOIPQUEUE_DIAL) {
-    $call = $item->getCall();
-    watchdog('debug', print_r($call,true));
-
-    watchdog('debug', 'hanging up '.print_r($item,true));
     voipqueue_call_hangup($item);
   }
 
@@ -359,8 +354,6 @@ function voipqueue_call_dial($item) {
   //$voip_server = voip_default_server();
   //$response = $voip_server->dial($call);
   $response = voip_dial($call);
-  //@todo: dial returns true if call was made successfully, however as success it considers busy and no answer too!
-  watchdog('debug', 'response in voipqueue_call_dial'.print_r($response,true));
 
   if ($response) {
     $result = array(
@@ -379,7 +372,6 @@ function voipqueue_call_dial($item) {
       );
     }
     else {
-      watchdog('debug', 'not retrying item in voipqueue_call_dial'.print_r($item,true));
       $result = array(
         'status' => ADVANCEDQUEUE_STATUS_FAILURE,
         'result' => voip_error_message(),
@@ -563,7 +555,6 @@ function voipqueue_add_text($number, $text, $options = array()) {
  */
 //@todo: update status of callblast history if call was requeued
 function voipqueue_voip_event($call, $status) {
-  watchdog('debug', 'voipevent: '.$status);
   switch ($status) {
     case VoipEvent::BUSY:
     case VoipEvent::NO_ANSWER:
@@ -575,10 +566,8 @@ function voipqueue_voip_event($call, $status) {
       if (is_a($item->data, 'VoipQueueJob')) {
         $item->data->item_id = $item->item_id;
         $item = $item->data;
-        watchdog('debug', 'item loaded ' . print_r($item,true));
         if ($item->retryPermitted()) {
           $delay = $item->calculateDelay();
-          watchdog('debug', 'delay is  ' . $delay);
           db_update('advancedqueue')
             ->fields(array(
               'status' => $delay ? VOIPQUEUE_STATUS_DELAYED :   ADVANCEDQUEUE_STATUS_QUEUED,
