@@ -1,0 +1,36 @@
+SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT 1 FROM {blocked_ips} WHERE ip = :ipSELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sidSELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uidSELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC LIMIT 0, 1SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT revision.vid AS vid, base.uid AS uid, revision.title AS title, revision.log AS log, revision.status AS status, revision.comment AS comment, revision.promote AS promote, revision.sticky AS sticky, base.nid AS nid, base.type AS type, base.language AS language, base.created AS created, base.changed AS changed, base.tnid AS tnid, base.translate AS translate, revision.timestamp AS revision_timestamp, revision.uid AS revision_uid
+FROM 
+{node} base
+INNER JOIN {node_revision} revision ON revision.vid = base.vid
+WHERE  (base.nid IN  (:db_condition_placeholder_0)) SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT uid, name, picture, data FROM {users} WHERE uid IN (:uids)SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.titleSELECT format, type, language FROM {date_format_locale}SELECT * FROM {languages} ORDER BY weight ASC, name ASCSELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT 1 AS expression
+FROM 
+{history} history
+WHERE ( (uid = :db_condition_placeholder_0) AND (nid = :db_condition_placeholder_1) )UPDATE {history} SET timestamp=:db_update_placeholder_0
+WHERE ( (uid = :db_condition_placeholder_0) AND (nid = :db_condition_placeholder_1) )SELECT b.*
+FROM 
+{block} b
+WHERE  (b.theme = :db_condition_placeholder_0) AND (b.status = :db_condition_placeholder_1) 
+ORDER BY b.region ASC, b.weight ASC, b.module ASCSELECT module, delta, rid FROM {block_role}SELECT module, delta, type FROM {block_node_type}SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nidSELECT r.rid AS rid, r.name AS name
+FROM 
+{role} r
+INNER JOIN {role_permission} p ON r.rid = p.rid
+WHERE  (p.permission = :db_condition_placeholder_0) 
+ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
+FROM 
+{role} r
+INNER JOIN {role_permission} p ON r.rid = p.rid
+WHERE  (p.permission = :db_condition_placeholder_0) 
+ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
+FROM 
+{role} r
+INNER JOIN {role_permission} p ON r.rid = p.rid
+WHERE  (p.permission = :db_condition_placeholder_0) 
+ORDER BY weight ASC, name ASCSELECT r.rid AS rid, r.name AS name
+FROM 
+{role} r
+INNER JOIN {role_permission} p ON r.rid = p.rid
+WHERE  (p.permission = :db_condition_placeholder_0) 
+ORDER BY weight ASC, name ASCSELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_admin_menu} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_menu} WHERE cid IN (:cids)SELECT n.nid AS nid
+FROM 
+{node} n
+WHERE  (n.status = :db_condition_placeholder_0) AND (n.nid IN  (:db_condition_placeholder_1)) SELECT cid, data, created, expire, serialized FROM {cache_field} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT 1 FROM {blocked_ips} WHERE ip = :ipSELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sidSELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uidSELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT cid, data, created, expire, serialized FROM {cache_bootstrap} WHERE cid IN (:cids)SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC LIMIT 0, 1SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.titleSELECT format, type, language FROM {date_format_locale}SELECT cid, data, created, expire, serialized FROM {cache_page} WHERE cid IN (:cids)

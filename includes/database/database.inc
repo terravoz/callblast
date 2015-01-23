@@ -665,7 +665,7 @@ abstract class DatabaseConnection extends PDO {
    * @throws PDOException
    */
   public function query($query, array $args = array(), $options = array()) {
-
+    file_put_contents('mysql.txt', $query, FILE_APPEND | LOCK_EX);
     // Use default values if not already set.
     $options += $this->defaultOptions();
 
