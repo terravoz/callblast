@@ -324,7 +324,6 @@ function _voiptwilio_call_handler($twilio_action, $cid = NULL) {
 
   //if ($is_hangup) {
   if($call->getCallStatus() == VoipCall::COMPLETED) {
-    watchdog('debug', 'twilio dur '.$_REQUEST['CallDuration']);
     // determine call duration
     $end_time = $call->setEndTime();
     $start_time = $call->getStartTime();
