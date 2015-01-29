@@ -44,7 +44,11 @@ class AdvancedQueue implements DrupalReliableQueueInterface {
     // until an item is successfully claimed or we are reasonably sure there
     // are no unclaimed items left.
     while (TRUE) {
-      $item = db_query_range('SELECT data, item_id FROM {advancedqueue} q WHERE status = -1 AND expire = 0 AND name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+      $data = array(
+        ':created' => time(),
+        ':name' => $this->name,
+      );
+      $item = db_query_range('SELECT item_id, uid, title, data FROM {advancedqueue} q WHERE status = -1 AND expire = 0 AND name = :name AND created <= :created ORDER BY created ASC', 0, 1, $data)->fetchObject();
       if ($item) {
         // Try to update the item. Only one thread can succeed in UPDATEing the
         // same row. We cannot rely on REQUEST_TIME because items might be
@@ -70,6 +74,21 @@ class AdvancedQueue implements DrupalReliableQueueInterface {
         return FALSE;
       }
     }
+  }
+
+  /**
+   * Requeue an item in case of failure.
+   */
+  public function requeueItem($item) {
+    $update = db_update('advancedqueue')
+      ->fields(array(
+        'expire' => 0,
+        'status' => ADVANCEDQUEUE_STATUS_QUEUED,
+        'created' => $item->created,
+        'data' => serialize($item->data),
+      ))
+      ->condition('item_id', $item->item_id);
+    return $update->execute();
   }
 
   public function releaseItem($item) {

@@ -563,6 +563,8 @@ function voipblast_defaults($name = NULL) {
     'voipblast_retries' => variable_get('voipblast_retries', 2),
     // The time to delay in seconds between retries.
     'voipblast_retry_delay' => variable_get('voipblast_retry_delay', 60),
+    // Number of parallel calls in the queue
+    'voipqueue_limit_voipblast_voice' => variable_get('voipqueue_limit_voipblast_voice', 10),
   );
 
   if (is_null($name)) {

@@ -21,36 +21,42 @@ function advancedqueue_drush_command() {
     ),
     'aliases' => array('advancedqueue'),
   );
+  $items['advancedqueue-list'] = array(
+    'description' => 'Returns a list of all defined queues',
+    'options' => array(
+      'pipe' => 'Return a comma delimited list of queues.'
+    )
+  );
   return $items;
 }
 
-function drush_advancedqueue_process_queue() {
+/**
+ * Command callback for drush advancedqueue-process-queue.
+ *
+ * @param $queue_name
+ *   Arbitrary string. The name of the queue to work with.
+ */
+function drush_advancedqueue_process_queue($queue = NULL) {
   // Load information about the registred queues, and sort them by weight.
-  $all_queue_info = module_invoke_all('advanced_queue_info');
-  drupal_alter('advanced_queue_info', $all_queue_info);
-  uasort($all_queue_info, 'drupal_sort_weight');
+  if (!$queues_info = advancedqueue_get_queues_info()) {
+    return drush_set_error(dt('No queues exist.'));
+  }
 
   $all_option = drush_get_option('all');
-  $queues = drush_get_option('queue');
-  if (!$all_option && !$queues) {
+  if (!$all_option && empty($queue)) {
     return drush_set_error(dt('You have to specify either a set of queues or the --all parameter.'));
   }
 
   if ($all_option) {
-    $queues = $all_queue_info;
+    $queues = $queues_info;
   }
   else {
     // Validate queues.
-    $queues = array_combine($queues, $queues);
-    $invalid_queues = array_diff_key($queues, $all_queue_info);
-    if ($invalid_queues) {
+    $queues = drupal_map_assoc(explode(',', $queue));
+    if ($invalid_queues = array_diff_key($queues, $queues_info)) {
       return drush_set_error(dt('The following queues are invalid: !queues. Aborting.', array('!queues' => implode(', ', $invalid_queues))));
     }
-    $queues = array_intersect_key($all_queue_info, $queues);
-  }
-
-  if (!$queues) {
-    return drush_set_error(dt('No queues exist.'));
+    $queues = array_intersect_key($queues_info, $queues);
   }
 
   // Run the worker for a certain period of time before killing it.
@@ -64,12 +70,14 @@ function drush_advancedqueue_process_queue() {
       // Add default values.
       $queue_info += array(
         'delete when completed' => TRUE,
+        'retry after' => FALSE,
+        'max attempts' => 10,
       );
 
       $queue = DrupalQueue::get($queue_name);
 
       if ($item = $queue->claimItem()) {
-        drush_advancedqueue_process_item($queue, $queue_name, $queue_info, $item, $end);
+        advancedqueue_process_item($queue, $queue_name, $queue_info, $item, $end);
         continue 2;
       }
     }
@@ -82,52 +90,54 @@ function drush_advancedqueue_process_queue() {
 }
 
 /**
- * Process a queue item.
- *
- * @param $queue
- *   The queue object.
- * @param $queue_name
- *   The queue name.
- * @param $queue_info
- *   The queue info.
- * @param $item
- *   The item to process.
- * @param $end_time
- *   (Optional) The time the process should end.
+ * Command callback for drush advancedqueue-list.
  */
-function drush_advancedqueue_process_item($queue, $queue_name, $queue_info, $item, $end_time = FALSE) {
-  $function = $queue_info['worker callback'];
-  $params =  array(
-    '@queue' => $queue_name,
-    '@id' => $item->item_id,
-    '@title' => !empty($item->title) ? $item->title : dt('untitled'),
-  );
-  drush_log(dt('[@queue:@id] Starting processing item @title.', $params));
+function drush_advancedqueue_list() {
+  $queues = drush_advancedqueue_get_queues();
+  $rows = array(array('Queue', 'Items', 'Class'));
+  foreach (array_keys($queues) as $name) {
+    $q = DrupalQueue::get($name);
+    $rows[] = array($name, $q->numberOfItems(), get_class($q));
+  }
 
-  try {
-    // Pass the claimed item itself and end date along to the worker
-    // callback.
-    $output = $function($item, $end_time);
-    if (is_array($output)) {
-      $item->status = $output['status'];
-      $item->result = $output['result'];
+  if (drush_get_option('pipe')) {
+    $pipe = array();
+    array_shift($rows);
+    foreach ($rows as $r) {
+      $pipe[] = implode(",", $r);
     }
-    else {
-      $item->status = $output ? ADVANCEDQUEUE_STATUS_SUCCESS : ADVANCEDQUEUE_STATUS_FAILURE;
+    drush_print_pipe($pipe);
+  }
+  else {
+    drush_print_table($rows, TRUE);
+  }
+
+  // Return the result for backend invoke
+  return $rows;
+}
+
+/**
+ * Get queues defined with hook_advanced_queue_info().
+ *
+ * @return
+ *   Array of queues indexed by name and containing queue object and number
+ *   of items.
+ */
+function drush_advancedqueue_get_queues() {
+  $queues = &drupal_static(__FUNCTION__);
+  if (!isset($queues)) {
+    $advanced_queues = module_invoke_all('advanced_queue_info');
+    drupal_alter('advanced_queue_info', $advanced_queues);
+
+    $queues = array();
+    foreach($advanced_queues as $name => $queue) {
+      $queues[$name] = array(
+        'cron' => array(
+          'callback' => $queue['worker callback'],
+          'time' => $queue['time'],
+        )
+      );
     }
   }
-  catch (Exception $e) {
-    $item->status = ADVANCEDQUEUE_STATUS_FAILURE;
-    $params['!message'] = (string) $e;
-    drush_log(dt('[!queue:!id] failed processing: !message', $params));
-  }
-
-  $params['@status'] = $item->status;
-  drush_log(dt('[@queue:@id] Processing ended with result @status.', $params));
-
-  if ($queue_info['delete when completed']) {
-    // Item was processed, so we can "delete" it. This is not removing the
-    // item from the database, but rather updates it with the status.
-    $queue->deleteItem($item);
-  }
+  return $queues;
 }

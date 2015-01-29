@@ -10,12 +10,9 @@ files[] = views/advancedqueue_handler_field_title.inc
 files[] = views/advancedqueue_handler_field_status.inc
 files[] = views/advancedqueue_handler_filter_status.inc
 
-; Test
-files[] = tests/advancedqueue.test
-
-; Information added by drupal.org packaging script on 2012-11-25
-version = "7.x-1.0-alpha2"
+; Information added by Drupal.org packaging script on 2014-08-28
+version = "7.x-1.0-beta3"
 core = "7.x"
 project = "advancedqueue"
-datestamp = "1353839756"
+datestamp = "1409216335"
 

@@ -93,6 +93,14 @@ function advancedqueue_views_data() {
     ),
   );
 
+  $data['advancedqueue']['result'] = array(
+    'title' => t('Result'),
+    'help' => t('The result of item processing.'),
+    'field' => array(
+      'handler' => 'views_handler_field_serialized',
+    ),
+  );
+
   $data['advancedqueue']['created'] = array(
     'title' => t('Created date'),
     'help' => t('The date the queued item was created.'),

@@ -81,7 +81,7 @@ function advancedqueue_schema() {
       'status' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'default' => ADVANCEDQUEUE_STATUS_QUEUED,
+        'default' => -1,
         'size' => 'tiny',
         'description' => 'Indicates whether the item has been processed (-1 = queue, 0 = processing, 1 = successfully processed, 2 = failed).',
       ),

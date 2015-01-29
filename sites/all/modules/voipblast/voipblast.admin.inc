@@ -50,11 +50,11 @@ function voipblast_admin_settings($form, &$form_state) {
     '#element_validate' => array('element_validate_integer_positive'),
   );
 
-  $form['voipblast_parallel_calls'] = array(
+  $form['voipqueue_limit_voipblast_voice'] = array(
     '#type' => 'textfield',
     '#title' => t('Number of parallel calls'),
     '#description' => t('Maximum number of parallel calls.'),
-    '#default_value' => $defaults['voipblast_parallel_calls'],
+    '#default_value' => $defaults['voipqueue_limit_voipblast_voice'],
     '#element_validate' => array('element_validate_integer_positive'),
   );
 
