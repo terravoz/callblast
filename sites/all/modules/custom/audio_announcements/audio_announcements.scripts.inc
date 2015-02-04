@@ -27,7 +27,7 @@ function audio_announcements_voipscript_load_script($script_name, $options=NULL)
       //Audio Announcements script for Voice channel
       $script = new VoipScript('audio_announcements_main_menu_script');
       $script->addSetVoice('woman');
-      $options['voice'] = 'claro';
+      $options['voice'] = 'log';
       $voice =  $options['voice'];
       voipvoice_set_current_voice($voice);
 
