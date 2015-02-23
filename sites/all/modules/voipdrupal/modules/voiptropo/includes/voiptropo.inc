@@ -736,8 +736,6 @@ function voiptropo_update_call_status($call, $result, $call_status) {
         '@cid' => $cid,
         '@result' => print_r($result, TRUE)
       );
-      // $call->report_error('voiptropo', $msg, $params);
-      watchdog('voiptropo', $msg, $params, WATCHDOG_WARNING);
       $found = FALSE;
       break;
     case 'RINGING':
@@ -757,6 +755,7 @@ function voiptropo_update_call_status($call, $result, $call_status) {
       // 'DISCONNECTED'
       if ($call_status == 'incomplete') {
         $call->setCallStatus(VoipCall::NO_ANSWER);
+        VoipEvent::event($call, VoipEvent::NO_ANSWER);
       }
       else {
         $call->setCallStatus(VoipCall::COMPLETED);
@@ -767,6 +766,7 @@ function voiptropo_update_call_status($call, $result, $call_status) {
       $cid = $call->getCid();
       $params = array('@cid' => $cid, '@result' => print_r($result, TRUE));
       $call->report_error('voiptropo', $msg, $params);
+      VoipEvent::event($call, VoipEvent::INVALID);
       break;
     case 'REDIRECTING':
     case 'REDIRECTED':
@@ -780,6 +780,7 @@ function voiptropo_update_call_status($call, $result, $call_status) {
         $cid = $call->getCid();
         $params = array('@status' => $call_status, '@cid' => $cid);
         $call->report_error('voiptropo', $msg, $params);
+        VoipEvent::event($call, VoipEvent::INVALID);
         break;
       case 'incomplete':
         // According to https://evolution.voxeo.com/ticket/1811533, the incomplete
@@ -787,6 +788,7 @@ function voiptropo_update_call_status($call, $result, $call_status) {
         // busy lines, invalid number, and no answer.
         $call->setCallStatus(VoipCall::NO_ANSWER);
         $call->setHangupReason(VoipCall::HANGUP_NO_ANSWER);
+        VoipEvent::event($call, VoipEvent::NO_ANSWER);
         break;
       case 'in-progress':
         $call->setCallStatus(VoipCall::IN_PROGRESS);
@@ -796,6 +798,7 @@ function voiptropo_update_call_status($call, $result, $call_status) {
         $cid = $call->getCid();
         $params = array('@cid' => $cid, '@result' => print_r($result, TRUE));
         $call->report_error('voiptropo', $msg, $params);
+        VoipEvent::event($call, VoipEvent::INVALID);
         break;
     }
   }
@@ -1118,6 +1121,13 @@ function _voiptropo_handle_new_calls($tropo_action, $session) {
     $call->setDestNumber($to);
     $call->setCallChannel($channel);
     $call->setCallNetwork($network);
+
+    if (strtolower($channel) == 'text') {
+      VoipEvent::event($call, VoipEvent::INBOUND_SMS_RECEIVED);
+    }
+    else {
+      VoipEvent::event($call, VoipEvent::INBOUND_CALL);
+    }
   }
   else {
     // handle outbound call requests

@@ -320,6 +320,7 @@ class VoipPlivoCloudServer extends VoipServer {
           $voipcall->report_error('voipplivocloud', $msg, $params);
         }
         else {
+          $voipcall->setCallStatus(VoipCall::COMPLETED);
           $voipcall->setHangupReason(VoipCall::HANGUP_API_REQUEST);
           $voipcall->save();
           $rc = TRUE;

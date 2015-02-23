@@ -135,6 +135,7 @@ function voipplivocore_call_handler($server, $plivo_action, $cid = NULL) {
     $call->setDestNumber($to);
     $call->setCallChannel($channel);
     $call->setCallNetwork($network);
+    VoipEvent::event($call, VoipEvent::INBOUND_CALL);
   }
   else if ($plivo_action == 'process_inbound_text'
     || $plivo_action == 'process_sms_framework') {
@@ -155,6 +156,7 @@ function voipplivocore_call_handler($server, $plivo_action, $cid = NULL) {
       $call->setCallOrigin('smsframework');
     }
     $call->save();
+    VoipEvent::event($call, VoipEvent::INBOUND_SMS_RECEIVED);
   }
   else {
     // handle ongoing calls
@@ -1002,11 +1004,13 @@ function voipplivocore_update_call_status($call, $plivo_call_status = 'in-progre
       $cid = $call->getCid();
       $params = array('@status' => $plivo_call_status, '@cid' => $cid);
       $call->report_error('voipplivocore', $msg, $params);
+      VoipEvent::event($call, VoipEvent::INVALID);
       return NULL;
       break;
     case 'failed': // call failed, most likely due to invalid number
       $call->setCallStatus(VoipCall::INVALID);
       $call->setHangupReason(VoipCall::HANGUP_INVALID_NUMBER);
+      VoipEvent::event($call, VoipEvent::INVALID);
       break;
     case 'queued':
       $call->setCallStatus(VoipCall::QUEUED);
@@ -1022,20 +1026,24 @@ function voipplivocore_update_call_status($call, $plivo_call_status = 'in-progre
       $hangup_reason = $call->getHangupReason();
       if (!$hangup_reason) {
         $call->setHangupReason(VoipCall::HANGUP_BY_USER);
+        VoipEvent::event($call, VoipEvent::HANGUP_BY_USER);
       }
       break;
     case 'busy':
       $call->setCallStatus(VoipCall::BUSY);
       $call->setHangupReason(VoipCall::HANGUP_BUSY);
+      VoipEvent::event($call, VoipEvent::BUSY);
       break;
     case 'no-answer':
       $call->setCallStatus(VoipCall::NO_ANSWER);
       $call->setHangupReason(VoipCall::HANGUP_NO_ANSWER);
+      VoipEvent::event($call, VoipEvent::NO_ANSWER);
       break;
     case 'canceled':
     case 'cancel':
       $call->setCallStatus(VoipCall::CANCELED);
       $call->setHangupReason(VoipCall::HANGUP_API_REQUEST);
+      VoipEvent::event($call, VoipEvent::CANCELED);
       break;
   }
   return $call;

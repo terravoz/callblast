@@ -261,6 +261,7 @@ class VoipTropoServer extends VoipServer {
       $event = 'hangup';
       try {
         $client->sendEvent($call_id, $event);
+        $voipcall->setCallStatus(VoipCall::COMPLETED);
         $voipcall->setHangupReason(VoipCall::HANGUP_API_REQUEST);
         $voipcall->save();
         $rc = TRUE;
