@@ -567,7 +567,7 @@ function voipqueue_voip_event($call, $status) {
         $item->data->item_id = $item->item_id;
         $item = $item->data;
         if ($item->retryPermitted()) {
-          $delay = $item->calculateDelay();
+          $delay = $item->retryDelay;
           db_update('advancedqueue')
             ->fields(array(
               'status' => $delay ? VOIPQUEUE_STATUS_DELAYED :   ADVANCEDQUEUE_STATUS_QUEUED,
