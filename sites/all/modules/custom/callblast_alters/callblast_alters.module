@@ -24,8 +24,31 @@ function callblast_alters_init() {
   drupal_add_css(drupal_get_path('module', 'callblast_alters').'/callblast_alters.css');
 }
 
+
 /**
  * Implementation of hook_menu().
+ */
+function callblast_alters_menu() {
+  $items['installphp/postinstall'] = array(
+    'title' => 'Callblast Postinstall',
+    'description' => 'Callblast Postinstall',
+    'page callback' => 'callblast_alters_postinstall',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+//Used in Callblast instalation profile
+function callblast_alters_postinstall() {
+  drupal_flush_all_caches();
+  features_rebuild();
+  features_revert();
+  drupal_goto('<front>');
+}
+
+/**
+ * Implementation of hook_cron().
  */
 function callblast_alters_cron() {
   $vid = 2;

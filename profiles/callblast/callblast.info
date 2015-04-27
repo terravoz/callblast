@@ -1,0 +1,5 @@
+name = Callblast
+description = Callblast is open-source ready to use system built on Drupal, for delivering voice and SMS to a group of people.
+version = 1.0
+core = 7.x
+dependencies[] = features
