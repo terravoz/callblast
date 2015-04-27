@@ -3,6 +3,7 @@
 Callblast is open-source ready to use system built on Drupal, for delivering voice and SMS to a group of people.
 
 == Features ==
+
 1. Send SMS Announcement: This allows an authenticated and a privileged user to send Bulk SMS to a targeted group.
 
 2. SMS Opt In Invitation: This enables a privileged user to send message to target group to
@@ -53,6 +54,7 @@ support more). For details refer to README of each individual VoIP provider in t
 
 
 == Usage ==
+
 Instructions: System is pretty straightforward once you login you will find 6 tabs:
 
 Step 1: Import contacts
@@ -62,25 +64,29 @@ http://yoursite.com/sites/default/files/feeds/testcontacts.csv
 !Make sure that Opted in field is set to 'yes'. System will only make calls to phone numbers that are
 opted-in (this is regulatory in some countries).
 
--you can also manually add contacts here: /node/add/phone-number?destination=contacts
+- you can also manually add contacts here: /node/add/phone-number?destination=contacts
 
--there is also option that people add their numbers (subscribe or unsubscribe) by SMSing any word
+- there is also option that people add their numbers (subscribe or unsubscribe) by SMSing any word
 to phone number you setup in Default call configuration (/admin/voip/call/settings)
 
 Step 2: Manage contacts
+
 View all contacts in system, search by keywords or groups, mass assign groups to contacts, export
 to csv, and bulk actions for edit/deleting/etc...
 
 Step 3: Send announcement
+
 This is where you send bulk voice or SMS announcements. There are two types:
-SMS announcement - where you enter SMS text to be sent
-Opt-In invitation - here the system sends SMS Opt-In invitation
-Voice announcement - where you enter voice to be played
-Voice announcement using VoIP Script - here instead you select predefined VoIP Script.
+- SMS announcement - where you enter SMS text to be sent
+- Opt-In invitation - here the system sends SMS Opt-In invitation
+- Voice announcement - where you enter voice to be played
+- Voice announcement using VoIP Script - here instead you select predefined VoIP Script.
+
 After you enter all required information, this blast will be scheduled to run with next available
 queue.
 
 Step 4: History
+
 Here you see all announcements sent or pending to be processed, together with status and phone
 numbers to which this announcement was sent. You can click on phone numbers in order to see
 detailed call log for each phone number.
