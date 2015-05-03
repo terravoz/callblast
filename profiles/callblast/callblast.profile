@@ -41,6 +41,7 @@ function callblast_form_submit($form, &$form_state) {
   */
   $callblast_file = dirname(__FILE__) . '/callblast.sql';
   $success = import_callblast($callblast_file);
+
   if (!$success) {
     return;
   }
@@ -121,7 +122,18 @@ function import_callblast($filename) {
       continue;
     }
 
+    // Skip comments
     if (substr($data,0,2) === '/*') {
+      continue;
+    }
+
+    // Skip creating database
+    if (substr($data,0,15) === 'CREATE DATABASE') {
+      continue;
+    }
+
+    //Skip USE commands
+    if (substr($data,0,3) === 'USE') {
       continue;
     }
 
