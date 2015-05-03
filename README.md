@@ -11,7 +11,7 @@ Callblast provides a simple mechanism to manage contact lists with phone numbers
 
 # Requirements
 In order to install the Callblast, you will need:
-* Drush (http://www.drush.org)
+* [Drush](http://www.drush.org)
 * PHP Curl extension enabled. For Debian systems, just run 
 ```sh
 $ sudo apt-get install php5-curl 
