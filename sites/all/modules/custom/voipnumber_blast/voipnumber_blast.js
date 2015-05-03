@@ -17,7 +17,7 @@
                     }
                 }
             );
-            
+
             voipnumber_blast_field_conditional_state($('#edit-field-blast-type-und').val());
             $('#edit-field-blast-type-und').change(function () {
                     voipnumber_blast_field_conditional_state($(this).val());
