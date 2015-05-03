@@ -114,7 +114,7 @@ function callblast_alters_form_alter(&$form, &$form_state, $form_id) {
     $form["options"]["sticky"]["#type"] = "hidden";
   }
   else if($form_id == 'broadcast_node_form') {
-    drupal_set_title(t('New message blast'));
+    drupal_set_title(t('New blast'));
     drupal_add_js(drupal_get_path('module', 'callblast_alters').'/callblast_alters.js');
     $form['actions']['submit']['#value'] = t('Start');
     //$form['actions']['preview']['#value'] = t('Test');

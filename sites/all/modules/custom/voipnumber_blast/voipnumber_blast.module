@@ -5,19 +5,24 @@
  */
 
 //@todo: check call status in hangup handler, see voipcall_process_hangup()
+
+/**
+ * Implementation of hook_init()
+ */
+function voipnumber_blast_init() {
+  drupal_add_js(array(
+    'voipnumber_blast' => array(
+      'opt_in_message' => variable_get('sms_actions_opt_message',
+        'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.'),
+    )
+  ), 'setting');
+  drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
+}
 /**
  * Implementation of hook_form_alter()
  */
 function voipnumber_blast_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'broadcast_node_form') {
-    drupal_add_js(array(
-      'voipnumber_blast' => array(
-        'opt_in_message' => variable_get('sms_actions_opt_message',
-          'Callblast App would like to send you SMS reminders @ this number. X/week. H for help. S to end. Msg&data rates may apply. Reply J to confirm today.'),
-      )
-    ), 'setting');
-    drupal_add_js(drupal_get_path('module', 'voipnumber_blast') . '/voipnumber_blast.js');
-
     //Set default VoIP Voice
     $server = VoipServer::getDefaultServer();
     $form['field_blast_voice']['und']['#default_value'] = $server->getDefaultVoice()

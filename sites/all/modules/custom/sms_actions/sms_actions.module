@@ -38,7 +38,7 @@ function sms_actions_admin_settings_form() {
     $form['sms_actions_fieldset']['sms_actions_action_'.$key] = array(
       '#type' => 'textfield',
       '#title' => t('Keywords for '.$sms_action['title']),
-      '#description' => t('Keywords for '.$sms_action['description']),
+      '#description' => $sms_action['description'],
       '#default_value' => variable_get('sms_actions_action_'.$key, ''),
     );
   }
@@ -136,17 +136,17 @@ function sms_actions_sms_actions() {
     'subscribe' => array(
       'script' => 'sms_actions_action_subscribe',
       'title' => 'SMS subscription',
-      'description' => 'SMS subscription',
+      'description' => 'Keywords to add the sender\'s number to the contact list',
     ),
     'unsubscribe' => array(
       'script' => 'sms_actions_action_unsubscribe',
       'title' => 'SMS unsubscription',
-      'description' => 'SMS unsubscription',
+      'description' => 'Keywords to remove the sender\'s number from the contact list',
     ),
     'help' => array(
       'script' => 'sms_actions_action_help',
       'title' => 'SMS help',
-      'description' => 'SMS help',
+      'description' => 'Keywords for SMS help',
     ),
   );
   return $sms_actions;

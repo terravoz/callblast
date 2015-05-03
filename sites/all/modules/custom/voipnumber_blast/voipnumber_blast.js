@@ -17,7 +17,10 @@
                     }
                 }
             );
+            
+            voipnumber_blast_field_conditional_state($('#edit-field-blast-type-und').val());
             $('#edit-field-blast-type-und').change(function () {
+                    voipnumber_blast_field_conditional_state($(this).val());
                     if($(this).val() == 'sms_optin') {
                         $('#edit-body-und-0-value').val(Drupal.settings.voipnumber_blast.opt_in_message);
                     }
@@ -48,4 +51,31 @@
             });
         }
     };
+
+    function voipnumber_blast_field_conditional_state(val) {
+        //Replace field_conditional_field module with custom JS
+        $('#broadcast-node-form #edit-body').hide();
+        $('#broadcast-node-form #edit-field-voice-announcement').hide();
+        $('#broadcast-node-form #edit-field-voice-audio').hide();
+        $('#broadcast-node-form #edit-field-voip-script').hide();
+        $('#broadcast-node-form #edit-field-blast-voice').hide();
+        switch (val) {
+            case 'sms':
+                $('#broadcast-node-form #edit-body').show();
+                break;
+            case 'sms_optin':
+                $('#broadcast-node-form #edit-body').show();
+                break;
+            case 'voice_text':
+                $('#broadcast-node-form #edit-field-voice-announcement').show();
+                $('#broadcast-node-form #edit-field-blast-voice').show();
+                break;
+            case 'voice_audio':
+                $('#broadcast-node-form #edit-field-voice-audio').show();
+                break;
+            case 'voice_script':
+                $('#broadcast-node-form #edit-field-voip-script').show();
+                break;
+        }
+    }
 })(jQuery);
