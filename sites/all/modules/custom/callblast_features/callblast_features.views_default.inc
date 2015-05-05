@@ -330,7 +330,7 @@ print l($voipcall->getCid(), \'voipcall/\'.$voipcall->getCid());
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Blast History';
+  $handler->display->display_options['title'] = 'Blast history and management';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -611,13 +611,13 @@ print l(\'More\', \'node/\'.$row->tag);
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   $handler->display->display_options['path'] = 'admin/voip/blast/history';
   $handler->display->display_options['menu']['type'] = 'tab';
-  $handler->display->display_options['menu']['title'] = 'History';
+  $handler->display->display_options['menu']['title'] = 'Blast history and management';
   $handler->display->display_options['menu']['weight'] = '1';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['claro_voip_queue'] = array(
     t('Master'),
-    t('Blast History'),
+    t('Blast history and management'),
     t('more'),
     t('Apply'),
     t('Reset'),
